@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<!-- Little attribute to help with responsiveness -->
+		<meta name="viewport" content="width=device-width, inital-scale=1.0">
+		<title>🏠 Home</title>
+		<!-- Google's Material Symbols -->
+		<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+		<!-- Materialize CSS lib -->
+		<link type="text/css" rel="stylesheet" href="css/materialize.min.css">
+		<!-- Custom styling -->
+		<link type="text/css" rel="stylesheet" href="css/style.css">
+		<!-- Favicon -->
+		<link rel="icon" type="image/png" href="images/favicon.png">
+	</head>
+	<body>
+		<!-- Navbar fixed to the top of the screen -->
+		<div class="navbar-fixed extend-fix">
+			<nav class="blue nav-extended">
+				<div class="nav-wrapper container">
+					<a href="#" class="brand-logo">EJ Snow</a>
+				</div>
+				<div class="nav-content container">
+					<ul class="tabs tabs-transparent">
+						<li class="tab"><a class="active" href="#home">Home</a></li>
+						<li class="tab"><a href="#about-me">About me</a></li>
+						<li class="tab"><a href="#projects">Projects</a></li>
+					</ul>
+				</div>
+			</nav>
+		</div>
+		<!-- Main -->
+		<main id="main">
+			<!-- Header image using parallax effect -->
+			<div class="parallax-container">
+				<div class="parallax">
+					<img src="images/header.jpg">
+				</div>
+			</div>
+			<div class="container">
+				<div id="home">
+					<h1 class="center-align">Welcome!</h1>
+					<p>Hey! My name is Ezra Snow, sometimes known as LightSaber online (mainly in video games). I live in North Carolina, and I'm homeschooled. I'm currently a junior in highschool. I'm 16 years old, and I enjoy computers and computer gaming. My favorite color is blue, because it's an amazing color.</p>
+					<p>This site probably won't have much on it for now. Mostly just occasional computer related projects. I'll probably expand it later, as I learn more about programming and computers.</p>
+					<h3 class="center-align">My most recent projects</h3>
+					<div class="row">
+						<div class="col s12 m6">
+							<div class="card large hoverable" id="redstone-computer">
+								<div class="card-image">
+									<img src="images/IMG_3296.JPG">
+									<span class="card-title">My redstone computer</span>
+								</div>
+								<div class="card-content">
+									<p>Oct 10, 2024</p>
+									<p>This is my main gaming PC. It's a 9-year old Dell OptiPlex 7020 (the model is 12 years old now) that I upgraded significantly from its original specs.</p>
+								</div>
+								<div class="card-action">
+									<a class="waves-effect btn-flat" style="color: #000000" href="projects/2024-10-05-redstone-computer.html">Full page</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="about-me">
+					<h2 class="center-align">About me</h2>
+					<p>My name is Ezra Snow. I live in North Carolina. I'm 16, homeschooled, and a junior in highschool.</p>
+					<p>I LOVE working with computers. I probably spend a little too much time on my computer, lol. I love learning about all the different parts of a computer, and how upgrading different parts affects how my computer works.</p>
+					<p>As part of that, I have inevitably gotten into programming. I made this website from scratch with the <a href="https://materializecss.com">Materialize</a> framework. (So not really from scratch, but sort of.) It was pretty cool to develop. The framework hasn't been updated in some time, but it still works perfectly fine in Firefox 128 ESR.</p>
+					<p>After I finish high school, I plan on majoring in computer science in college and then after that, I want to do something computer science/IT related.</p>
+					<p>My favorites:</p>
+					<ul class="browser-default">
+						<li>Favorite color: Blue</li>
+						<li>Favorite operating system: Windows 7 (<a target="_blank" href="https://getaurora.dev">Aurora Linux</a> is a close second, Windows 10 is a distant third)</li>
+						<li>Favorite computer type: Early 2010s laptops (because they're upgradable <i>and</i> portable)</li>
+						<li>Favorite hobbies: Computer gaming and programming</li>
+					</ul>
+					<p>I am a follower of Jesus Christ. I believe that God made us as good people, but we chose to turn away from him and live in sin, and that everyone has sinned. As sinners, we are doomed to die. But God in his mercy sent Jesus to live on earth, and die for our sins. But Jesus rose from the dead, and has returned to be with God our Father. In doing this, God opened a way for us to know him personally. If we come to the Father through Jesus and repent of our sins, we will be saved from death, and we will be able to live forever with God. If you are reading this, and you aren't currently in a relationship with God, I encourage you to find a church wherever you live, and to learn about God through Scripture.</p>
+					<h4>My computers</h4>
+					<p>Upgrades are marked with an arrow (→). Significant upgrades are marked in bold.</p>
+					<div class="row border-top" style="margin-bottom: 0.75rem">
+						<div class="col s12 m5">
+							<img class="materialboxed responsive-img" data-caption="My redstone computer, Feb 19 2025. It runs Windows 10, but in this picture I had themed it to look like Windows 7." src="images/IMG_3622.JPG">
+						</div>
+						<div class="col s12 m7">
+							<h5>Redstone Computer</h5>
+							<p>My main computer is an old OptiPlex desktop that I upgraded significantly to make a kinda sorta gaming PC. It's been my daily driver since October 2024.</p>
+							<ul class="browser-default">
+								<li>CPU: Intel Core i5-4590 → Intel Core i7-4790</li>
+								<li>RAM: 8 GB (2x4GB) DDR3 → <b>Crucial 16 GB (2x8GB) DDR3</b></li>
+								<li>GPU: Intel HD 4600 (iGPU) → <b>Radeon RX 6400 (dGPU)</b></li>
+								<li>Storage: 128 GB 2.5" SSD → <b>500 GB Crucial MX500 2.5" SSD + 1 TB Western Digital Blue 2.5" HDD</b></li>
+								<li>Networking: Intel I217-LM Ethernet → <b>TP-Link Archer TX55E Wi-Fi 6 + Bluetooth 5.3</b></li>
+								<li>Main OS: Windows 10 Pro (but I'm switching to Linux after Windows 10 EOL)</li>
+							</ul>
+						</div>
+					</div>
+					<div class="row border-top" style="margin-bottom: 0.75rem">
+						<div class="col s12 m5">
+							<img class="materialboxed responsive-img" data-caption="My old school laptop booting Linux Mint from an external HDD, June 24 2024. It never had a permanent Linux install on it though." src="images/IMG_2904.JPG">
+						</div>
+						<div class="col s12 m7">
+							<h5>My old school laptop (no longer used)</h5>
+							<p>This was an old Dell Latitude I used for school, and the little gaming it could do, from January 2022 to October 2024. It was replaced by my redstone computer. My family's had this laptop since 2013. I might resurrect it as a Windows 7 nostalgia machine at some point.</p>
+							<ul class="browser-default">
+								<li>CPU: Intel Core i7-3540M</li>
+								<li>RAM: 8 GB (2x4GB) DDR3 → <b>16 GB (2x8GB) DDR3</b></li>
+								<li>GPU: Intel HD 4000 (iGPU)</li>
+								<li>Storage: 750 GB Western Digital Black 2.5" HDD → <b>500 GB Crucial MX500 2.5" SSD</b></li>
+								<li>Main OS: Windows 7 Professional → Windows 10 Pro</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div id="projects">
+					<h2 class="center-align">My projects</h2>
+					<p>A listing of all my projects, past and present.</p>
+					<div class="row">
+						<div class="col s12 m6">
+							<div class="card large hoverable" id="redstone-computer">
+								<div class="card-image">
+									<img src="images/IMG_3296.JPG">
+									<span class="card-title">My redstone computer</span>
+								</div>
+								<div class="card-content">
+									<p>Oct 10, 2024</p>
+									<p>This is my main gaming PC. It's a 9-year old Dell OptiPlex 7020 (the model is 12 years old now) that I upgraded significantly from its original specs.</p>
+								</div>
+								<div class="card-action">
+									<a type="button" class="waves-effect btn-flat" style="color: #000000" href="projects/2024-10-05-redstone-computer.html">Full page</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<p>For other kinds of projects, be sure to check out my <a href="https://github.com/ejsnow">GitHub profile</a>!
+				</div>
+			</div>
+		</main>
+		<!-- Footer -->
+		<footer class="page-footer blue">
+			<div class="container">
+				<div class="row">
+					<div class="col m6 s12">
+						<h5 class="white-text">Page footer</h5>
+						<p class="grey-text text-lighten-4">I may put more stuff here later. For now, this footer is sad and empty.</p>
+						<p class="grey-text text-lighten-4">Check out the links to the right (or below on mobile).</p>
+					</div>
+					<div class="col m4 offset-m2 s12">
+						<h5 class="white-text">Links</h5>
+						<ul>
+							<li><a class="grey-text text-lighten-3" target="_blank" href="https://github.com/EJSnow">My GitHub</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!-- Copyright -->
+			<div class="footer-copyright">
+				<div class="container">© 2025 EJ Snow<span class="grey-text text-lighten-4 right">Powered by <a class="grey-text text-lighten-4" target="_blank" href="https://materializecss.com">Materialize</a></span>
+				</div>
+			</div>
+        </footer>
+		
+		<!-- Materialize JS lib -->
+		<script type="text/javascript" src="js/materialize.min.js"></script>
+		<!-- Initialization for interactive components -->
+		<script type="text/javascript" src="js/init.js"></script>
+	</body>
+</html>

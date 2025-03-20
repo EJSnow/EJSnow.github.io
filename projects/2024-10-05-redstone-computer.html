@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<!-- This helps with responsiveness -->
+		<meta name="viewport" content="width=device-width, intial-scale=1.0">
+		<title>🖥 Redstone Computer Oct 5, 2024</title>
+		<!-- Google's Material Symbols -->
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+		<!-- Materialize CSS lib -->
+		<link rel="stylesheet" href="../css/materialize.min.css">
+		<!-- Custom styling -->
+		<link rel="stylesheet" href="../css/style.css">
+		<!-- Favicon -->
+		<link rel="icon" type="image/png" href="../images/favicon.png">
+	</head>
+	<body>
+		<!-- Navbar fixed to the top of the screen -->
+		<div class="navbar-fixed">
+			<nav class="blue">
+				<div class="nav-wrapper container">
+					<a href="../index.html" class="brand-logo center">EJ Snow</a>
+					<div>
+						<a href="../index.html" class="breadcrumb">Home</a>
+						<a href="../index.html#projects" class="breadcrumb">Projects</a>
+					</div>
+				</div>
+			</nav>
+		</div>
+		<!-- Main -->
+		<main id="main">
+			<div class="container">
+				<h2 class="center-align">Redstone Computer</h2>
+				<h6 class="center-align">Built Oct 05, 2024</h6>
+				<img class="responsive-img materialboxed" data-caption="The Redstone Computer as of Feb 19, 2025" src="../images/IMG_3622.JPG">
+				<p><i>Last updated: Mar 17, 2025</i></p>
+				<p>The Redstone Computer is an SFF Dell OptiPlex 7020 from 2013 that I got for free and turned into my new daily driver/gaming PC. I primarily play Minecraft and Forza Horizon 4, plus a smattering of other lightweight games like Geometry Dash and Asphalt 8/9. It runs all of those games very smoothly, even with fancy shaders in Minecraft. However, the GPU is not being used to its full potential, because it has severe overheating issues, to the point where it's not very safe to allow it to reach more than 60% utilization, because the cooler is bad and there's like no airflow in the case anyway. But even with that handicap, it still works quite well, and the computer is very stable otherwise. It's also so much faster than my old laptop. That could barely run Minecraft at playable framerates WITHOUT shaders. Geometry Dash was mostly fine on it, but large, extremely detailed levels would still manage to kill that laptop.</p>
+				<p>I haven't run into any major issues so far, other than the GPU overheating problem I mentioned, and the fact that initially, the Bluetooth on the Wi-Fi card didn't work. I fixed that with a cheap adapter, though, and Bluetooth works now. #adaptersftw</p>
+				<h4>Storage upgrade 1/16/2025</h4>
+				<p>I was starting to run out of space on the internal SSD, so I added a 1TB Western Digital HDD for $38. At this point, I'm probably not going to make any more hardware changes on this computer. The next upgrade will be a whole new PC (or I might buy a laptop, I'm not fully sure yet). I do know that after Windows 10 gets killed by Microsoft, I'd rather deal with the mess that is Linux than the mess that is Windows 11. The thing is, Linux actually shouldn't be too messy for me, especially since I'm using an AMD GPU.</p>
+				<div class="row">
+					<div class="col s12 m5">
+						<img class="materialboxed responsive-img" data-caption="The hard drive I bought to expand the redstone computer's storage" src="../images/IMG_3480.JPG">
+					</div>
+					<div class="col s12 m7">
+						<img class="materialboxed responsive-img" data-caption="The hard drive in File Explorer after formatting it." src="../images/IMG_3485.JPG">
+					</div>
+				</div>
+				<h4>Original build 10/5/2024</h4>
+				<p>This OptiPlex started out with an Intel Core i5-4590, 8 GB of RAM, a 128 GB SSD, and no GPU or Wi-Fi/Bluetooth. Obviously, that won't allow for much gaming, especially since Intel iGPUs of this era are hot garbage. So....</p>
+				<ul class="browser-default">
+					<li>I upgraded the CPU to an Intel Core i7-4790 (non-K, this mobo can't overclock anyway) for the best possible chance of not bottlenecking the GPU I put in this thing... I didn't have to worry about that, since it's doing a fine job of bottlenecking itself lol.</li>
+					<li>I replaced the original RAM with a 16 GB Crucial DDR3 kit, just because Windows and games are quite greedy and demand more RAM than the original 8GB kit would have allowed.</li>
+					<li>The original 128GB SSD would have filled up pretty much as soon as I got everything set up, so I replaced that with a Crucial 500GB SSD.</li>
+					<li>You can't do much gaming on an Intel iGPU from 2013, so I bought a Radeon RX 6400, but unfortunately I had to settle for the loser XFX version as opposed to the Sapphire Pulse RX 6400, which is better in every possible way. Issues with the XFX card include: 1) A needlessly complicated procedure to swap out the PCIe bracket for the low-profile one, 2) An awful cooler that prefers to let the GPU melt rather than scream its face off with the laughably tiny fan, and 3) complete lockout of frequency, power limit, and fan curve adjustment, which is sad because I wanted to undervolt the card for efficiency's sake, and also see if I could push a more aggressive fan curve so that it runs cooler. It's already quite efficient though, so undervolting likely wouldn't do much.</li>
+					<li>Finally, I didn't really want to use Ethernet, plus I wanted Bluetooth for my speaker, so I bought a TP-Link Wi-Fi card with Bluetooth. Initially the Bluetooth didn't work, though, since the Wi-Fi card demands you have a spare USB header on your motherboard. The OptiPlex mobo does not, and even if it did, they're proprietary anyways.</li>
+				</ul>
+				<p>Overall, I think I did pretty good. I actually really like small computers. I do not like building in an SFF (i.e, mini ITX) case though, which is basically what this is. They are pretty cramped. My next desktop will probably be MicroATX. That seems like the best compromise between normal ATX towers (which I think are too big) and exremely compact mini ITX PCs (which are quite compact, but are often a pain to build in).</p>
+				<div class="row">
+					<div class="col s12 m6">
+						<img class="materialboxed responsive-img" data-caption="All the parts used for the initial build, minus the CPU." src="../images/IMG_3251.JPG">
+					</div>
+					<div class="col s12 m6">
+						<img class="materialboxed responsive-img" data-caption="The inside of my redstone computer with all the components installed. It's tight in there!" src="../images/IMG_3284.JPG">
+					</div>
+				</div>
+				<div class="row">
+					<div class="col s12 m6">
+						<img class="materialboxed responsive-img" data-caption="Windows 10 being installed on my computer." src="../images/IMG_3290.JPG">
+					</div>
+					<div class="col s12 m6">
+						<img class="materialboxed responsive-img" data-caption="The second stage of Windows setup—OOBE—complete." src="../images/IMG_3292.JPG">
+					</div>
+				</div>
+				<h4>Thoughts on the components</h4>
+				<ul class="collapsible expandable">
+					<li>
+						<div class="collapsible-header"><i class="material-symbols-outlined">memory</i>CPU - Intel Core i7-4790</div>
+						<div class="collapsible-body">This CPU is absolutely still relevant in 2025, despite its age. Just don't run Windows. Linux is so much better in every possible way on these older CPUs. It also can't run Windows 11. It actually performs quite well for what I need it for. It's not bottlenecking anything as far as I'm aware, and I mostly don't do much CPU-intensive stuff anyways. So it's perfect for me. I likely could have kept the original Core i5, but too late for that now.</div>
+					</li>
+					<li>
+						<div class="collapsible-header"><i class="material-symbols-outlined">hard_disk</i>Drives - Crucial MX500 500GB SSD and WD Blue 5400RPM 1TB HDD</div>
+						<div class="collapsible-body">The SSD works pretty well as my boot drive. It's actually the same model I put in my old laptop way back in 2023. That poor laptop was extremely CPU bottlenecked, so it took twice as long to boot Windows as this computer, even with the same drive. I would say this SSD is slightly overpriced nowadays, though. You can get an M.2 drive for cheaper now.<br>As for the HDD, it's pretty alright. I got it from a slightly sketchy seller on Amazon, and found out that it was likely used when it arrived. The manufacture date on it is Jan 2017. But it works just fine. It's decent for mass data storage, although it's not very fast. I can actually tell the difference between this HDD and my old laptop's HDD, which is a 750GB WD Scorpio Black 7200RPM drive.</div>
+					</li>
+					<li>
+						<div class="collapsible-header"><i class="material-symbols-outlined">monitor</i>GPU - XFX SWFT 105 Radeon RX 6400</div>
+						<div class="collapsible-body">This particular version of the RX 6400 has a few flaws, but overall the RX 6400 itself is a great GPU for SFF office computers turned gaming PCs. It's actually decently fast, although it only just matches the GTX 1650, which was the most popular low-profile GPU before the RX 6400. There are still a few gotchas with any RX 6400, such as the lack of a video codec for <i>some reason</i>, but it's a great choice overall. However, the XFX card is not great. I would prefer to have gotten the Sapphire Pulse RX 6400, but that was not available on Amazon when I bought my parts. The reason why is that the XFX card has an awful cooler, which means that I'm not getting the performance I was promised (because the GPU overheats if I try). The design is pretty bad too. One of the screws for the PCIe bracket is hidden under the shroud, which itself is secured by 8 very small screws. A very important consideration for low-profile GPUs, especially when you actually need to use the half-height PCIe bracket.</div>
+					</li>
+					<li>
+						<div class="collapsible-header"><i class="material-symbols-outlined">wifi</i>Wi-Fi card - TP-Link Archer TX55E</div>
+						<div class="collapsible-body">Very nice Wi-Fi card. It works quite well, even in a computer that no one ever dreamed of putting an Intel AX210 Wi-Fi chipset in. It also has Bluetooth, which is pretty useful too. But for Bluetooth to work, you need a spare USB 2.0 header on your motherboard. Guess what. My OptiPlex doesn't have one. So the solution is a $5 adapter to make it possible to plug it into an external USB port. Also, Bluetooth audio doesn't work well in Forza Horizon 4, at least with this card. Once you load into the game, about 10 seconds after you reach your in-game house, it just says screw your Bluetooth audio.</div>
+					</li>
+					<li>
+						<div class="collapsible-header"><i class="material-symbols-outlined">keyboard</i>Keyboard - Logitech K260</div>
+						<div class="collapsible-body">Nope. Do not even think about using this keyboard (or the K270, which is this but with a power switch lol). It's your average $10 office keyboard. Clacky, feels bad to type on, and also slightly flimsy. But it does work. I would only use this if I got it for free. Which I did.</div>
+					</li>
+					<li>
+						<div class="collapsible-header"><i class="material-symbols-outlined">monitor</i>Monitor - Dell P2210</div>
+						<div class="collapsible-body">It's an alright monitor. Colors look fine, I guess. It's quite ancient, which is fitting for this PC. Also sometimes when I turn on the computer, the entire image glitches out. Can be fixed simply by turning the monitor off and back on again. Likely an indication that it's about to die.</div>
+					</li>
+				</ul>
+				<h4>Screenshot dump :)</h4>
+				<p>Here are some screenshots I took in Minecraft with shaders and Forza Horizon 4. Enjoy ;) (I have a lot more screenshots, but I didn't want to put too many on this page since there's already a lot of pictures.)</p>
+				<div class="row">
+					<h5>Minecraft</h5>
+					<div class="col s12 m6">
+						<img class="materialboxed responsive-img" src="../images/Minecraft-Survival-Complementary-Shaders.jpg">
+					</div>
+					<div class="col s12 m6">
+						<img class="materialboxed responsive-img" src="../images/Minecraft-Night-Aurora-Photon-Shader.jpg">
+					</div>
+				</div>
+				<div class="row">
+					<div class="col s12 m6">
+						<img class="materialboxed responsive-img" src="../images/Minecraft-Survival-Sunrise-Photon-Shader.jpg">
+					</div>
+					<div class="col s12 m6">
+						<img class="materialboxed responsive-img" src="../images/Minecraft-Cherry-Sunset-Super-Duper-Shader.jpg">
+					</div>
+				</div>
+				<div class="row">
+					<h5>Forza Horizon 4</h5>
+					<div class="col s12 m6">
+						<img class="materialboxed responsive-img" src="../images/FH4-Evening-Drive-Winter.jpg">
+					</div>
+					<div class="col s12 m6">
+						<img class="materialboxed responsive-img" src="../images/FH4-Chevy-Nova-Summer.jpg">
+					</div>
+				</div>
+				<div class="row">
+					<div class="col s12 m6">
+						<img class="materialboxed responsive-img" src="../images/FH4-Field-Spring.jpg">
+					</div>
+					<div class="col s12 m6">
+						<img class="materialboxed responsive-img" src="../images/FH4-Hudson-Hornet.jpg">
+					</div>
+				</div>
+			</div>
+		</main>
+		<!-- Footer -->
+		<footer class="page-footer blue">
+			<div class="container">
+				<div class="row">
+					<div class="col m6 s12">
+						<h5 class="white-text">Page footer</h5>
+						<p class="grey-text text-lighten-4">I may put more stuff here later. For now, this footer is sad and empty.</p>
+						<p class="grey-text text-lighten-4">Check out the links to the right (or below on mobile).</p>
+					</div>
+					<div class="col m4 offset-m2 s12">
+						<h5 class="white-text">Links</h5>
+						<ul>
+							<li><a class="grey-text text-lighten-3" href="https://github.com/EJSnow">My GitHub</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!-- Copyright -->
+			<div class="footer-copyright">
+				<div class="container">© 2025 EJ Snow<span class="grey-text text-lighten-4 right">Powered by <a class="grey-text text-lighten-4" target="_blank" href="https://materializecss.com">Materialize</a></span>
+				</div>
+			</div>
+        </footer>
+		
+		<!-- Materialize JS lib -->
+		<script type="text/javascript" src="../js/materialize.min.js"></script>
+		<!-- Initialization for interactive components -->
+		<script type="text/javascript" src="../js/init.js"></script>
+	</body>
+</html>

@@ -1,7 +1,7 @@
 # EJSnow.github.io
 Just a little website of mine.
 
-The actual website is not in the `main` branch, instead it's hosted over at the `gh-pages` branch. To view the website like a normal person, navigate to [https://EJSnow.github.io](https://ejsnow.github.io).
+The actual website is not in the `main` branch, instead it's hosted over at the `site` branch. To view the website like a normal person, navigate to [https://EJSnow.github.io](https://ejsnow.github.io).
 
 If you see anything in the source code you would have done better, feel free to [open an issue](https://github.com/EJSnow/EJSnow.github.io/issues) so we can discuss it.
 ## Credits

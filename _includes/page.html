@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, inital-scale=1.0">
+    <title>{{ title }} - EJSnow</title>
+    <link rel="stylesheet" href="https://unpkg.com/7.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap');</style>
+  </head>
+  <body>
+    <div class="window glass active content" id="main">
+      <div class="title-bar">
+        <div class="title-bar-text">EJSnow</div>
+        <div class="title-bar-controls">
+          <!-- These are decorative and don't actually do anything -->
+          <button aria-label="Minimize"></button>
+          <button aria-label="Maximize"></button>
+          <button aria-label="Close"></button>
+        </div>
+      </div>
+      <div class="window-body has-space">
+        <article role="tabpanel">
+          <a id="top" href="/">← 🏡 Home</a>
+          <h1>{{ title }}</h1>
+          <pre><code>#include metadata.h<br>// Created {{ created }}<br>// Last updated {{ lastUpdated }}</code></pre>
+          {% if toc %}
+          <details id="toc">
+            <summary>Table of Contents</summary>
+            <ul id="toc-contents"></ul>
+          </details>
+          {% endif %}
+          {{ content }}
+        </article>
+      </div>
+      <footer>
+        <a href="https://github.com/ejsnow">My GitHub profile</a>
+        <a href="#top">Back to top ↑</a>
+      </footer>
+    </div>
+
+    <!-- Lightbox window -->
+    <div class="window glass active" id="image-viewer" role="dialog" aria-labelledby="lightbox-title">
+      <div class="title-bar">
+        <div class="title-bar-text" id="lightbox-title">Viewing image</div>
+        <div class="title-bar-controls">
+          <button aria-label="Minimize"></button>
+          <button aria-label="Maximize"></button>
+          <button onclick="history.back()" aria-label="Close"></button>
+        </div>
+      </div>
+      <div class="window-body" id="lightbox">
+        <figure>
+          <img id="lightbox-img" src="" alt="">
+          <figcaption id="image-caption"></figcaption>
+        </figure>
+      </div>
+    </div>
+    <script src="/js/script.js"></script>
+  </body>
+</html>

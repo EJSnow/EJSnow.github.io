@@ -1,0 +1,19 @@
+{
+  "name": "my-website",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build-ghpages": "npx eleventy --pathprefix=/ejsnow.github.io"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@11ty/eleventy": "^3.1.2"
+  },
+  "devDependencies": {
+    "markdown-it-anchor": "^9.2.0"
+  }
+}

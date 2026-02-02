@@ -38,8 +38,6 @@ jobs:
 
       - name: Build site
         run: npm run build-ghpages
-        env:
-          TZ: America/New_York
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3

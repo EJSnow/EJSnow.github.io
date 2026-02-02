@@ -129,7 +129,7 @@ pre {
 	margin: 1em 0 !important;
 	padding: var(--w7-w-space);
 	background: var(--w7-surface);
-	border: 1px solid var(--w7-w-bd);
+	border: 1px solid var(--w7-el-bd);
 	overflow: auto;
 }
 code {
@@ -209,4 +209,36 @@ div.warning p, div.info p {
 /* Tables AHHHH */
 table {
 	margin-bottom: 1em;
+}
+
+/*************************************************************/
+/* Dark Mode                                                 */
+/*************************************************************/
+
+/* Hopefully everything can be in one query */
+@media (prefers-color-scheme: dark) {
+	html {
+		background-image: url("../images/background-dark.jpg");
+		color: #fff;
+		background-color: #121212;
+	}
+	:root {
+		--w7-w-bg: #81a1c1;
+		--w7-surface: #202020;
+		--w7-tab-bg: #121212;
+		--w7-el-sd: inset 0 0 0 1px #222c;
+		--w7-el-bd: #707171;
+		--w7-el-bg: #454545;
+		--w7-el-bg-s-1: #292929;
+		--w7-el-bg-s-2: #222;
+		--w7-el-grad-h: #a7d9f53b;
+		--w7-link-c: #39f;
+		--w7-link-c-h: #6bf;
+	}
+	.window footer::before {
+		box-shadow: inset 0 1px #0000004d, inset 0 -1px #121212;
+	}
+	menu[role="tablist"] button {
+		color: #f0f0f0;
+	}
 }

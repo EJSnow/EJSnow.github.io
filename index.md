@@ -40,6 +40,8 @@ Fun fact: I wrote parts of this section on my phone by ssh-ing into my PC. <a ta
 
 ## My computers
 
+*Select any image below to view it full size*
+
 ### The Redstone Computer
 <img class="lightboxed" alt="The Redstone Computer, Sep 13 2025, running Arch Linux" src="images/redstone-computer.jpg">
 

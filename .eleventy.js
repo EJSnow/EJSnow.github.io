@@ -9,6 +9,7 @@ export const config = {
 export default async function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy("css/*");
   eleventyConfig.addPassthroughCopy("js/*");
+  eleventyConfig.addPassthroughCopy("images/*")
 
   eleventyConfig.amendLibrary("md", (mdLib) => mdLib.use(markDownItAnchor), {level: [2, 3, 4]});
 }

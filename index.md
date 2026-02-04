@@ -94,12 +94,14 @@ Specs:
 
 Cool stuff I've made. Check my <a target="_blank" href="https://github.com/ejsnow">GitHub profile</a> for more!
 
-## Completed</h2>
+## Completed
+
 <div class="grid-container">
 <div class="grid-item">
 
 ### Redstone Computer
-<img alt="The Redstone Computer, Sep 13 2025, running Arch Linux" src="images/redstone-computer.jpg">
+
+![The Redstone Computer running Arch Linux, Sep 13 2025](/images/redstone-computer.jpg)
 
 **Built Oct 5, 2024**
 
@@ -110,7 +112,19 @@ Cool stuff I've made. Check my <a target="_blank" href="https://github.com/ejsno
 
 ## Ongoing
 
-<p style="text-align: center"><i>Nothing to see here... yet.</i></p>
+<div class="grid-container">
+<div class="grid-item">
+
+### My KDE Plasma dotfiles
+
+![My Arch Linux setup Feb 1, 2026](/images/my-arch-setup.jpg)
+
+**Created Jan 7, 2026**
+
+<p style="margin: 0.5em 0 0">My preferred Linux setup on KDE Plasma. Wallpapers/panel layout not included.</p>
+<p style="text-align: right"><a href="https://github.com/ejsnow/dotfiles">Github repo ↗</a>
+</div>
+</div>
 </article>
 <!-- Resources for various purposes -->
 <article role="tabpanel" id="resources" hidden>

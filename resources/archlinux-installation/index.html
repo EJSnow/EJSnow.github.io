@@ -23,14 +23,14 @@
         <article role="tabpanel">
           <a id="top" href="/">← 🏡 Home</a>
           <h1>Arch Linux Installation</h1>
-          <pre><code>#include metadata.h<br>// Created Jan 31, 2026<br>// Last updated Feb 1, 2026</code></pre>
+          <pre><code>#include metadata.h<br>// Created Jan 31, 2026<br>// Last updated Feb 25, 2026</code></pre>
           
           <details id="toc">
             <summary>Table of Contents</summary>
             <ul id="toc-contents"></ul>
           </details>
           
-          <p><strong>Important:</strong> This is my own personalized installation guide for personal use. I do not recommend following this if you aren't me. Usually, you'll want to follow the <a href="https://wiki.archlinux.org/title/Installation_guide">official installation</a> guide instead. Note that instructions here may be out of date and/or I might have made a little mistake (it happens lol). Best to reference the ArchWiki. (Realistically I'm probably not going to use this that much but it's a good idea to fully document my installation anyway.)</p>
+          <p><strong>Important:</strong> This is my own personalized installation guide for personal use. I do not recommend following this if you aren't me. Usually, you'll want to follow the <a href="https://wiki.archlinux.org/title/Installation_guide">official installation</a> guide instead. Note that instructions here may be out of date and/or I might have made a little mistake (it happens lol). Best to reference the ArchWiki. (Realistically I'm probably not going to use this that much but it's a good idea to fully document my installation procedures anyway.)</p>
 <h2 id="warming-up" tabindex="-1">Warming up</h2>
 <p>First off, there are a few formatting conventions in the command snippets below. Text enclosed in asterisks (<code>*Like this*</code>) is a placeholder that should be changed as needed (for example, a reference to a block device like <code>/dev/sda</code>). Commands prefixed with a dollar sign (<code>$</code>) should be run as a normal (non-root) user, while commands prefixed with a hashtag or pound sign (<code>#</code>) have to be run as root. Also, in the network connection section, the commands that are run inside <code>iwctl</code>'s shell are prefixed with <code>[iwd]#</code>.</p>
 <h3 id="basic-requirements" tabindex="-1">Basic requirements</h3>
@@ -86,12 +86,12 @@
 </div>
 <h2 id="pre-installation" tabindex="-1">Pre-installation</h2>
 <div class="info">
-<p><strong>Note:</strong> The Arch Linux ISO doesn't support Secure Boot so make sure it's disabled before booting it. You <em>can</em> set up your full installation to support Secure Boot but it's painful and annoying.</p>
+<p><strong>Note:</strong> The Arch Linux ISO doesn't support Secure Boot so make sure it's disabled before booting it. You <em>can</em> set up your full installation to support Secure Boot however.</p>
 </div>
 <p>Plug the thumb drive containing your Arch ISO to your computer, then boot from it. To do this, turn on the PC, then press the one-time boot menu key. Dell and Lenovo PCs use F12. Select your thumb drive and press Enter. If you're using a Ventoy drive, select the Arch Linux ISO from the Ventoy menu, then &quot;Boot in normal mode&quot;, which will boot the ISO. Once it boots up, you'll be logged into the root acount. Your screen should look like this:</p>
 <p><img src="/images/arch-installer.png" alt="The Arch Linux installer"></p>
 <h3 id="setting-the-console-font" tabindex="-1">Setting the console font</h3>
-<p>If necessary, change the console font to a larger one. The kernel will try to detect HiDPI screens and set a larger terminal font as needed, but often this doesn't happen so you'll have to set a font manually like so:</p>
+<p>If necessary, change the console font to a larger one. The kernel will try to detect HiDPI screens and set a larger terminal font as needed, but sometimes you'll need to set a larger font manually:</p>
 <pre><code class="language-sh"># setfont *ter-124n*
 </code></pre>
 <p>You can see all available fonts by listing the contents of <code>/usr/share/kbd/consolefonts/</code>.</p>
@@ -205,7 +205,7 @@
 </div>
 <pre><code class="language-sh"># mkfs.fat -F 32 -n &quot;*label*&quot; /dev/*esp*
 </code></pre>
-<p>FAT32 has notable limitations on the label; it can only be 16 alphanumeric characters, and letters must be capitalized. My usual label is &quot;ARCHEFI&quot;.</p>
+<p>FAT32 has notable limitations on the label; it can only be 16 alphanumeric characters, and letters must be capitalized. My usual label is &quot;ARCHEFI&quot; or just &quot;EFI&quot;.</p>
 <div class="warning">
 <p><strong>WARNING:</strong> All data on the target partitions will be <strong>erased</strong>! I know this seems a <em>little</em> pointless after having re-partitioned your drive, but this is more to get through to your sleep-deprived 2AM brain that you NEED TO GO TO SLEEP AND DO THIS WHEN YOU'RE NOT SLEEP DEPRIVED.</p>
 </div>
@@ -249,7 +249,7 @@
 <p>This is the only configuration data that will be copied to your new installation, so it's worth making sure it's set up properly.</p>
 <p>Anyways time to install some packages. Some notes:</p>
 <ul>
-<li>If you want to install AUR packages (you probably do), you should install <code>base-devel</code>. It also includes sudo for the sole reason that makepkg uses it to resolve dependencies.</li>
+<li>If you want to install AUR packages (you probably do), you should install <code>base-devel</code>. It also includes sudo for the sole reason that makepkg uses it to run pacman when resolving dependencies.</li>
 <li>Some laptops may require specific firmware packages (i.e. beyond the default firmware set) for sound and Wi-Fi to work correctly.</li>
 <li>You'll probably want CPU microcode updates when installing on real hardware. They include mitigations for CPU-based vulnerabilities, bugfixes, and other goodies. Install <code>intel-ucode</code> for Intel CPUs or <code>amd-ucode</code> for AMD CPUs.</li>
 <li>To modify and create filesystems, you'll need the userspace utilities for them. I think <code>btrfs-progs</code>, <code>dosfstools</code>, <code>e2fsprogs</code>, <code>exfatprogs</code>, and <code>ntfs-3g</code> will be all you'll need currently. You can always install additional utilities for other filesystems if you need them.</li>
@@ -261,6 +261,7 @@
 <p>To install these essentials, use <code>pacstrap</code>:</p>
 <pre><code class="language-sh"># pacstrap -K /mnt base base-devel *cpu-ucode* linux linux-firmware btrfs-progs dosfstools e2fsprogs exfatprogs ntfs-3g networkmanager wpa_supplicant man-db man-pages texinfo nano fastfetch
 </code></pre>
+<p>Couple other things of note: If you're installing in an LXC, you don't need a kernel as the LXC can use your host's linux kernel. Also linux-firmware isn't needed for VM installs. And finally the absolute minimum needed for the most barebones of installs are <code>base</code>, <code>linux</code>, and <code>linux-firmware</code> (keeping in mind the previous notes, technically you only need <code>base</code> lol).</p>
 <h2 id="configuration" tabindex="-1">Configuration</h2>
 <p>It's now time to perform initial configuration of your installation.</p>
 <p>We'll start by generating the <a href="https://wiki.archlinux.org/title/Fstab">fstab</a> file using genfstab.</p>
@@ -271,8 +272,9 @@
 <p>Most of our configuration will be done chrooted into the new installation. Let's do that now.</p>
 <pre><code class="language-sh"># arch-chroot /mnt
 </code></pre>
-<p>If you're using <a href="#swap-on-zram">swap on zram</a>, you can set this up now.</p>
-<h4 id="set-the-time-zone" tabindex="-1">Set the time zone</h4>
+<p>Btw if you're using <a href="#swap-on-zram">swap on zram</a>, you can set this up now.</p>
+<h4 id="time...-(we-never-have-enough-of-it)" tabindex="-1">Time... (we never have enough of it)</h4>
+<p>Set the time zone first of all:</p>
 <pre><code class="language-sh"># ln -sf /usr/share/zoneinfo/*US*/*Eastern* /etc/localtime
 </code></pre>
 <p>Run the following command to generate <code>/etc/adjtime</code> which helps prevent the system clock from drifting.</p>
@@ -292,11 +294,11 @@
 <pre><code>KEYMAP=*keymap*
 FONT=*ter-124n*
 </code></pre>
-<p>Note that <code>terminus-font</code> is not installed by default, you will need to install it.</p>
+<p>Note that <code>terminus-font</code> (which provides the font in the example above) is not installed by default, you will need to install it.</p>
 <h4 id="hostname" tabindex="-1">Hostname</h4>
 <p>Set the hostname by creating <code>/etc/hostname</code> and put your desired hostname in it.</p>
 <div class="info">
-<p><strong>Note:</strong> The hostname should be a unique, recognizable name. It must be no longer than 63 characters, and can only use alphanumeric characters and the hyphen (-). It can't start with a hyphen.</p>
+<p><strong>Note:</strong> The hostname should be a unique, recognizable name. It must be no longer than 63 characters, and can only use alphanumeric characters and the hyphen (-). It can't start with a hyphen though.</p>
 </div>
 <h4 id="networking" tabindex="-1">Networking</h4>
 <p>To set up networking, simply enable NetworkManger's service:</p>
@@ -310,7 +312,7 @@ FONT=*ter-124n*
 <pre><code class="language-sh"># EDITOR=rnano visudo
 </code></pre>
 <div class="warning">
-<p><strong>WARNING:</strong> Do NOT use a text editor on the sudoers file directly! <em>Always</em> use visudo to edit it! If the edited file has syntax errors, sudo will be <strong>unusable</strong>.</p>
+<p><strong>WARNING:</strong> Do NOT use a text editor on the sudoers file directly! <em>Always</em> use visudo to edit it! Sudo really really hates your syntax errors so visudo is provided to check your edits for syntax errors.</p>
 </div>
 <p>Uncomment this line and save the file:</p>
 <pre><code>...
@@ -325,7 +327,7 @@ FONT=*ter-124n*
 </code></pre>
 <p>Finally, we can disable the root account:</p>
 <div class="warning">
-<p><strong>WARNING:</strong> You may be locked out of the system if you forget your password. Additionally, booting into recovery mode will not work since it tries to log into the root account.</p>
+<p><strong>WARNING:</strong> You may be locked out of the system if you forget your password.</p>
 </div>
 <pre><code class="language-sh"># passwd -dl root
 </code></pre>
@@ -343,14 +345,14 @@ w /sys/power/image_size -    -   -   -   0
 <pre><code>HOOKS=(... plymouth)
 </code></pre>
 <div class="info">
-<p><strong>Note:</strong> On KDE Plasma, the <code>plymouth-kcm</code> package allows you to easily change the Plymouth theme from System Settings. You can also download and apply new themes.</p>
+<p><strong>Note:</strong> On KDE Plasma, the <code>plymouth-kcm</code> package allows you to easily change the Plymouth theme from System Settings. You can also download and apply new themes from there.</p>
 </div>
 <h4 id="desktop-environment" tabindex="-1">Desktop environment</h4>
 <p>I currently use KDE Plasma because it's epic. Other supported DEs can be found on the <a href="https://wiki.archlinux.org/title/Desktop_environment">Desktop Environment</a> ArchWiki page.</p>
 <p>To install a fully featured KDE Plasma session with my preferred KDE apps + Firefox as the web browser, run the following command:</p>
-<pre><code class="language-sh"># pacman -S plasma-meta kde-system-meta plymouth-kcm baloo-widgets breeze5 dolphin-plugins ffmpegthumbs kdeconnect kdegraphics-thumbnailers kdenetwork-filesharing kimageformats kio-admin kio-extras kio-fuse kio-gdrive kwalletmanager phonon-qt6-vlc plasma5-integration qqc2-desktop-style icoutils iio-sensor-proxy libappindicator noto-fonts-emoji power-profiles-daemon qt6-imageformats thermald xdg-desktop-portal-gtk xsettingsd ark dragon elisa filelight gwenview k3b kamoso kate kcalc kcharselect kdenlive kdialog kfind konsole kphotoalbum krita kup kwalletmanager markdownpart okular svgpart firefox
+<pre><code class="language-sh"># pacman -S plasma-meta kde-system-meta plymouth-kcm baloo-widgets breeze5 dolphin-plugins ffmpegthumbs kdeconnect kdegraphics-thumbnailers kdenetwork-filesharing kimageformats kio-admin kio-extras kio-fuse kwalletmanager phonon-qt6-vlc plasma5-integration qqc2-desktop-style icoutils iio-sensor-proxy libappindicator noto-fonts-emoji power-profiles-daemon qt6-imageformats thermald xdg-desktop-portal-gtk xsettingsd ark digikam dragon elisa filelight gwenview k3b kamoso kate kcalc kcharselect kdenlive kdialog kfind konsole krita kup kwalletmanager markdownpart okular svgpart firefox
 </code></pre>
-<p>You'll need the appropriate graphics drivers as well. See the table below for the needed packages in addition to <code>mesa</code>.</p>
+<p>You'll need the appropriate graphics drivers as well. See the table below for the needed packages in addition to <code>mesa</code> (which is a dependency of KWin and the Qt libraries so gets installed with Plasma).</p>
 <table>
 <thead>
 <tr>
@@ -377,7 +379,7 @@ w /sys/power/image_size -    -   -   -   0
 <h4 id="installing-a-bootloader" tabindex="-1">Installing a bootloader</h4>
 <p>Up until now, the system is unbootable. Let's fix that. I use <a href="https://wiki.archlinux.org/title/GRUB">GRUB</a> which is like the default Linux bootloader.</p>
 <div class="info">
-<p><strong>Note:</strong> Linux support for Secure Boot is still fairly weak and setting up your installation for Secure Boot will be annoying so I recommend not doing that unless you like pain.</p>
+<p><strong>Note:</strong> You can use Secure Boot with Linux however it takes some careful setup. Go to my <a href="/resources/using-secure-boot-on-arch/">Secure Boot guide</a> and follow those instructions instead of this section.</p>
 </div>
 <p>Install <code>grub</code> and <code>efibootmgr</code>. You'll need to have the ESP mounted (it should already be mounted) for the next steps. Substitute its mountpoint for <code>*esp*</code> in the next steps.</p>
 <p>Run the following command to install GRUB to the ESP:</p>
@@ -434,6 +436,7 @@ $ makepkg -sci
 <li><a href="https://wiki.archlinux.org/title/Hardware_video_acceleration">Hardware video acceleration</a></li>
 <li><a href="https://wiki.archlinux.org/title/Arch_User_Repository#Installing_and_upgrading_packages">Installing AUR packages</a></li>
 </ul>
+<p>congratulations on installing arch lol! You have just accomplished something most people will never ever do and you should be proud of that!</p>
 
         </article>
       </div>

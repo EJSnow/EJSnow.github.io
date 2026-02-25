@@ -77,7 +77,7 @@ This laptop has been in my family for a long time, and from 2022-2024 it was the
 
 In October 2024 this laptop was retired after I built the Redstone Computer. However, it's still used as a Minecraft server, and it works surprisingly well for that, despite how slow it was as a PC. I guess it's because I'm running Linux on it (Windows is unacceptable for servers), and there's no desktop environment either (being a server, management is done through web dashboards or the terminal).
 
-I mean the Mi![alt text](image.png)necraft server kinda died though so it's been shut down for a while. I don't want this to be a server forever so any server needs will probably be handled by either what's left of the Redstone Computer after I upgrade/replace it or a cheap mini PC, and then I'll turn this laptop into a Windows 7 nostalgia machine and hopefully give it back its original HDD.
+I mean the Minecraft server kinda died though so it's been shut down for a while. I don't want this to be a server forever so any server needs will probably be handled by either what's left of the Redstone Computer after I upgrade/replace it or a cheap mini PC, and then I'll turn this laptop into a Windows 7 nostalgia machine and hopefully give it back its original HDD.
 
 Specs:
 

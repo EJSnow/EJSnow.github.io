@@ -2,11 +2,11 @@
 layout: page.html
 title: Arch Linux Installation
 created: Jan 31, 2026
-lastUpdated: Feb 1, 2026
+lastUpdated: Feb 25, 2026
 toc: true
 ---
 
-**Important:** This is my own personalized installation guide for personal use. I do not recommend following this if you aren't me. Usually, you'll want to follow the [official installation](https://wiki.archlinux.org/title/Installation_guide) guide instead. Note that instructions here may be out of date and/or I might have made a little mistake (it happens lol). Best to reference the ArchWiki. (Realistically I'm probably not going to use this that much but it's a good idea to fully document my installation anyway.)
+**Important:** This is my own personalized installation guide for personal use. I do not recommend following this if you aren't me. Usually, you'll want to follow the [official installation](https://wiki.archlinux.org/title/Installation_guide) guide instead. Note that instructions here may be out of date and/or I might have made a little mistake (it happens lol). Best to reference the ArchWiki. (Realistically I'm probably not going to use this that much but it's a good idea to fully document my installation procedures anyway.)
 
 ## Warming up
 
@@ -82,7 +82,7 @@ There are various GUI utilities that can do this as well. On Windows, [Rufus](ht
 
 <div class="info">
 
-**Note:** The Arch Linux ISO doesn't support Secure Boot so make sure it's disabled before booting it. You *can* set up your full installation to support Secure Boot but it's painful and annoying.
+**Note:** The Arch Linux ISO doesn't support Secure Boot so make sure it's disabled before booting it. You *can* set up your full installation to support Secure Boot however.
 
 </div>
 
@@ -92,7 +92,7 @@ Plug the thumb drive containing your Arch ISO to your computer, then boot from i
 
 ### Setting the console font
 
-If necessary, change the console font to a larger one. The kernel will try to detect HiDPI screens and set a larger terminal font as needed, but often this doesn't happen so you'll have to set a font manually like so:
+If necessary, change the console font to a larger one. The kernel will try to detect HiDPI screens and set a larger terminal font as needed, but sometimes you'll need to set a larger font manually:
 
 ```sh
 # setfont *ter-124n*
@@ -233,7 +233,7 @@ The ESP has to be formatted as FAT32:
 # mkfs.fat -F 32 -n "*label*" /dev/*esp*
 ```
 
-FAT32 has notable limitations on the label; it can only be 16 alphanumeric characters, and letters must be capitalized. My usual label is "ARCHEFI".
+FAT32 has notable limitations on the label; it can only be 16 alphanumeric characters, and letters must be capitalized. My usual label is "ARCHEFI" or just "EFI".
 
 <div class="warning">
 
@@ -318,7 +318,7 @@ This is the only configuration data that will be copied to your new installation
 
 Anyways time to install some packages. Some notes:
 
-* If you want to install AUR packages (you probably do), you should install `base-devel`. It also includes sudo for the sole reason that makepkg uses it to resolve dependencies.
+* If you want to install AUR packages (you probably do), you should install `base-devel`. It also includes sudo for the sole reason that makepkg uses it to run pacman when resolving dependencies.
 * Some laptops may require specific firmware packages (i.e. beyond the default firmware set) for sound and Wi-Fi to work correctly.
 * You'll probably want CPU microcode updates when installing on real hardware. They include mitigations for CPU-based vulnerabilities, bugfixes, and other goodies. Install `intel-ucode` for Intel CPUs or `amd-ucode` for AMD CPUs.
 * To modify and create filesystems, you'll need the userspace utilities for them. I think `btrfs-progs`, `dosfstools`, `e2fsprogs`, `exfatprogs`, and `ntfs-3g` will be all you'll need currently. You can always install additional utilities for other filesystems if you need them.
@@ -332,6 +332,8 @@ To install these essentials, use `pacstrap`:
 ```sh
 # pacstrap -K /mnt base base-devel *cpu-ucode* linux linux-firmware btrfs-progs dosfstools e2fsprogs exfatprogs ntfs-3g networkmanager wpa_supplicant man-db man-pages texinfo nano fastfetch
 ```
+
+Couple other things of note: If you're installing in an LXC, you don't need a kernel as the LXC can use your host's linux kernel. Also linux-firmware isn't needed for VM installs. And finally the absolute minimum needed for the most barebones of installs are `base`, `linux`, and `linux-firmware` (keeping in mind the previous notes, technically you only need `base` lol).
 
 ## Configuration
 
@@ -353,9 +355,11 @@ Most of our configuration will be done chrooted into the new installation. Let's
 # arch-chroot /mnt
 ```
 
-If you're using [swap on zram](#swap-on-zram), you can set this up now.
+Btw if you're using [swap on zram](#swap-on-zram), you can set this up now.
 
-#### Set the time zone
+#### Time... (we never have enough of it)
+
+Set the time zone first of all:
 
 ```sh
 # ln -sf /usr/share/zoneinfo/*US*/*Eastern* /etc/localtime
@@ -394,7 +398,7 @@ KEYMAP=*keymap*
 FONT=*ter-124n*
 ```
 
-Note that `terminus-font` is not installed by default, you will need to install it.
+Note that `terminus-font` (which provides the font in the example above) is not installed by default, you will need to install it.
 
 #### Hostname
 
@@ -402,7 +406,7 @@ Set the hostname by creating `/etc/hostname` and put your desired hostname in it
 
 <div class="info">
 
-**Note:** The hostname should be a unique, recognizable name. It must be no longer than 63 characters, and can only use alphanumeric characters and the hyphen (-). It can't start with a hyphen.
+**Note:** The hostname should be a unique, recognizable name. It must be no longer than 63 characters, and can only use alphanumeric characters and the hyphen (-). It can't start with a hyphen though.
 
 </div>
 
@@ -430,7 +434,7 @@ First, ensure sudo is installed (if you installed base-devel before, sudo will a
 
 <div class="warning">
 
-**WARNING:** Do NOT use a text editor on the sudoers file directly! *Always* use visudo to edit it! If the edited file has syntax errors, sudo will be **unusable**.
+**WARNING:** Do NOT use a text editor on the sudoers file directly! *Always* use visudo to edit it! Sudo really really hates your syntax errors so visudo is provided to check your edits for syntax errors.
 
 </div>
 
@@ -458,7 +462,7 @@ Finally, we can disable the root account:
 
 <div class="warning">
 
-**WARNING:** You may be locked out of the system if you forget your password. Additionally, booting into recovery mode will not work since it tries to log into the root account.
+**WARNING:** You may be locked out of the system if you forget your password.
 
 </div>
 
@@ -493,7 +497,7 @@ HOOKS=(... plymouth)
 
 <div class="info">
 
-**Note:** On KDE Plasma, the `plymouth-kcm` package allows you to easily change the Plymouth theme from System Settings. You can also download and apply new themes.
+**Note:** On KDE Plasma, the `plymouth-kcm` package allows you to easily change the Plymouth theme from System Settings. You can also download and apply new themes from there.
 
 </div>
 
@@ -504,10 +508,10 @@ I currently use KDE Plasma because it's epic. Other supported DEs can be found o
 To install a fully featured KDE Plasma session with my preferred KDE apps + Firefox as the web browser, run the following command:
 
 ```sh
-# pacman -S plasma-meta kde-system-meta plymouth-kcm baloo-widgets breeze5 dolphin-plugins ffmpegthumbs kdeconnect kdegraphics-thumbnailers kdenetwork-filesharing kimageformats kio-admin kio-extras kio-fuse kio-gdrive kwalletmanager phonon-qt6-vlc plasma5-integration qqc2-desktop-style icoutils iio-sensor-proxy libappindicator noto-fonts-emoji power-profiles-daemon qt6-imageformats thermald xdg-desktop-portal-gtk xsettingsd ark dragon elisa filelight gwenview k3b kamoso kate kcalc kcharselect kdenlive kdialog kfind konsole kphotoalbum krita kup kwalletmanager markdownpart okular svgpart firefox
+# pacman -S plasma-meta kde-system-meta plymouth-kcm baloo-widgets breeze5 dolphin-plugins ffmpegthumbs kdeconnect kdegraphics-thumbnailers kdenetwork-filesharing kimageformats kio-admin kio-extras kio-fuse kwalletmanager phonon-qt6-vlc plasma5-integration qqc2-desktop-style icoutils iio-sensor-proxy libappindicator noto-fonts-emoji power-profiles-daemon qt6-imageformats thermald xdg-desktop-portal-gtk xsettingsd ark digikam dragon elisa filelight gwenview k3b kamoso kate kcalc kcharselect kdenlive kdialog kfind konsole krita kup kwalletmanager markdownpart okular svgpart firefox
 ```
 
-You'll need the appropriate graphics drivers as well. See the table below for the needed packages in addition to `mesa`.
+You'll need the appropriate graphics drivers as well. See the table below for the needed packages in addition to `mesa` (which is a dependency of KWin and the Qt libraries so gets installed with Plasma).
 
 |GPU brand:|Required packages for Vulkan and hardware video acceleration:|
 |---|---|
@@ -530,7 +534,7 @@ Up until now, the system is unbootable. Let's fix that. I use [GRUB](https://wik
 
 <div class="info">
 
-**Note:** Linux support for Secure Boot is still fairly weak and setting up your installation for Secure Boot will be annoying so I recommend not doing that unless you like pain.
+**Note:** You can use Secure Boot with Linux however it takes some careful setup. Go to my [Secure Boot guide](/resources/using-secure-boot-on-arch/) and follow those instructions instead of this section.
 
 </div>
 
@@ -620,3 +624,5 @@ This document references MANY ArchWiki pages and a few manpages. Most of them we
 * [Intel graphics](https://wiki.archlinux.org/title/Intel_graphics)
 * [Hardware video acceleration](https://wiki.archlinux.org/title/Hardware_video_acceleration)
 * [Installing AUR packages](https://wiki.archlinux.org/title/Arch_User_Repository#Installing_and_upgrading_packages)
+
+congratulations on installing arch lol! You have just accomplished something most people will never ever do and you should be proud of that!

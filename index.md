@@ -77,7 +77,7 @@ This laptop has been in my family for a long time, and from 2022-2024 it was the
 
 In October 2024 this laptop was retired after I built the Redstone Computer. However, it's still used as a Minecraft server, and it works surprisingly well for that, despite how slow it was as a PC. I guess it's because I'm running Linux on it (Windows is unacceptable for servers), and there's no desktop environment either (being a server, management is done through web dashboards or the terminal).
 
-I mean the Minecraft server kinda died though so it's been shut down for a while. I don't want this to be a server forever so any server needs will probably be handled by either what's left of the Redstone Computer after I upgrade/replace it or a cheap mini PC, and then I'll turn this laptop into a Windows 7 nostalgia machine and hopefully give it back its original HDD.
+I mean the Mi![alt text](image.png)necraft server kinda died though so it's been shut down for a while. I don't want this to be a server forever so any server needs will probably be handled by either what's left of the Redstone Computer after I upgrade/replace it or a cheap mini PC, and then I'll turn this laptop into a Windows 7 nostalgia machine and hopefully give it back its original HDD.
 
 Specs:
 
@@ -131,7 +131,7 @@ Cool stuff I've made. Check my <a target="_blank" href="https://github.com/ejsno
 
 # Resources
 
-Documents I have here for future reference. Mainly guides for setting up Linux currently.
+Documents I have here for future reference. Mainly guides for setting up Linux currently. Just for the record this is for my own personal reference mostly and they're on here just because this is a convenient way of accessing them from anywhere. These mostly aren't general purpose guides; check official documentation (like the [ArchWiki](https://wiki.archlinux.org)) or other locations of good repute for those. ;)
 
 ## Linux stuff
 
@@ -140,9 +140,18 @@ Documents I have here for future reference. Mainly guides for setting up Linux c
 
 ### Arch Linux Installation
 
-**Last updated Jan 26, 2026**
+**Last updated Feb 25, 2026**
 <p style="margin-top: 0.5em">A guide to installing Arch Linux on a PC, but personalized. Based on the official installation guide and combining information from several other ArchWiki pages. Currently entirely complete. NOT a generic Arch install guide.</p>
 <p style="text-align: right"><a href="resources/archlinux-installation">View</a></p>
 </div>
+<div class="grid-item">
+
+### Using Secure Boot on Linux
+
+**Last updated Feb 25, 2026**
+<p style="margin-top: 0.5em">I recently set up Secure Boot on Twilight (my laptop) and the ArchWiki's documentation was a little confusing (partly because of having to support multiple bootloaders) so here's a more concise guide that only deals with GRUB.</p>
+<p style="text-align: right"><a href="resources/using-secure-boot-on-arch">View</a></p>
 </div>
+</div>
+
 </article>

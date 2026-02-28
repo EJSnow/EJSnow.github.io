@@ -27,14 +27,6 @@ The files are `shimx64.efi` and `mmx64.efi` and are located in `/usr/share/shim-
 # cp /usr/share/shim-signed/mmx64.efi /efi/EFI/arch/
 ```
 
-Then, create a boot entry that points to `shimx64.efi`:
-
-```sh
-# efibootmgr --unicode --disk /dev/sdX --part Y --create --label "Arch" --loader /EFI/arch/shimx64.efi
-```
-
-Replace the disk and partition number with the actual one for your ESP (on Twilight, the disk is `/dev/nvme0n1` and the ESP is partition 4).
-
 Now you need to create a Machine Owner Key (MOK) that will be enrolled using MokManager (mmx64.efi) and is used to sign the kernel and GRUB. These two commands will create an MOK you can use:
 
 ```sh
@@ -186,6 +178,14 @@ fi
 I copied my keys to the location you see in the script for easier access. Just remember where they are lol.
 
 Now, copy the `MOK.cer` file to your ESP. This is so MokManager can access it to enroll it.
+
+Finally, you need to create a boot entry for `shimx64.efi`. If you do this immediately after installing shim and before reinstalling GRUB, the entry will be overwritten and try to launch GRUB directly rather than going through shim.
+
+```sh
+# efibootmgr --unicode --disk /dev/sdX --part Y --create --label "Arch" --loader /EFI/arch/shimx64.efi
+```
+
+Replace the disk and partition number with the actual one for your ESP (on Twilight, the disk is `/dev/nvme0n1` and the ESP is partition 4).
 
 ## Enabling Secure Boot
 

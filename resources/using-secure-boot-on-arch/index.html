@@ -41,10 +41,6 @@
 <pre><code class="language-sh"># cp /usr/share/shim-signed/shimx64.efi /efi/EFI/arch/
 # cp /usr/share/shim-signed/mmx64.efi /efi/EFI/arch/
 </code></pre>
-<p>Then, create a boot entry that points to <code>shimx64.efi</code>:</p>
-<pre><code class="language-sh"># efibootmgr --unicode --disk /dev/sdX --part Y --create --label &quot;Arch&quot; --loader /EFI/arch/shimx64.efi
-</code></pre>
-<p>Replace the disk and partition number with the actual one for your ESP (on Twilight, the disk is <code>/dev/nvme0n1</code> and the ESP is partition 4).</p>
 <p>Now you need to create a Machine Owner Key (MOK) that will be enrolled using MokManager (mmx64.efi) and is used to sign the kernel and GRUB. These two commands will create an MOK you can use:</p>
 <pre><code class="language-sh">$ openssl req -newkey rsa:2048 -nodes -keyout MOK.key -new -x509 -sha256 -days 3650 -subj &quot;/CN=your MOK/&quot; -out MOK.crt
 $ openssl x509 -outform DER -in MOK.crt -out MOK.cer
@@ -174,6 +170,10 @@ fi
 </code></pre>
 <p>I copied my keys to the location you see in the script for easier access. Just remember where they are lol.</p>
 <p>Now, copy the <code>MOK.cer</code> file to your ESP. This is so MokManager can access it to enroll it.</p>
+<p>Finally, you need to create a boot entry for <code>shimx64.efi</code>. If you do this immediately after installing shim and before reinstalling GRUB, the entry will be overwritten and try to launch GRUB directly rather than going through shim.</p>
+<pre><code class="language-sh"># efibootmgr --unicode --disk /dev/sdX --part Y --create --label &quot;Arch&quot; --loader /EFI/arch/shimx64.efi
+</code></pre>
+<p>Replace the disk and partition number with the actual one for your ESP (on Twilight, the disk is <code>/dev/nvme0n1</code> and the ESP is partition 4).</p>
 <h2 id="enabling-secure-boot" tabindex="-1">Enabling Secure Boot</h2>
 <p>Reboot into UEFI setup and enable Secure Boot (often found under &quot;Security&quot;). Save and exit setup. When shim doesn't find the key GRUB is signed with it'll launch MokManager. Select <em>Enroll key from disk</em>, locate the <code>MOK.cer</code> file and enroll it. Then select <em>Continue boot</em> and GRUB should load and boot Linux like normal.</p>
 <p><img src="/images/twilight-secure-booted.jpg" alt="A screenshot of Twilight's desktop showing Secure Boot is enabled"></p>

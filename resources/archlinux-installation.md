@@ -289,7 +289,7 @@ First, you need to load the `zram` module at boot. Create a file named `/etc/mod
 zram
 ```
 
-Now create a udev rule to create a zram device. Make a file named `/etc/udev/rules.d/99-zram-swap.conf` with the following contents:
+Now create a udev rule to create a zram device. Make a file named `/etc/udev/rules.d/99-zram-swap.rules` with the following contents:
 
 ```
 ACTION=="add", KERNEL=="zram0", ATTR{initstate}=="0", ATTR{comp_algorithm}="zstd", ATTR{disksize}="*4G*", TAG+="systemd"

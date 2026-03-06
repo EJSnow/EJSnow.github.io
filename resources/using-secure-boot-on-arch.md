@@ -2,9 +2,15 @@
 layout: page.html
 title: Using Secure Boot on Arch
 created: Feb 25, 2026
-lastUpdated: Feb 25, 2026
+lastUpdated: Mar 4, 2026
 toc: true
 ---
+
+## Update (Mar 4, 2026)
+
+About a week after I wrote this guide I had the brilliant idea to switch to systemd-boot and also reconfigure my system to boot from a unified kernel image (UKI). This actually greatly simplified the process of encrypting the root partition since the UKI gets placed on the ESP after being assembled, thus I didn't need to worry about the bootloader being able to access `/boot` since the UKI is on the ESP (which is where the bootloader is installed to as well). I also worked up enough courage to directly modify the Secure Boot database so I could eliminate shim from my setup. So for my purposes at least, this guide is no longer relevant. But I'm leaving it up in the hope someone else finds it useful. :)
+
+## Introduction
 
 Welp guess what? Last week I set up Secure Boot on Twilight, my laptop. It works pretty much fine, the only real issue I had was a skill issue and the documentation on the ArchWiki being kinda messy and spread across a few different pages. This page is supposed to fix that issue at least for GRUB users.
 
@@ -12,13 +18,13 @@ Its always slightly bothered me that my systems (especially my laptop) aren't re
 
 ## Preliminaries
 
-So the first thing to consider was how exactly I was going to make my installation Secure Boot compatible. The ArchWiki's page on [Secure Boot](https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface/Secure_Boot#Implementing_Secure_Boot) outlines two main approaches: Using your own keys directly (enrolling them in the UEFI Secure Boot database) or using a chain loader that loads your real bootloader signed with Microsoft's 3rd party UEFI CA keys (that are already enrolled in the UEFI Secure Boot database by default).
+So the first thing to consider was how exactly I was going to make my installation Secure Boot compatible. The ArchWiki's page on [Secure Boot](https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface/Secure_Boot#Implementing_Secure_Boot) outlines two main approaches: Using your own keys directly (enrolling them in the UEFI Secure Boot database) or using a chain loader signed with Microsoft's 3rd party UEFI CA key (already enrolled in most PCs' Secure Boot databases) that validates your real bootloader via a machine owner key (MOK) or its SHA256 hash.
 
-I chose the second approach, since while reading through the instructions for the first approach, I realized that messing around with the firmware's Secure Boot database is serious stuff; you can actually brick your PC if you don't do the key enrollment process right. The second approach doesn't directly modify the Secure Boot database, instead, it uses an intermediary chain loader that's already signed with Microsoft's keys mentioned above and that chain loader is responsible for verifying the authenticity and loading of your actual bootloader and OS. This latter option is actually used to great effect by several major distros and thus seemed like the best option overall, not to mention there's pretty much no risk of accidentally bricking my PC.
+I chose the second approach simply because at the time it seemed simpler and the first approach has big red warnings all over the place saying that if you mess up you can actually soft-brick your PC. However if you do get it to work the first approach is way more elegant (it doesn't require an extra chainloader so less confusion with EFI boot entries).
 
 ## Initial setup
 
-So the first thing to do is get shim, the chainloader I'm using. It's available in the AUR as [`shim-signed`](https://aur.archlinux.org/packages/shim-signed). Then, the shim and MokManager binaries from that package need to be copied to the ESP. I'm going to put the files in /EFI/arch on my ESP (this is actually the default location for GRUB on Arch Linux when no `bootloader-id` is given to `grub-install`).
+So the first thing to do is get shim, a chainloader used by multiple well-known distros for Secure Boot support. It's available in the AUR as [`shim-signed`](https://aur.archlinux.org/packages/shim-signed). Then, the shim and MokManager binaries from that package need to be copied to the ESP. I'm going to put the files in /EFI/arch on my ESP (this is actually the default location for GRUB on Arch Linux when no `bootloader-id` is given to `grub-install`).
 
 The files are `shimx64.efi` and `mmx64.efi` and are located in `/usr/share/shim-signed`. For command-line lovers, here are the commands to copy the files:
 
@@ -27,22 +33,22 @@ The files are `shimx64.efi` and `mmx64.efi` and are located in `/usr/share/shim-
 # cp /usr/share/shim-signed/mmx64.efi /efi/EFI/arch/
 ```
 
-Now you need to create a Machine Owner Key (MOK) that will be enrolled using MokManager (mmx64.efi) and is used to sign the kernel and GRUB. These two commands will create an MOK you can use:
+Now you need to create a machine owner key (MOK) that will be enrolled using MokManager (mmx64.efi) and is used to sign the kernel and GRUB. These two commands will create an MOK you can use:
 
 ```sh
 $ openssl req -newkey rsa:2048 -nodes -keyout MOK.key -new -x509 -sha256 -days 3650 -subj "/CN=your MOK/" -out MOK.crt
 $ openssl x509 -outform DER -in MOK.crt -out MOK.cer
 ```
 
-The MOK.key file is the private key used to sign the kernel and GRUB; MOK.crt is a certificate for sbsign (which we'll use to sign the kernel and GRUB) and MOK.cer is a different format of the certificate that is enrolled in MokManager.
+The MOK.key file is the private key used to sign the kernel and GRUB; MOK.crt is the certificate tied to the key used in signing GRUB and the kernel and MOK.cer is a different format of the certificate that shim/MokManager use for verification.
 
-Don't share the MOK.key file with **anyone** and probably don't share the certificates either.
+Note: MOK.key should **not** be shared with anyone.
 
 ## Configuring GRUB
 
-GRUB out of the box will not be very Secure Boot compliant. It stores its modules in separate files and dynamically loads them at boot; with this approach we can't do that so instead all the modules necessary to boot must be embedded in GRUB's main EFI binary, grubx64.efi. Also, grubx64.efi needs a Secure Boot Advanced Targeting (SBAT) section embedded in it as well which includes information about the binary, and is required in order for shim to load it. There's a sample SBAT file included in `/usr/share/grub/sbat.csv` and it will serve our purposes.
+GRUB out of the box will not be very Secure Boot compliant. It stores its modules in separate files and dynamically loads them at boot; with this approach we can't do that so instead all the modules necessary to boot must be embedded in GRUB's main EFI binary, grubx64.efi. Shim also requires that the binary has a Secure Boot Advanced Targeting (SBAT) section in it (which it uses to prevent versions of GRUB with known vulnerabilities from loading even if they otherwise pass the checks). GRUB provides one at `/usr/share/grub/sbat.csv` that we can use.
 
-We'll set the list of modules GRUB needs as a shell variable to ease our pain when typing out the install command. I apologize in advance for the extremely long list which is taken from Ubuntu's build script.
+We'll set the list of modules GRUB needs as a shell variable to ease our pain when typing out the install command. I apologize in advance for the extremely long list (which is taken from Ubuntu's build script).
 
 ```sh
 GRUB_MODULES="
@@ -139,11 +145,13 @@ GRUB_MODULES="
 	"
 ```
 
-Okay, now we can install GRUB with all the modules embedded.
+Okay, now we can reinstall GRUB.
 
 ```sh
 # grub-install --target=x86_64-efi --efi-directory=/efi --boot-directory=/efi --modules="${GRUB_MODULES}" --sbat /usr/share/grub/sbat.csv
 ```
+
+This version of GRUB has all its modules embedded in the EFI binary as well as the SBAT section shim requires. Fun fact: Shim seems to be the only software that actually implements SBAT. Almost no UEFI firmware actually does SBAT verification.
 
 ## Signing GRUB and the kernel
 
@@ -189,11 +197,11 @@ Replace the disk and partition number with the actual one for your ESP (on Twili
 
 ## Enabling Secure Boot
 
-Reboot into UEFI setup and enable Secure Boot (often found under "Security"). Save and exit setup. When shim doesn't find the key GRUB is signed with it'll launch MokManager. Select *Enroll key from disk*, locate the `MOK.cer` file and enroll it. Then select *Continue boot* and GRUB should load and boot Linux like normal.
+Reboot into UEFI setup and enable Secure Boot (often found under "Security"). Save and exit setup. When shim doesn't find the key GRUB is signed with it'll launch MokManager which will throw a security violation. Select *OK* then *Enroll key from disk*. Locate the `MOK.cer` file and enroll it. Once enrolled, select *Reset* and the system should boot like normal.
 
 ![A screenshot of Twilight's desktop showing Secure Boot is enabled](/images/twilight-secure-booted.jpg)
 
-And that's it! There's an additional script and Pacman hook to automate the signing of GRUB below, but I don't consider them to be that useful since GRUB is not updated often. Still nice to know that it's taken care of when GRUB **does** update.
+And that's it! There's an additional script and Pacman hook to automate the signing of GRUB below, but I don't consider them to be that useful since GRUB isn't updated very often. Still nice to know that it's taken care of when GRUB **does** update.
 
 ## Additional scripts
 

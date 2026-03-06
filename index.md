@@ -121,7 +121,7 @@ Cool stuff I've made. Check my <a target="_blank" href="https://github.com/ejsno
 
 **Created Jan 7, 2026**
 
-<p style="margin: 0.5em 0 0">My preferred Linux setup on KDE Plasma. Wallpapers/panel layout not included.</p>
+<p style="margin: 0.5em 0 0">My configs for KDE Plasma on Arch Linux. Wallpapers/panel layout not included.</p>
 <p style="text-align: right"><a href="https://github.com/ejsnow/dotfiles">Github repo ↗</a>
 </div>
 </div>
@@ -135,23 +135,21 @@ Documents I have here for future reference. Mainly guides for setting up Linux c
 
 ## Linux stuff
 
-<div class="grid-container">
-<div class="grid-item">
+<section>
 
-### Arch Linux Installation
+### Arch Linux Installation (including LUKS encryption with TPM2 and Secure Boot)
 
-**Last updated Feb 25, 2026**
-<p style="margin-top: 0.5em">A guide to installing Arch Linux on a PC, but personalized. Based on the official installation guide and combining information from several other ArchWiki pages. Currently entirely complete. NOT a generic Arch install guide.</p>
+**Last updated Mar 6, 2026**
+<p style="margin-top: 0.5em">A guide documenting my preferred route for installing Arch Linux, including full disk encryption and Secure Boot support. Mostly just in case I ever have to do a full reinstall or I'm setting up a new PC.</p>
 <p style="text-align: right"><a href="resources/archlinux-installation">View</a></p>
-</div>
-<div class="grid-item">
+</section>
+<section>
 
-### Using Secure Boot on Linux
+### Using Secure Boot on Linux with GRUB
 
-**Last updated Feb 25, 2026**
-<p style="margin-top: 0.5em">I recently set up Secure Boot on Twilight (my laptop) and the ArchWiki's documentation was a little confusing (partly because of having to support multiple bootloaders) so here's a more concise guide that only deals with GRUB.</p>
+**Last updated Mar 4, 2026**
+<p style="margin-top: 0.5em">I recently set up Secure Boot on Twilight (my laptop) and the ArchWiki's documentation was a little confusing so here's a more concise guide that only deals with GRUB. NOTE: I actually switched to systemd-boot but I'm leaving this here in the hopes that this is somewhat useful to someone else :)</p>
 <p style="text-align: right"><a href="resources/using-secure-boot-on-arch">View</a></p>
-</div>
-</div>
+</section>
 
 </article>

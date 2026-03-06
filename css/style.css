@@ -64,6 +64,11 @@ pre, code {
 	font-size: 10pt;
 	line-height: 1.3;
 }
+.content table {
+	font: 1rem/1.6 "EB Garamond", serif;
+	table-layout: auto;
+	width: 100%;
+}
 
 /* Images */
 #main img {
@@ -188,24 +193,6 @@ figure {
 	margin: 1em 0;
 }
 
-/* Callout boxen */
-div.warning, div.info {
-	padding: 0.3em;
-	margin-bottom: 1em;
-}
-div.warning {
-	background-color: #bf616aa0;
-	border: 1px solid #bf2938;
-}
-div.info {
-	background-color: #88c0d0a0;
-	border: 1px solid #4bb3d0;
-}
-div.warning p, div.info p {
-	margin: 0;
-	line-height: 1.3;
-}
-
 /* Tables AHHHH */
 table {
 	margin-bottom: 1em;
@@ -215,6 +202,14 @@ table {
 /* Dark Mode                                                 */
 /*************************************************************/
 
+/* Fix tables */
+table {
+	border: 1px solid #d7d7d7;
+}
+table > tbody > tr > * {
+	border-right: none !important;
+	border: 1px solid #d7d7d7;
+}
 /* Hopefully everything can be in one query */
 @media (prefers-color-scheme: dark) {
 	html {
@@ -240,5 +235,19 @@ table {
 	}
 	menu[role="tablist"] button {
 		color: #f0f0f0;
+	}
+	div.info {
+		background-color: #81a1c190;
+	}
+	table {
+		background-color: var(--w7-surface);
+		border: 1px solid var(--w7-el-bd);
+	}
+	table > thead > tr > * {
+		background: linear-gradient(180deg, var(--w7-el-bg) 45%, var(--w7-el-bg-s-1) 0, var(--w7-el-bg-s-2));
+		border: 1px solid var(--w7-el-bd);
+	}
+	table > tbody > tr > * {
+		border: 1px solid var(--w7-el-bd);
 	}
 }

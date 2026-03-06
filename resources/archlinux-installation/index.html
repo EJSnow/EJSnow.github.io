@@ -23,336 +23,87 @@
         <article role="tabpanel">
           <a id="top" href="/">← 🏡 Home</a>
           <h1>Arch Linux Installation</h1>
-          <pre><code>#include metadata.h<br>// Created Jan 31, 2026<br>// Last updated Feb 25, 2026</code></pre>
+          <pre><code>#include metadata.h<br>// Created Jan 31, 2026<br>// Last updated Mar 6, 2026</code></pre>
           
           <details id="toc">
             <summary>Table of Contents</summary>
             <ul id="toc-contents"></ul>
           </details>
           
-          <p><strong>Important:</strong> This is my own personalized installation guide for personal use. I do not recommend following this if you aren't me. Usually, you'll want to follow the <a href="https://wiki.archlinux.org/title/Installation_guide">official installation</a> guide instead. Note that instructions here may be out of date and/or I might have made a little mistake (it happens lol). Best to reference the ArchWiki. (Realistically I'm probably not going to use this that much but it's a good idea to fully document my installation procedures anyway.)</p>
+          <p><strong>Important:</strong> This is my own personalized installation guide for personal use. I do not recommend following this if you aren't me. Use the <a href="https://wiki.archlinux.org/title/Installation_guide">official installation</a> guide instead.</p>
+<p>This setup implements Secure Boot and full disk encryption with automated unlocking provided by the TPM2. The system boots from a signed unified kernel image (UKI) to eliminate complex bootloader configuration (the UKI is stored on the ESP and has the kernel command line embedded).</p>
 <h2 id="warming-up" tabindex="-1">Warming up</h2>
-<p>First off, there are a few formatting conventions in the command snippets below. Text enclosed in asterisks (<code>*Like this*</code>) is a placeholder that should be changed as needed (for example, a reference to a block device like <code>/dev/sda</code>). Commands prefixed with a dollar sign (<code>$</code>) should be run as a normal (non-root) user, while commands prefixed with a hashtag or pound sign (<code>#</code>) have to be run as root. Also, in the network connection section, the commands that are run inside <code>iwctl</code>'s shell are prefixed with <code>[iwd]#</code>.</p>
-<h3 id="basic-requirements" tabindex="-1">Basic requirements</h3>
-<p>Generally, Arch Linux requires a few things:</p>
-<ul>
-<li>An x86_64 PC</li>
-<li>1GiB of RAM</li>
-<li>At least 5GiB of storage space (15-20GiB or higher is recommended)</li>
-<li>A stable internet connection during installation (Ethernet recommended)</li>
-</ul>
-<p>If you're going to dual-boot Windows and Linux, see this ArchWiki <a href="https://wiki.archlinux.org/title/Dual_boot_with_Windows">page</a>, as it has a lot of VERY useful information that will save you MANY headaches. I'll add this as well: DON'T try to share a Steam library between Windows and Linux, EVER. It's EXTREMELY unreliable, it works once in a blue moon and once it breaks it will NEVER work EVER again.</p>
-<h3 id="creating-installation-media" tabindex="-1">Creating installation media</h3>
-<p>First, download the Arch Linux ISO from the <a href="https://archlinux.org/download">download</a> page. After you've downloaded your ISO, verify the integrity of your copy with the instructions under <a href="https://archlinux.org/download#checksums">Checksums and signatures</a> on the download page.</p>
-<p>GPG signature verification can be done easily from an existing Arch install like this:</p>
-<pre><code class="language-sh">$ pacman-key -v archlinux-*version*-x86_64.iso.sig
-</code></pre>
-<p>The ISO can now be written to an installation medium. We all know USB thumb drives are the only relevant media type nowadays, so I'm only going to cover that method.</p>
-<h4 id="ventoy" tabindex="-1">Ventoy</h4>
-<p>I personally prefer to use <a href="https://ventoy.net">Ventoy</a>. It allows you to copy multiple ISOs to a thumb drive as-is, and then select which one to boot from a menu. Once you set it up on your thumb drive, it's as easy as copying the Arch Linux ISO to the thumb drive, then booting from it and selecting the Arch ISO in the menu. Ventoy even lets you browse drives attached to your PC for an ISO to boot, which is <em>super</em> epic.</p>
-<h4 id="writing-to-a-thumb-drive-directly-(can-be-useful-sometimes)" tabindex="-1">Writing to a thumb drive directly (can be useful sometimes)</h4>
-<p>On Linux, use these instructions.</p>
-<ol>
-<li>Find the name of your USB device:</li>
-</ol>
-<pre><code class="language-sh"># ls -l /dev/disk/by-id/usb-*
-</code></pre>
-<ol start="2">
-<li>Now, check whether it's mounted.</li>
-</ol>
-<pre><code class="language-sh"># lsblk
-</code></pre>
-<ol start="3">
-<li>If it's mounted, unmount it.</li>
-</ol>
-<pre><code class="language-sh"># umount */usb/mountpoint*
-</code></pre>
-<ol start="4">
-<li>Now, write the ISO to your thumb drive.</li>
-</ol>
-<pre><code class="language-sh"># cp */path/to/*archlinux-*version*-x86_64.iso /dev/disk/by-id/usb-*My_flash_drive*
-</code></pre>
-<div class="warning">
-<p>NOTE: THIS WILL ERASE ALL DATA from your thumb drive.</p>
-</div>
-<ol start="5">
-<li>Ensure the image is written fully.</li>
-</ol>
-<pre><code class="language-sh"># sync
-</code></pre>
-<p>There are various GUI utilities that can do this as well. On Windows, <a href="https://rufus.ie/en">Rufus</a> is the best program to use. On Linux, I like KDE's ISO Image Writer, which is extremely simple and also works. And if you feel like being weird, you can use <a href="https://play.google.com/store/apps/details?id=eu.depau.etchdroid">EtchDroid</a> to do this on any Android device. It doesn't even need root.</p>
-<div class="info">
-<p><strong>Note for Windows users using Rufus</strong>: If your installer doesn't boot after writing the ISO with the default ISO image mode in Rufus, try using DD image mode instead. Assuming the partition scheme is set to GPT, Rufus will ask you which mode to use after clicking <em>START</em>.</p>
-</div>
-<h2 id="pre-installation" tabindex="-1">Pre-installation</h2>
-<div class="info">
-<p><strong>Note:</strong> The Arch Linux ISO doesn't support Secure Boot so make sure it's disabled before booting it. You <em>can</em> set up your full installation to support Secure Boot however.</p>
-</div>
-<p>Plug the thumb drive containing your Arch ISO to your computer, then boot from it. To do this, turn on the PC, then press the one-time boot menu key. Dell and Lenovo PCs use F12. Select your thumb drive and press Enter. If you're using a Ventoy drive, select the Arch Linux ISO from the Ventoy menu, then &quot;Boot in normal mode&quot;, which will boot the ISO. Once it boots up, you'll be logged into the root acount. Your screen should look like this:</p>
-<p><img src="/images/arch-installer.png" alt="The Arch Linux installer"></p>
-<h3 id="setting-the-console-font" tabindex="-1">Setting the console font</h3>
-<p>If necessary, change the console font to a larger one. The kernel will try to detect HiDPI screens and set a larger terminal font as needed, but sometimes you'll need to set a larger font manually:</p>
-<pre><code class="language-sh"># setfont *ter-124n*
-</code></pre>
-<p>You can see all available fonts by listing the contents of <code>/usr/share/kbd/consolefonts/</code>.</p>
-<h3 id="connecting-to-the-internet" tabindex="-1">Connecting to the internet</h3>
-<p>First ensure your network adapter is detected and enabled.</p>
-<pre><code class="language-sh"># ip link
-</code></pre>
-<p>Then, if using Ethernet, plug in an Ethernet cable if you haven't done so already. If using Wi-Fi, follow these instructions to connect to your Wi-Fi network.</p>
-<ol>
-<li>Check that the adapter isn't blocked with <code>rfkill</code>.</li>
-<li>Run <code>iwctl</code>.</li>
-<li>List devices, to determine your adapter's name.</li>
-</ol>
-<pre><code>[iwd]# device list
-</code></pre>
-<ol start="4">
-<li>If your adapter isn't already on, turn it on.</li>
-</ol>
-<pre><code>[iwd]# device *name* set-property Powered on
-[iwd]# adapter *adapter* set-property Powered on
-</code></pre>
-<ol start="5">
-<li>Now you can scan for available networks.</li>
-</ol>
-<pre><code>[iwd]# station *name* scan
-[iwd]# station *name* get-networks
-</code></pre>
-<ol start="6">
-<li>Now, connect to your network.</li>
-</ol>
-<pre><code>[iwd]# station *name* connect {SSID}
-</code></pre>
-<ol start="7">
-<li>Alternatively, if your network is hidden.</li>
-</ol>
-<pre><code>[iwd]# station *name* connect-hidden {SSID}
-</code></pre>
-<p>If the network is secured with a password, you'll be prompted to enter it when you connect.</p>
-<p>Now, verify you have internet access.</p>
-<pre><code class="language-sh"># ping ping.archlinux.org
-</code></pre>
-<p>The live environment will automagically sync the system clock once you're on the Internet. Run <code>timedatectl</code> to ensure this has occurred. There should be a line saying <code>System time synchronized: Yes</code> in its output. If the system time is inaccurate, you'll run into issues while downloading packages.</p>
-<h3 id="partitioning" tabindex="-1">Partitioning</h3>
-<p>We've arrived at the destructive parts now, how wonderful! As long as you follow appropriate precautions (take backups, carefully review what you're doing, don't do this sleep-deprived at 2AM) you shouldn't mess anything up.</p>
-<h4 id="creating-partitions" tabindex="-1">Creating partitions</h4>
-<p>Your system disk will most likely need to be reformatted for Arch Linux. The exact partition layout depends on how many OSes you're multi-booting and how much you value your sanity. If you've previously partitioned your drive you can skip this step.</p>
-<p>The live environment should automagically detect your disks on bootup. Use either lsblk or fdisk to identify them.</p>
-<pre><code class="language-sh"># fdisk -l
-</code></pre>
-<p>Anything ending in <code>rom</code>, <code>loop</code>, or <code>airootfs</code> can be ignored. Same goes for <code>mmcblk*</code> devices ending in <code>rpbm</code>, <code>boot0</code>, and <code>boot1</code>.</p>
-<div class="info">
-<p><strong>Note:</strong> If you can't see your disks, ensure your SATA or NVMe controller is *not* in RAID mode.</p>
-</div>
-<p>At the very least, for UEFI boot, you'll need these partitions:</p>
-<ul>
-<li>An EFI system partition (ESP)</li>
-<li>A partition for the root directory (<code>/</code>)</li>
-</ul>
-<p>Use a partitioning tool to partition your drive. These examples use fdisk. To launch fdisk on the target disk:</p>
-<pre><code class="language-sh"># fdisk /dev/*sda*
-</code></pre>
-<p>Below is my preferred partitioning scheme. I prefer not to use a dedicated swap partition. I either use swap on zram or a swap file on the root partition. Swap on zram gets rid of the need for a fixed swap size, and a swap file is a lot easier to resize than a dedicated swap partition.</p>
+<p><a href="https://archlinux.org/download">Download the latest ISO</a> and follow the instructions on that page to verify it. Then put it on a USB drive to boot it either using <a href="https://ventoy.net/">Ventoy</a> or by writing it directly to the USB drive (see the <a href="https://wiki.archlinux.org/title/USB_flash_installation_medium">relevant Arch</a>Wiki page for more info).</p>
+<p>Boot the installation media. After it boots up, you'll be greeted by the ArchISO prompt:<img src="/images/arch-installer.png" alt="The Arch Linux installer"> The Arch Linux ISO doesn't support Secure Boot, so it must be disabled before booting it.</p>
+<p>Set the console font if necessary (for example on not-quite-HiDPI laptop screens) and ensure you have Internet access as described in the <a href="https://wiki.archlinux.org/title/Installation_guide#Connect_to_the_internet">installation guide</a>.</p>
+<h2 id="partitioning" tabindex="-1">Partitioning</h2>
+<p>See the <a href="https://wiki.archlinux.org/title/Installation_guide#Partition_the_disks">installation guide</a> and <a href="https://wiki.archlinux.org/title/Partitioning#Partition_scheme">Partitioning#Partition scheme</a> for more details.</p>
+<p>Below is my preferred partitioning scheme (GPT/UEFI). I use swap on zram and a larger swap file for hibernation (if hibernation is desired). Also note that for an NVME drive the partitions will be <code>/dev/nvme0n1p1</code> for the ESP and <code>/dev/nvme0n1p2</code> for the root partition. I honestly don't put too much stock in the partition numbers though since they often end up being completely different due to dual-booting shenaniganery. Use <code>lsblk</code> to ensure you've got the partitions straight :)</p>
 <table>
 <thead>
 <tr>
 <th>Mount point</th>
 <th>Partition</th>
-<th>Partition type</th>
+<th>Partition type GUID</th>
 <th>Suggested size</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>/efi</code></td>
-<td><code>/dev/*esp*</code></td>
-<td>EFI system partition</td>
-<td>250MiB</td>
+<td><code>/dev/sda1</code></td>
+<td><code>C12A7328-F81F-11D2-BA4B-00A0C93EC93B</code>: EFI system partition (<code>uefi</code> alias in fdisk)</td>
+<td>250MiB-1GiB</td>
 </tr>
 <tr>
 <td><code>/</code></td>
-<td><code>/dev/*root*</code></td>
-<td>Linux x86_64 root</td>
-<td>Remainder of the drive. Should be at least 15GiB.</td>
+<td><code>/dev/sda2</code></td>
+<td><code>4F68BCE3-E8CD-4DB1-96E7-FBCAF984B709</code>: Linux x86_64 root</td>
+<td>Remainder of the drive.</td>
 </tr>
 </tbody>
 </table>
-<div class="info">
-<p><strong>Note:</strong> When using <code>/efi</code> as the mount point for the ESP, the partition containing <code>/boot</code> has to use a filesystem supported by the bootloader (e.g. GRUB). If you're just using Ext4 for the root partition, it should be fine to use this layout as-is, but with Btrfs or other more exotic filesystems that aren't supported by most bootloaders, you'll need to make an additional partition, 1GiB in size, formatted as FAT32 or Ext4, and mounted at <code>/boot</code>.</p>
-</div>
-<p>In fdisk, enter <code>g</code> to create a new GPT partition table.</p>
-<p>Then enter <code>n</code> to create a new partition. You'll have to provide:</p>
-<ul>
-<li>A partition number (automatic assignment will work, but remember the numbers!)</li>
-<li>A starting sector (has to be an absolute sector number. The automatic selection places it as close to the start of the disk as possible.)</li>
-<li>An ending sector. This can be an absolute sector number, or a partition size in kibibytes (K), mebibytes (M), gibibytes (G), and so on. For example, to set the partition size to 250MiB, enter <code>+250M</code> for the size. If no size is specified the largest contiguous block of unallocated space after the starting sector will be filled.</li>
-</ul>
-<p>After creating the ESP, you need to change its type. Enter <code>t</code>, select your ESP if prompted, and enter <code>uefi</code> for the type.</p>
-<p>Enter <code>p</code> to review the layout. Once you're happy, enter <code>w</code> to apply the changes and quit fdisk. You can also quit fdisk without applying any changes by entering <code>q</code>.</p>
-<div class="warning">
-<p><strong>WARNING:</strong> All data on the target drive will be <strong>erased</strong> at this point. Make sure any important data is backed up to an external location!</p>
-</div>
-<h4 id="formatting-the-partitions" tabindex="-1">Formatting the partitions</h4>
-<p>Once you've created your partitions, they must be formatted. For a basic UEFI setup, the root partition will probably be <code>/dev/sda2</code> or <code>/dev/nvme0n1p2, and the ESP will probably be </code>/dev/sda1<code>or</code>/dev/nvme0n1p1`.</p>
-<p>The root partition can be formatted with several different filesystems, but a good default choice is Ext4. To format it as Ext4, use the following command:</p>
-<pre><code class="language-sh"># mkfs.ext4 -L &quot;*label*&quot; /dev/*root_partition*
+<p>Create the partitions using, e.g, <a href="https://wiki.archlinux.org/title/Fdisk">fdisk</a>. Obviously <strong>all data on the drive will be erased</strong> so take appropriate precautions.</p>
+<p>The root partition can be <a href="https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system#LUKS_on_a_partition_with_TPM2_and_Secure_Boot">encrypted</a> now using LUKS2. After booting into the new installation you can enroll your TPM2, generate a secure recovery key, and erase the password you create here.</p>
+<pre><code class="language-sh"># cryptsetup luksFormat /dev/sda2
+# cryptsetup open /dev/sda2 root
 </code></pre>
-<p>The label can be anything you want, I generally put &quot;Arch Linux&quot; or &quot;Arch Root&quot;</p>
-<p>The ESP has to be formatted as FAT32:</p>
-<div class="warning">
-<p><strong>WARNING:</strong> If you're multi-booting and re-using an existing ESP (no please don't at least not with Windows), do NOT reformat it, as this will leave other OSes unbootable.</p>
-</div>
-<pre><code class="language-sh"># mkfs.fat -F 32 -n &quot;*label*&quot; /dev/*esp*
+<p>Now the unlocked root partition can be formatted as ext4 (although other filesystems can be used).</p>
+<pre><code class="language-sh"># mkfs.ext4 -L &quot;Arch Linux&quot; /dev/mapper/root
 </code></pre>
-<p>FAT32 has notable limitations on the label; it can only be 16 alphanumeric characters, and letters must be capitalized. My usual label is &quot;ARCHEFI&quot; or just &quot;EFI&quot;.</p>
-<div class="warning">
-<p><strong>WARNING:</strong> All data on the target partitions will be <strong>erased</strong>! I know this seems a <em>little</em> pointless after having re-partitioned your drive, but this is more to get through to your sleep-deprived 2AM brain that you NEED TO GO TO SLEEP AND DO THIS WHEN YOU'RE NOT SLEEP DEPRIVED.</p>
-</div>
-<h3 id="mounting-partitions-and-swap-creation" tabindex="-1">Mounting partitions and swap creation</h3>
-<p>Mount the root partition to /mnt:</p>
-<pre><code class="language-sh"># mount /dev/*root_partition* /mnt
+<p>The ESP has to be formatted as FAT32, unless re-using an existing one, then don't format it.</p>
+<pre><code class="language-sh"># mkfs.fat -F 32 -n &quot;EFI&quot; /dev/sda1
 </code></pre>
-<p>Mount the ESP to /mnt/efi:</p>
-<pre><code class="language-sh"># mount --mkdir /dev/*esp* /mnt/efi
-</code></pre>
-<p>Mount any other partitions as needed.</p>
-<p>Now is as good a time as any to create a swap space. Follow the instructions under the respective heading depending on whether you want to use a <a href="https://wiki.archlinux.org/title/Swap#Swap_file">swap file</a> or <a href="https://wiki.archlinux.org/title/Zram#Usage_as_swap">swap on zram</a>. If you're planning on using <a href="https://wiki.archlinux.org/title/Power_management/Suspend_and_hibernate#Hibernation">hibernation</a>, read <a href="#hibernation-(optional)">this section</a> below for things you should take into account.</p>
-<h4 id="swap-file" tabindex="-1">Swap file</h4>
-<p>First create a swap file on the root partition:</p>
-<pre><code class="language-sh"># mkswap -U clear --size *2G* --file /mnt/swapfile
-</code></pre>
-<p>Alter the size if necessary. Then activate the swap file:</p>
-<pre><code class="language-sh"># swapon /mnt/swapfile
-</code></pre>
-<p>Later, <code>genfstab</code> will detect it and add an appropriate fstab entry.</p>
-<h4 id="swap-on-zram" tabindex="-1">Swap on zram</h4>
-<p>This is a little more complicated. You can enable it in the installer and presumably genfstab would detect it and add at least the fstab entry but that alone isn't enough for it to work right away. In order to enable swap on zram on boot, you need a udev rule to create a zram device, and an fstab entry to use it as swap space. Not to mention it's best to disable zswap when using swap on zram.</p>
-<p>So this part is best done in the chroot, after the base system is installed. And it won't take effect until after a reboot.</p>
-<p>Note that I'm assuming you're doing this in chroot so the paths are typical.</p>
-<p>First, you need to load the <code>zram</code> module at boot. Create a file named <code>/etc/modules-load.d/zram.conf</code> with the following contents:</p>
-<pre><code>zram
-</code></pre>
-<p>Now create a udev rule to create a zram device. Make a file named <code>/etc/udev/rules.d/99-zram-swap.rules</code> with the following contents:</p>
-<pre><code>ACTION==&quot;add&quot;, KERNEL==&quot;zram0&quot;, ATTR{initstate}==&quot;0&quot;, ATTR{comp_algorithm}=&quot;zstd&quot;, ATTR{disksize}=&quot;*4G*&quot;, TAG+=&quot;systemd&quot;
-</code></pre>
-<p>Finally, add an fstab entry in <code>/etc/fstab</code>:</p>
-<pre><code>...
-/dev/zram0 none swap defaults,discard,pri=100,x-systemd.makefs 0 0
-</code></pre>
-<p>Note that the priority is set to a high value and the x-systemd.makefs option is used. Idk what the importance is, but it probably helps make it work.</p>
-<p>After rebooting, you should have swap on zram. Note that it's recommended to disable zswap (a similar but different feature) while using swap on zram. This can be done permanently by adding <code>zswap.enabled=0</code> to your kernel parameters.</p>
+<p>Mount the unlocked root partition to <code>/mnt</code> and the ESP to <code>/mnt/efi</code>.</p>
 <h2 id="installing-the-base-system" tabindex="-1">Installing the base system</h2>
-<p>First, Pacman's mirrorlist has to be configured to use the fastest mirror servers. <a href="https://wiki.archlinux.org/title/Reflector">Reflector</a> can do this easily. The following command finds the 10 fastest, most recently synced mirror servers in the US, and saves the list to Pacman's mirrorlist.</p>
+<p>Generally refer to the <a href="https://wiki.archlinux.org/title/Installation_guide#Installation">official</a> installation guide for this part. The following reflector command can be used to generate a good mirrorlist for the US:</p>
 <pre><code class="language-sh"># reflector --latest 10 --sort rate --country 'United States' --save /etc/pacman.d/mirrorlist
 </code></pre>
-<p>This is the only configuration data that will be copied to your new installation, so it's worth making sure it's set up properly.</p>
-<p>Anyways time to install some packages. Some notes:</p>
+<p>Anyways time to <code>pacstrap</code> the system. Suggested packages to install here (my choices plus some things beyond what the installation guide suggests):</p>
 <ul>
-<li>If you want to install AUR packages (you probably do), you should install <code>base-devel</code>. It also includes sudo for the sole reason that makepkg uses it to run pacman when resolving dependencies.</li>
-<li>Some laptops may require specific firmware packages (i.e. beyond the default firmware set) for sound and Wi-Fi to work correctly.</li>
-<li>You'll probably want CPU microcode updates when installing on real hardware. They include mitigations for CPU-based vulnerabilities, bugfixes, and other goodies. Install <code>intel-ucode</code> for Intel CPUs or <code>amd-ucode</code> for AMD CPUs.</li>
-<li>To modify and create filesystems, you'll need the userspace utilities for them. I think <code>btrfs-progs</code>, <code>dosfstools</code>, <code>e2fsprogs</code>, <code>exfatprogs</code>, and <code>ntfs-3g</code> will be all you'll need currently. You can always install additional utilities for other filesystems if you need them.</li>
-<li>You'll want a network manager to enable network connectivity. I use <code>networkmanager</code> along with <code>wpa_supplicant</code> for Wi-Fi support.</li>
-<li>We'll be creating some config files, so a console text editor is also a good idea. I prefer <code>nano</code> for quick config file edits.</li>
-<li>Installing <code>man-db</code>, <code>man-pages</code>, and <code>texinfo</code> will allow viewing manpages which can be very useful.</li>
-<li>Oh also let's not forget <code>fastfetch</code> to make the every Linux setup screenie ever lol.</li>
+<li><code>base-devel</code> for AUR packages and possibly other shenanigans</li>
+<li>Userspace filesystem utilities: At a minimum, <code>dosfstools</code>, <code>e2fsprogs</code>, and <code>exfatprogs</code>. <code>ntfs-3g</code> might be wanted for NTFS (note that the kernel has a native NTFS driver now so <code>ntfs-3g</code> is only required for creating/modifying NTFS's). If I ever get into Btrfs, obviously <code>btrfs-progs</code>.</li>
+<li>I use <code>networkmanager</code> for network/Internet access</li>
+<li>Always <code>fastfetch</code> for good luck ;)</li>
 </ul>
-<p>To install these essentials, use <code>pacstrap</code>:</p>
-<pre><code class="language-sh"># pacstrap -K /mnt base base-devel *cpu-ucode* linux linux-firmware btrfs-progs dosfstools e2fsprogs exfatprogs ntfs-3g networkmanager wpa_supplicant man-db man-pages texinfo nano fastfetch
-</code></pre>
-<p>Couple other things of note: If you're installing in an LXC, you don't need a kernel as the LXC can use your host's linux kernel. Also linux-firmware isn't needed for VM installs. And finally the absolute minimum needed for the most barebones of installs are <code>base</code>, <code>linux</code>, and <code>linux-firmware</code> (keeping in mind the previous notes, technically you only need <code>base</code> lol).</p>
 <h2 id="configuration" tabindex="-1">Configuration</h2>
 <p>It's now time to perform initial configuration of your installation.</p>
-<p>We'll start by generating the <a href="https://wiki.archlinux.org/title/Fstab">fstab</a> file using genfstab.</p>
-<pre><code class="language-sh"># genfstab -U /mnt &gt;&gt; /mnt/etc/fstab
+<p>Back in the day you had to generate <code>/etc/fstab</code> to handle partition mounting on boot but Systemd can <a href="https://wiki.archlinux.org/title/Systemd#GPT_partition_automounting">automount partitions</a> when they have the correct types (shown above in the partition layout). So you can skip generating it and continue on in the <a href="https://wiki.archlinux.org/title/Installation_guide#Chroot">chroot</a>.</p>
+<p>I skipped setting up a swap space when partitioning since I use swap on zram and this is best set up at this stage once we're in the chroot. The easiest way to set this up is to install <code>zram-generator</code> and create <code>/etc/systemd/zram-generator.conf</code> with the following:</p>
+<pre><code>[zram0]
 </code></pre>
-<p>Check the resulting fstab file for mistakes and correct them as needed.</p>
-<h3 id="chroot" tabindex="-1">Chroot</h3>
-<p>Most of our configuration will be done chrooted into the new installation. Let's do that now.</p>
-<pre><code class="language-sh"># arch-chroot /mnt
-</code></pre>
-<p>Btw if you're using <a href="#swap-on-zram">swap on zram</a>, you can set this up now.</p>
-<h4 id="time...-(we-never-have-enough-of-it)" tabindex="-1">Time... (we never have enough of it)</h4>
-<p>Set the time zone first of all:</p>
-<pre><code class="language-sh"># ln -sf /usr/share/zoneinfo/*US*/*Eastern* /etc/localtime
-</code></pre>
-<p>Run the following command to generate <code>/etc/adjtime</code> which helps prevent the system clock from drifting.</p>
-<pre><code class="language-sh"># hwclock --systohc
-</code></pre>
-<p>This won't do much though, so you should also set up network time synchronization. Systemd has a timesync daemon built-in, you just need to enable its service.</p>
-<pre><code class="language-sh"># systemctl enable systemd-timesyncd.service
-</code></pre>
-<h4 id="set-the-locale" tabindex="-1">Set the locale</h4>
-<p>Setting the system locale determines what language applications use, as well as things like date formatting, currency, and decimal separators. Edit <code>/etc/locale.gen</code> and uncomment all the UTF-8 locales you'll be using. Then generate the locales by running:</p>
-<pre><code class="language-sh"># locale-gen
-</code></pre>
-<p>Now, create <code>/etc/locale.conf</code> and set the LANG variable in it:</p>
-<pre><code>LANG=*en_US.UTF-8*
-</code></pre>
-<p>If you set the console font (or keymap) make the change permanent in <code>/etc/vconsole.conf</code>:</p>
-<pre><code>KEYMAP=*keymap*
-FONT=*ter-124n*
-</code></pre>
-<p>Note that <code>terminus-font</code> (which provides the font in the example above) is not installed by default, you will need to install it.</p>
-<h4 id="hostname" tabindex="-1">Hostname</h4>
-<p>Set the hostname by creating <code>/etc/hostname</code> and put your desired hostname in it.</p>
-<div class="info">
-<p><strong>Note:</strong> The hostname should be a unique, recognizable name. It must be no longer than 63 characters, and can only use alphanumeric characters and the hyphen (-). It can't start with a hyphen though.</p>
-</div>
-<h4 id="networking" tabindex="-1">Networking</h4>
-<p>To set up networking, simply enable NetworkManger's service:</p>
-<pre><code class="language-sh"># systemctl enable NetworkManager.service
-</code></pre>
-<p>For Wi-Fi, ensure <code>wpa_supplicant</code> is installed.</p>
-<p>You will want a firewall as well for security reasons. I use <a href="https://wiki.archlinux.org/title/Firewalld">firewalld</a>. To set it up, install <code>firewalld</code> and enable <code>firewalld.service</code>. You can adjust the configuration as needed later, but the default setup should work fine to start with.</p>
-<h4 id="user-accounts" tabindex="-1">User accounts</h4>
-<p>I prefer to disable the root account and set up a user account with sudo privileges.</p>
-<p>First, ensure sudo is installed (if you installed base-devel before, sudo will already be installed). Then, open the sudoers file (sudo's main config file) with visudo.</p>
-<pre><code class="language-sh"># EDITOR=rnano visudo
-</code></pre>
-<div class="warning">
-<p><strong>WARNING:</strong> Do NOT use a text editor on the sudoers file directly! <em>Always</em> use visudo to edit it! Sudo really really hates your syntax errors so visudo is provided to check your edits for syntax errors.</p>
-</div>
-<p>Uncomment this line and save the file:</p>
-<pre><code>...
-%wheel ALL=(ALL:ALL) ALL
-...
-</code></pre>
-<p>Now, create a user account with sudo privileges:</p>
-<pre><code class="language-sh"># useradd -m -G wheel *username*
-</code></pre>
-<p>And set a password for your account:</p>
-<pre><code class="language-sh"># passwd *username*
-</code></pre>
-<p>Finally, we can disable the root account:</p>
-<div class="warning">
-<p><strong>WARNING:</strong> You may be locked out of the system if you forget your password.</p>
-</div>
-<pre><code class="language-sh"># passwd -dl root
-</code></pre>
-<h4 id="hibernation-(optional)" tabindex="-1">Hibernation (optional)</h4>
-<p>Setting up <a href="https://wiki.archlinux.org/title/Power_management/Suspend_and_hibernate#Hibernation">hibernation</a> on UEFI systems is really easy. It's actually already set up out of the box on Arch Linux lol.</p>
-<p>This requires special setup to use with swap on zram. You'll have to create and enable a separate swap file that will be used only for hibernation. The zram device needs to have a higher priority than the hibernation file, which it should already.</p>
-<p>I generally prefer not to use hibernation, especially when multi-booting, since it causes issues with hardware detection and drive access if you hibernate from one OS and then boot into another OS.</p>
-<p>Anyways, if using hibernation, you should make your swap file at least half the size of your RAM. Enable it as usual, and then to help ensure successful hibernation, change the <code>image-size</code> value to 0 to make the hibernation image as small as possible. Create <code>/etc/tmpfiles.d/hibernation_image_size.conf</code> and put the following in it:</p>
-<pre><code># Path                  Mode UID GID Age Argument
-w /sys/power/image_size -    -   -   -   0
-</code></pre>
-<p>Now, that's all you need to do unless you're on a legacy BIOS system which this guide doesn't cover. See the ArchWiki page linked above.</p>
-<h4 id="plymouth-(optional)" tabindex="-1">Plymouth (optional)</h4>
-<p><a href="https://wiki.archlinux.org/title/Plymouth">Plymouth</a> is a customizable graphical boot screen for Linux. To set it up, first install <code>plymouth</code>, then add <code>plymouth</code> in the HOOKS array of <code>/etc/mkinitcpio.conf</code>:</p>
-<pre><code>HOOKS=(... plymouth)
-</code></pre>
-<div class="info">
-<p><strong>Note:</strong> On KDE Plasma, the <code>plymouth-kcm</code> package allows you to easily change the Plymouth theme from System Settings. You can also download and apply new themes from there.</p>
-</div>
-<h4 id="desktop-environment" tabindex="-1">Desktop environment</h4>
+<p>Yes, that's literally it.</p>
+<p>For <a href="https://wiki.archlinux.org/title/Power_management/Suspend_and_hibernate#Hibernation">hibernation</a> support (swap on zram doesn't support hibernation), create a <a href="https://wiki.archlinux.org/title/Swap#Swap_file">swap file</a> that is half the size of your RAM to start with. I rarely use hibernation though and it's best to avoid it entirely when dualbooting since that causes all sorts of weirdness.</p>
+<p>Follow the installation <a href="https://wiki.archlinux.org/title/Installation_guide#Time">guide</a> from the &quot;Time&quot; section up until &quot;Initramfs&quot;. I use systemd-timesyncd for time synchronization. For the &quot;Network configuration&quot; section, enable <code>NetworkManager.service</code> and install/enable <code>firewalld</code>.</p>
+<p>As far as user accounts go, I prefer to lock the root account (preventing you from logging into it) and rely on sudo for root access. Sudo should already be installed (it's a dependency of <code>base-devel</code>). <a href="https://wiki.archlinux.org/title/Sudo#Configuration">Configure it</a> to give members of the <code>wheel</code> group admin privileges. Then add a <a href="https://wiki.archlinux.org/title/Users_and_groups#User_management">user account</a> that is in the <code>wheel</code> group and set a password for it. Finally <a href="https://wiki.archlinux.org/title/Sudo#Disable_root_login">lock the</a> root account.</p>
+<p>Also set up <a href="https://wiki.archlinux.org/title/Plymouth">Plymouth</a>.</p>
+<h3 id="desktop-environment" tabindex="-1">Desktop environment</h3>
 <p>I currently use KDE Plasma because it's epic. Other supported DEs can be found on the <a href="https://wiki.archlinux.org/title/Desktop_environment">Desktop Environment</a> ArchWiki page.</p>
 <p>To install a fully featured KDE Plasma session with my preferred KDE apps + Firefox as the web browser, run the following command:</p>
-<pre><code class="language-sh"># pacman -S plasma-meta kde-system-meta plymouth-kcm baloo-widgets breeze5 dolphin-plugins ffmpegthumbs kdeconnect kdegraphics-thumbnailers kdenetwork-filesharing kimageformats kio-admin kio-extras kio-fuse kwalletmanager phonon-qt6-vlc plasma5-integration qqc2-desktop-style icoutils iio-sensor-proxy libappindicator noto-fonts-emoji power-profiles-daemon qt6-imageformats thermald xdg-desktop-portal-gtk xsettingsd ark digikam dragon elisa filelight gwenview k3b kamoso kate kcalc kcharselect kdenlive kdialog kfind konsole krita kup kwalletmanager markdownpart okular svgpart firefox
+<pre><code class="language-sh"># pacman -S plasma-meta kde-system-meta plymouth-kcm baloo-widgets breeze5 dolphin-plugins ffmpegthumbs kdeconnect kdegraphics-thumbnailers kdenetwork-filesharing kimageformats kio-admin kio-extras kio-fuse kwalletmanager phonon-qt6-vlc plasma5-integration qqc2-desktop-style icoutils iio-sensor-proxy libappindicator noto-fonts-emoji power-profiles-daemon qt6-imageformats thermald xdg-desktop-portal-gtk xsettingsd ark dragon elisa filelight gwenview kamoso kate kcalc kcharselect kdialog konsole kup kwalletmanager markdownpart okular svgpart firefox
 </code></pre>
-<p>You'll need the appropriate graphics drivers as well. See the table below for the needed packages in addition to <code>mesa</code> (which is a dependency of KWin and the Qt libraries so gets installed with Plasma).</p>
+<p>Don't forget to enable <code>plasmalogin.service</code> to actually boot into a graphical session.</p>
+<p>For graphics drivers consult this handy table for Intel and AMD graphics (note that <code>mesa</code> which provides the basic graphics stack and OpenGL drivers is required by Plasma so is already installed):</p>
 <table>
 <thead>
 <tr>
@@ -371,72 +122,56 @@ w /sys/power/image_size -    -   -   -   0
 </tr>
 </tbody>
 </table>
-<p>If using an Nvidia GPU (unlikely for me), see the <a href="https://wiki.archlinux.org/title/NVIDIA">Nvidia page on</a> the ArchWiki.</p>
-<h4 id="regenerate-the-initramfs" tabindex="-1">Regenerate the initramfs</h4>
-<p>Some of the changes we made before will require regenerating the initramfs, so do that now:</p>
-<pre><code class="language-sh"># mkinitcpio -P
+<p>While it's unlikely I will ever use an Nvidia GPU, if I do end up with one, see the <a href="https://wiki.archlinux.org/title/NVIDIA">Nvidia page on</a> the ArchWiki.</p>
+<h3 id="kernel%2Finitramfs-config" tabindex="-1">Kernel/initramfs config</h3>
+<p>In order to boot successfully, make sure the <code>HOOKS</code> array in <code>mkinitcpio.conf</code> contains the following:</p>
+<pre><code>HOOKS=(base systemd autodetect microcode modconf kms keyboard sd-vconsole block sd-encrypt filesystems plymouth)
 </code></pre>
-<h4 id="installing-a-bootloader" tabindex="-1">Installing a bootloader</h4>
-<p>Up until now, the system is unbootable. Let's fix that. I use <a href="https://wiki.archlinux.org/title/GRUB">GRUB</a> which is like the default Linux bootloader.</p>
-<div class="info">
-<p><strong>Note:</strong> You can use Secure Boot with Linux however it takes some careful setup. Go to my <a href="/resources/using-secure-boot-on-arch/">Secure Boot guide</a> and follow those instructions instead of this section.</p>
-</div>
-<p>Install <code>grub</code> and <code>efibootmgr</code>. You'll need to have the ESP mounted (it should already be mounted) for the next steps. Substitute its mountpoint for <code>*esp*</code> in the next steps.</p>
-<p>Run the following command to install GRUB to the ESP:</p>
-<pre><code class="language-sh"># grub-install --target=x86_64-efi --efi-directory=*esp* --boot-directory=*esp* --bootloader-id=&quot;Arch Linux&quot;
+<p>The <code>fsck</code> hook is skipped because systemd provides its own filesystem checking mechanism and it keeps the console output while booting to a minimum.</p>
+<p>Follow the instructions at <a href="https://wiki.archlinux.org/title/Unified_kernel_image#mkinitcpio">Unified kernel image#mkinitcpio</a> to set up UKI generation. Do not regenerate the initramfs after finishing, as the required directory on the ESP hasn't been created yet. For the kernel command line create <code>/etc/cmdline.d/silent.conf</code> containing the following:</p>
+<pre><code>quiet loglevel=3 systemd.show_status=auto rd.udev.log_level=3 splash&quot;
 </code></pre>
-<p>The <code>bootloader-id</code> value can be anything you like, it determines the directory on the ESP where GRUB is placed and the name of its UEFI boot entry. Not all UEFI firmwares can handle spaces in it, however, so consider using a value without spaces.</p>
-<p>Now, before generating the main config file, we need to change some options. Edit <code>/etc/default/grub</code> and change the <code>GRUB_CMDLINE_LINUX_DEFAULT</code> line to match this:</p>
-<pre><code>GRUB_CMDLINE_LINUX_DEFAULT=&quot;quiet loglevel=3 systemd.show_status=auto rd.udev.log_level=3 splash&quot;
+<p>And <code>/etc/cmdline.d/disable-zswap.conf</code> since we're using swap on zram:</p>
+<pre><code>zswap.enabled=0
 </code></pre>
-<p>Any existing parameters can be left. They should be in the order above. See <a href="https://wiki.archlinux.org/title/Silent_boot">Silent boot</a> on the ArchWiki for more info.</p>
-<p>Now, generate the config file:</p>
-<pre><code class="language-sh"># grub-mkconfig -o *esp*/grub/grub.cfg
-</code></pre>
-<p>This path doesn't change.</p>
+<p>Systemd's GPT partition automounting mechanism will automatically find, unlock, and mount the root partition, don't worry about it.</p>
 <h2 id="finishing-up" tabindex="-1">Finishing up</h2>
-<p>Whew! We're about done! Exit the chroot by entering <code>exit</code> or pressing Ctrl-D. Then reboot:</p>
-<pre><code class="language-sh"># reboot
+<p>There's only a couple more steps!</p>
+<p>Install <a href="https://wiki.archlinux.org/title/Systemd-boot">systemd-boot</a> as the bootloader. Systemd-boot automatically picks up UKIs on the ESP, so no further configuration is required to boot. At this point, you can regenerate the initramfs as well (which will build a UKI and place it on the ESP).</p>
+<p>At this point we need to get Secure Boot enabled, so it's time to reboot into the new installation. Make a quick detour into the BIOS to put Secure Boot in setup mode so keys can be enrolled. After logging in to the new install, make a fastfetch screenshot for good luck before proceeding.</p>
+<p>I use the method described <a href="https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface/Secure_Boot#Assisted_process_with_sbctl">here</a> for enabling Secure Boot.</p>
+<p>Once Secure Boot is enabled, now we can enlist the help of the TPM2 to ensure a smooth boot process with no pesky password prompts to unlock the root partition. Use <a href="https://wiki.archlinux.org/title/Systemd-cryptenroll"><code>systemd-cryptenroll</code></a> to add a recovery key, enroll the TPM2, and wipe the password created earlier:</p>
+<pre><code class="language-sh">$ sudo systemd-cryptenroll /dev/sda2 --recovery-key
+$ sudo systemd-cryptenroll /dev/sda2 --wipe-slot=password --tpm2-device=auto --tpm2-pcrs=7+15:sha256=0000000000000000000000000000000000000000000000000000000000000000
 </code></pre>
-<p>Remove the installation medium and your computer should boot into your new Arch Linux installation. Log into your user account and you've done it!</p>
-<p>Review the <a href="https://wiki.archlinux.org/title/General_recommendations">General recommendations</a> page on the ArchWiki for some useful tips (some of them have already been covered here) and enjoy your new Arch Linux installation! Don't forget to make a fastfetch screenshot after the first successful boot for good luck!</p>
-<h3 id="installing-other-apps-and-my-kde-rice" tabindex="-1">Installing other apps and my KDE rice</h3>
-<p>Ahh but there's still a couple things to do. We'll start with an AUR helper. I use yay, which supports the Apdatifier widget (which can do some basic package management stuff but most importantly makes it way easier to keep your system up to date).</p>
+<p>The TPM2 will release the key as long as the Secure Boot state hasn't been tampered with. If it doesn't, the system will prompt for the recovery key. Make sure to save it somewhere safe otherwise it won't be very useful.</p>
+<p>Reboot to make sure everything works.</p>
+<h3 id="finishing-touches" tabindex="-1">Finishing touches</h3>
+<p>Now it's time to put some finishing touches on the installation. I use yay as my AUR helper, which supports the <a href="https://github.com/exequtic/apdatifier">Apdatifier</a> plasmoid (which can do some basic package management stuff but most importantly makes it way easier to keep your system up to date).</p>
 <p>To install yay, open a terminal and navigate to a directory where you won't mind having an AUR package compiled. Your user account needs read/write permissions on it. Then run the following:</p>
 <pre><code class="language-sh">$ git clone https://aur.archlinux.org/yay.git &amp;&amp; cd yay
 $ makepkg -sci
 </code></pre>
-<p>I also like to add the <a href="https://aur.chaotic.cx/">Chaotic-AUR</a> repository to my systems as it provides prebuilt AUR packages. It doesn't provide <em>every</em> AUR package but it provides a lot and is nice to have.</p>
+<p>I also like to add the <a href="https://aur.chaotic.cx/">Chaotic-AUR</a> repository to my systems as it provides prebuilt AUR packages. It doesn't provide <em>every</em> AUR package but it provides quite a few and is nice to have.</p>
 <p>Now, here's all the other apps I like to install:</p>
-<pre><code class="language-sh">$ yay -S --needed discord easyeffects ghostwriter goverlay keepassxc ktorrent lact libreoffice-fresh mangohud modrinth-app-bin neovim obs-studio octopi spotify steam visual-studio-code-bin
+<pre><code class="language-sh">$ yay -S --needed digikam discord easyeffects ghostwriter goverlay kdenlive keepassxc krita ktorrent lact libreoffice-fresh mangohud modrinth-app-bin obs-studio octopi spotify steam visual-studio-code-bin
 </code></pre>
-<p>I use the <code>modrinth-app-bin</code> package since the from-source version takes a while to compile and it's not on the Chaotic-AUR.</p>
-<p>And finally my rice. In pursuit of not repeating myself (and providing even more out-of-date instructions) I'll just <a href="https://github.com/EJSnow/dotfiles">link to the repository</a>. Follow the instructions in there and now you're REALLY done lol.</p>
-<p><img src="/images/my-arch-setup.jpg" alt="My Arch setup on my PC"></p>
-<p style="text-align: center;margin:0">The finished product</p>
+<p>And finally my Plasma dotfiles. Follow the instructions on <a href="https://github.com/EJSnow/dotfiles">the repository</a> and that will about do it (currently the panel layout isn't done automatically though).<img src="/images/my-arch-setup.jpg" alt="My Arch setup"></p>
 <h2 id="references" tabindex="-1">References</h2>
-<p>This document references MANY ArchWiki pages and a few manpages. Most of them were linked but here's a full list anyway:</p>
+<p>I wrote this with the help of MANY ArchWiki pages and a few manpages.</p>
 <ul>
 <li><a href="https://wiki.archlinux.org/title/Installation_guide">The official installation guide</a></li>
-<li><a href="https://wiki.archlinux.org/title/USB_flash_installation_medium">Using a USB flash drive as an installer</a></li>
-<li><a href="https://wiki.archlinux.org/title/Iwd#iwctl">iwctl</a></li>
-<li><a href="https://wiki.archlinux.org/title/Fdisk">Fdisk</a></li>
+<li><a href="https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system#LUKS_on_a_partition_with_TPM2_and_Secure_Boot">This example for encrypting your installation</a> (I basically lifted the encryption instructions from there)</li>
 <li><a href="https://man.archlinux.org/man/mkfs.ext4.8.en">mkfs.ext4 manpage</a></li>
 <li><a href="https://man.archlinux.org/man/mkfs.fat.8.en">mkfs.fat manpage</a></li>
-<li><a href="https://wiki.archlinux.org/title/Swap#Swap_file">Swap file</a></li>
-<li><a href="https://wiki.archlinux.org/title/Zram#Usage_as_swap">Swap on zram</a></li>
 <li><a href="https://man.archlinux.org/man/reflector.1#EXAMPLES">Reflector examples</a></li>
-<li><a href="https://wiki.archlinux.org/title/General_recommendations">General recommendations</a></li>
-<li><a href="https://wiki.archlinux.org/title/Sudo#Configuration">Sudo configuration</a></li>
+<li><a href="https://wiki.archlinux.org/title/Zram#Usage_as_swap">Swap on zram</a></li>
 <li><a href="https://wiki.archlinux.org/title/Power_management/Suspend_and_hibernate#Hibernation">Hibernation</a></li>
-<li><a href="https://wiki.archlinux.org/title/Plymouth">Plymouth</a></li>
-<li><a href="https://wiki.archlinux.org/title/GRUB">GRUB</a> (also <a href="https://wiki.archlinux.org/title/GRUB/Tips_and_tricks">GRUB/Tips and tricks</a>)</li>
 <li><a href="https://wiki.archlinux.org/title/AMDGPU">AMD graphics (AMDGPU)</a></li>
 <li><a href="https://wiki.archlinux.org/title/Intel_graphics">Intel graphics</a></li>
 <li><a href="https://wiki.archlinux.org/title/Hardware_video_acceleration">Hardware video acceleration</a></li>
 <li><a href="https://wiki.archlinux.org/title/Arch_User_Repository#Installing_and_upgrading_packages">Installing AUR packages</a></li>
 </ul>
-<p>congratulations on installing arch lol! You have just accomplished something most people will never ever do and you should be proud of that!</p>
 
         </article>
       </div>

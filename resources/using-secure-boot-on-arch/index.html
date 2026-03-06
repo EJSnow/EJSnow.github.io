@@ -23,33 +23,36 @@
         <article role="tabpanel">
           <a id="top" href="/">← 🏡 Home</a>
           <h1>Using Secure Boot on Arch</h1>
-          <pre><code>#include metadata.h<br>// Created Feb 25, 2026<br>// Last updated Feb 25, 2026</code></pre>
+          <pre><code>#include metadata.h<br>// Created Feb 25, 2026<br>// Last updated Mar 4, 2026</code></pre>
           
           <details id="toc">
             <summary>Table of Contents</summary>
             <ul id="toc-contents"></ul>
           </details>
           
-          <p>Welp guess what? Last week I set up Secure Boot on Twilight, my laptop. It works pretty much fine, the only real issue I had was a skill issue and the documentation on the ArchWiki being kinda messy and spread across a few different pages. This page is supposed to fix that issue at least for GRUB users.</p>
+          <h2 id="update-(mar-4%2C-2026)" tabindex="-1">Update (Mar 4, 2026)</h2>
+<p>About a week after I wrote this guide I had the brilliant idea to switch to systemd-boot and also reconfigure my system to boot from a unified kernel image (UKI). This actually greatly simplified the process of encrypting the root partition since the UKI gets placed on the ESP after being assembled, thus I didn't need to worry about the bootloader being able to access <code>/boot</code> since the UKI is on the ESP (which is where the bootloader is installed to as well). I also worked up enough courage to directly modify the Secure Boot database so I could eliminate shim from my setup. So for my purposes at least, this guide is no longer relevant. But I'm leaving it up in the hope someone else finds it useful. :)</p>
+<h2 id="introduction" tabindex="-1">Introduction</h2>
+<p>Welp guess what? Last week I set up Secure Boot on Twilight, my laptop. It works pretty much fine, the only real issue I had was a skill issue and the documentation on the ArchWiki being kinda messy and spread across a few different pages. This page is supposed to fix that issue at least for GRUB users.</p>
 <p>Its always slightly bothered me that my systems (especially my laptop) aren't really that secure (I'm not joking, you get full access to them simply by booting up a live Linux image and mounting the internal drive and then you can do basically anything) so I'm taking some steps to <em>minimize the risks</em>. This basically just boils down to 1) enabling Secure Boot so only trusted OSes (and Windows) can boot, and 2) encrypting the internal drive so that you can't mount it in a live environment without knowing the secret to unlocking it. I've done Secure Boot first since it's the simpler option to implement and also fairly low-risk (the worst that could happen was nuking my bootloader and that's not that hard to fix).</p>
 <h2 id="preliminaries" tabindex="-1">Preliminaries</h2>
-<p>So the first thing to consider was how exactly I was going to make my installation Secure Boot compatible. The ArchWiki's page on <a href="https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface/Secure_Boot#Implementing_Secure_Boot">Secure Boot</a> outlines two main approaches: Using your own keys directly (enrolling them in the UEFI Secure Boot database) or using a chain loader that loads your real bootloader signed with Microsoft's 3rd party UEFI CA keys (that are already enrolled in the UEFI Secure Boot database by default).</p>
-<p>I chose the second approach, since while reading through the instructions for the first approach, I realized that messing around with the firmware's Secure Boot database is serious stuff; you can actually brick your PC if you don't do the key enrollment process right. The second approach doesn't directly modify the Secure Boot database, instead, it uses an intermediary chain loader that's already signed with Microsoft's keys mentioned above and that chain loader is responsible for verifying the authenticity and loading of your actual bootloader and OS. This latter option is actually used to great effect by several major distros and thus seemed like the best option overall, not to mention there's pretty much no risk of accidentally bricking my PC.</p>
+<p>So the first thing to consider was how exactly I was going to make my installation Secure Boot compatible. The ArchWiki's page on <a href="https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface/Secure_Boot#Implementing_Secure_Boot">Secure Boot</a> outlines two main approaches: Using your own keys directly (enrolling them in the UEFI Secure Boot database) or using a chain loader signed with Microsoft's 3rd party UEFI CA key (already enrolled in most PCs' Secure Boot databases) that validates your real bootloader via a machine owner key (MOK) or its SHA256 hash.</p>
+<p>I chose the second approach simply because at the time it seemed simpler and the first approach has big red warnings all over the place saying that if you mess up you can actually soft-brick your PC. However if you do get it to work the first approach is way more elegant (it doesn't require an extra chainloader so less confusion with EFI boot entries).</p>
 <h2 id="initial-setup" tabindex="-1">Initial setup</h2>
-<p>So the first thing to do is get shim, the chainloader I'm using. It's available in the AUR as <a href="https://aur.archlinux.org/packages/shim-signed"><code>shim-signed</code></a>. Then, the shim and MokManager binaries from that package need to be copied to the ESP. I'm going to put the files in /EFI/arch on my ESP (this is actually the default location for GRUB on Arch Linux when no <code>bootloader-id</code> is given to <code>grub-install</code>).</p>
+<p>So the first thing to do is get shim, a chainloader used by multiple well-known distros for Secure Boot support. It's available in the AUR as <a href="https://aur.archlinux.org/packages/shim-signed"><code>shim-signed</code></a>. Then, the shim and MokManager binaries from that package need to be copied to the ESP. I'm going to put the files in /EFI/arch on my ESP (this is actually the default location for GRUB on Arch Linux when no <code>bootloader-id</code> is given to <code>grub-install</code>).</p>
 <p>The files are <code>shimx64.efi</code> and <code>mmx64.efi</code> and are located in <code>/usr/share/shim-signed</code>. For command-line lovers, here are the commands to copy the files:</p>
 <pre><code class="language-sh"># cp /usr/share/shim-signed/shimx64.efi /efi/EFI/arch/
 # cp /usr/share/shim-signed/mmx64.efi /efi/EFI/arch/
 </code></pre>
-<p>Now you need to create a Machine Owner Key (MOK) that will be enrolled using MokManager (mmx64.efi) and is used to sign the kernel and GRUB. These two commands will create an MOK you can use:</p>
+<p>Now you need to create a machine owner key (MOK) that will be enrolled using MokManager (mmx64.efi) and is used to sign the kernel and GRUB. These two commands will create an MOK you can use:</p>
 <pre><code class="language-sh">$ openssl req -newkey rsa:2048 -nodes -keyout MOK.key -new -x509 -sha256 -days 3650 -subj &quot;/CN=your MOK/&quot; -out MOK.crt
 $ openssl x509 -outform DER -in MOK.crt -out MOK.cer
 </code></pre>
-<p>The MOK.key file is the private key used to sign the kernel and GRUB; MOK.crt is a certificate for sbsign (which we'll use to sign the kernel and GRUB) and MOK.cer is a different format of the certificate that is enrolled in MokManager.</p>
-<p>Don't share the MOK.key file with <strong>anyone</strong> and probably don't share the certificates either.</p>
+<p>The MOK.key file is the private key used to sign the kernel and GRUB; MOK.crt is the certificate tied to the key used in signing GRUB and the kernel and MOK.cer is a different format of the certificate that shim/MokManager use for verification.</p>
+<p>Note: MOK.key should <strong>not</strong> be shared with anyone.</p>
 <h2 id="configuring-grub" tabindex="-1">Configuring GRUB</h2>
-<p>GRUB out of the box will not be very Secure Boot compliant. It stores its modules in separate files and dynamically loads them at boot; with this approach we can't do that so instead all the modules necessary to boot must be embedded in GRUB's main EFI binary, grubx64.efi. Also, grubx64.efi needs a Secure Boot Advanced Targeting (SBAT) section embedded in it as well which includes information about the binary, and is required in order for shim to load it. There's a sample SBAT file included in <code>/usr/share/grub/sbat.csv</code> and it will serve our purposes.</p>
-<p>We'll set the list of modules GRUB needs as a shell variable to ease our pain when typing out the install command. I apologize in advance for the extremely long list which is taken from Ubuntu's build script.</p>
+<p>GRUB out of the box will not be very Secure Boot compliant. It stores its modules in separate files and dynamically loads them at boot; with this approach we can't do that so instead all the modules necessary to boot must be embedded in GRUB's main EFI binary, grubx64.efi. Shim also requires that the binary has a Secure Boot Advanced Targeting (SBAT) section in it (which it uses to prevent versions of GRUB with known vulnerabilities from loading even if they otherwise pass the checks). GRUB provides one at <code>/usr/share/grub/sbat.csv</code> that we can use.</p>
+<p>We'll set the list of modules GRUB needs as a shell variable to ease our pain when typing out the install command. I apologize in advance for the extremely long list (which is taken from Ubuntu's build script).</p>
 <pre><code class="language-sh">GRUB_MODULES=&quot;
     all_video
 	bli
@@ -143,9 +146,10 @@ $ openssl x509 -outform DER -in MOK.crt -out MOK.cer
 	raid6rec
 	&quot;
 </code></pre>
-<p>Okay, now we can install GRUB with all the modules embedded.</p>
+<p>Okay, now we can reinstall GRUB.</p>
 <pre><code class="language-sh"># grub-install --target=x86_64-efi --efi-directory=/efi --boot-directory=/efi --modules=&quot;${GRUB_MODULES}&quot; --sbat /usr/share/grub/sbat.csv
 </code></pre>
+<p>This version of GRUB has all its modules embedded in the EFI binary as well as the SBAT section shim requires. Fun fact: Shim seems to be the only software that actually implements SBAT. Almost no UEFI firmware actually does SBAT verification.</p>
 <h2 id="signing-grub-and-the-kernel" tabindex="-1">Signing GRUB and the kernel</h2>
 <p>However there is still one problem. The GRUB binary isn't signed and so shim cannot verify it! Let's sign it now.</p>
 <p>First install <code>sbsigntools</code>, and then run the following commands to sign both your kernel and GRUB (if you leave the kernel unsigned GRUB will refuse to load it for obvious reasons):</p>
@@ -175,9 +179,9 @@ fi
 </code></pre>
 <p>Replace the disk and partition number with the actual one for your ESP (on Twilight, the disk is <code>/dev/nvme0n1</code> and the ESP is partition 4).</p>
 <h2 id="enabling-secure-boot" tabindex="-1">Enabling Secure Boot</h2>
-<p>Reboot into UEFI setup and enable Secure Boot (often found under &quot;Security&quot;). Save and exit setup. When shim doesn't find the key GRUB is signed with it'll launch MokManager. Select <em>Enroll key from disk</em>, locate the <code>MOK.cer</code> file and enroll it. Then select <em>Continue boot</em> and GRUB should load and boot Linux like normal.</p>
+<p>Reboot into UEFI setup and enable Secure Boot (often found under &quot;Security&quot;). Save and exit setup. When shim doesn't find the key GRUB is signed with it'll launch MokManager which will throw a security violation. Select <em>OK</em> then <em>Enroll key from disk</em>. Locate the <code>MOK.cer</code> file and enroll it. Once enrolled, select <em>Reset</em> and the system should boot like normal.</p>
 <p><img src="/images/twilight-secure-booted.jpg" alt="A screenshot of Twilight's desktop showing Secure Boot is enabled"></p>
-<p>And that's it! There's an additional script and Pacman hook to automate the signing of GRUB below, but I don't consider them to be that useful since GRUB is not updated often. Still nice to know that it's taken care of when GRUB <strong>does</strong> update.</p>
+<p>And that's it! There's an additional script and Pacman hook to automate the signing of GRUB below, but I don't consider them to be that useful since GRUB isn't updated very often. Still nice to know that it's taken care of when GRUB <strong>does</strong> update.</p>
 <h2 id="additional-scripts" tabindex="-1">Additional scripts</h2>
 <p>This is a Pacman hook and script to automate the installation and signing of a new GRUB version.</p>
 <p>Pacman hook:</p>

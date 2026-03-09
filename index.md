@@ -26,12 +26,13 @@ My main PC ([View project](projects/2024-10-05-redstone-computer/)):
 
 I'm Ezra Snow, a nerdy (extremely) 17 year old guy who may be addicted to computers and Linux (I spend far too much time using and messing with Linux on my computer). I currently live in North Carolina, and I'm a senior in high school. After I graduate, I'm going to study computer science at LeTourneau University. When I'm not doing school or messing with Linux, I'm often playing video games.
 
-Games I like (in this order):
+Games I like (in no particular order):
 
 * The Elder Scrolls V: Skyrim
-* Minecraft
 * Forza Horizon 4
 * Geometry Dash
+* Hollow Knight
+* Minecraft
 * Just Shapes and Beats
 
 I'm also getting interested in running a home server, but I'm kind of limited with what I can do right now, since I don't have a web domain. What I really want to do is set up a NAS so I can access files more conveniently from multiple devices. And perhaps a media server. There's a lot I could do with a server. But that's a distant dream right now. \*sigh\* Maybe someday. Although I've already been messing around with some stuff on my main PC.
@@ -45,7 +46,7 @@ Fun fact: I wrote parts of this section on my phone by ssh-ing into my PC. <a ta
 ### The Redstone Computer
 <img class="lightboxed" alt="The Redstone Computer, Sep 13 2025, running Arch Linux" src="images/redstone-computer.jpg">
 
-My main PC, that I use for gaming, some web development, and pretty much everything else that isn't schoolwork (including Windows nostalgia). I built it over a year ago and it's worked really well, despite its age. It was originally a lowly office computer (a Dell OptiPlex 7020 SFF), but then I got my hands on it and **forced** it to game, upgrading most of the hardware to bring it up to gaming specs. Among the upgrades was a TP-Link Archer TX55E Wi-Fi card, since it only had Ethernet to begin with and I can't conveniently use Ethernet, plus I also wanted Bluetooth.
+My main PC, that I use for gaming, some web development, and pretty much everything else that isn't schoolwork (including Windows nostalgia). I built it over a year ago and it's worked really well, despite its age. It was originally a lowly office computer (a Dell OptiPlex 7020 SFF), but then I got my hands on it and **forced** it to game, upgrading most of the hardware to bring it up to gaming specs. Among the upgrades was a TP-Link Archer TX55E Wi-Fi card, since it only had Ethernet to begin with and I can't conveniently use Ethernet, plus I also wanted Bluetooth. I primarily play Geometry Dash, Skyrim, and Forza Horizon 4 on it, and I used to play a lot of Minecraft as well. It handles all of those games quite flawlessly.
 
 Specs (original → upgraded):
 
@@ -60,15 +61,15 @@ Items in bold are considered to be significant upgrades.
 ### Twilight
 <img class="lightboxed" alt="Twilight, my laptop, Sep 30 2025, running Arch Linux" src="images/twilight.jpg">
 
-A Lenovo Ideapad Flex 5-15IIL05 laptop I got for free in August 2025. The main reason I got it was because the keyboard was half-dead, but it just needed to be cleaned. It works great now, although not for gaming. I use it for sometimes school and general messing around when I don't want to sit down at my PC. It's kind of insane for a free laptop. The battery is even still pretty good.
+A Lenovo Ideapad Flex 5-15IIL05 laptop I got for free in August 2025 from my grandparents. The keyboard was mostly dead due to a lot of dirt finding its way into it, so they had gotten a new laptop and gave this one to me. After doing a deep clean of the keyboard, it works great now. I use it for school and general messing around when I don't want to sit down at my PC. It's even capable of lightweight gaming; it runs Minecraft and Geometry Dash very well (also JSAB and Hollow Knight run solidly too). It can even run Skyrim at 720p and extremely low settings, but it can't run much beyond that. It's kind of insane for a free laptop. The battery is even still pretty good, at least in Arch Linux (it's significantly worse in Windows).
 
 Specs:
 
 * CPU: Intel Core i7-1065G7
 * RAM: 16GB LPDDR4
-* GPU: Intel Iris Plus (iGPU)
-* Storage: Samsung PM991 512GB NVMe SSD
-* OS: Windows 11 Home → **Arch Linux**
+* GPU: Intel Iris Plus G7 (iGPU)
+* Storage: Smasnug PM991 512GB NVMe SSD
+* OS: Windows 10 Home → Windows 11 Home → **Arch Linux**
 
 ### The Minecraft server (not anymore though)
 <img class="lightboxed" alt="The Minecraft server, Oct 23 2025, installing Fedora Server 42" src="images/server.jpg">

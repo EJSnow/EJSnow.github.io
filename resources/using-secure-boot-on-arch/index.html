@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, inital-scale=1.0">
-    <title>Using Secure Boot on Arch - EJSnow</title>
+    <title>Using Secure Boot on Arch Linux with GRUB - EJSnow</title>
     <link rel="stylesheet" href="https://unpkg.com/7.css">
     <link rel="stylesheet" href="/css/style.css">
     <style>@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap');</style>
@@ -22,7 +22,7 @@
       <div class="window-body has-space">
         <article role="tabpanel">
           <a id="top" href="/">← 🏡 Home</a>
-          <h1>Using Secure Boot on Arch</h1>
+          <h1>Using Secure Boot on Arch Linux with GRUB</h1>
           <pre><code>#include metadata.h<br>// Created Feb 25, 2026<br>// Last updated Mar 4, 2026</code></pre>
           
           <details id="toc">
@@ -30,10 +30,7 @@
             <ul id="toc-contents"></ul>
           </details>
           
-          <h2 id="update-(mar-4%2C-2026)" tabindex="-1">Update (Mar 4, 2026)</h2>
-<p>About a week after I wrote this guide I had the brilliant idea to switch to systemd-boot and also reconfigure my system to boot from a unified kernel image (UKI). This actually greatly simplified the process of encrypting the root partition since the UKI gets placed on the ESP after being assembled, thus I didn't need to worry about the bootloader being able to access <code>/boot</code> since the UKI is on the ESP (which is where the bootloader is installed to as well). I also worked up enough courage to directly modify the Secure Boot database so I could eliminate shim from my setup. So for my purposes at least, this guide is no longer relevant. But I'm leaving it up in the hope someone else finds it useful. :)</p>
-<h2 id="introduction" tabindex="-1">Introduction</h2>
-<p>Welp guess what? Last week I set up Secure Boot on Twilight, my laptop. It works pretty much fine, the only real issue I had was a skill issue and the documentation on the ArchWiki being kinda messy and spread across a few different pages. This page is supposed to fix that issue at least for GRUB users.</p>
+          <p>I recently set up Secure Boot on Twilight (my laptop). It works well, but the ArchWiki's documentation was a little confusing to follow, so I wrote this guide that targets GRUB. I have changed my setup significantly and I'm using systemd-boot now, but I'm leaving this here in case someone else finds it useful.</p>
 <p>Its always slightly bothered me that my systems (especially my laptop) aren't really that secure (I'm not joking, you get full access to them simply by booting up a live Linux image and mounting the internal drive and then you can do basically anything) so I'm taking some steps to <em>minimize the risks</em>. This basically just boils down to 1) enabling Secure Boot so only trusted OSes (and Windows) can boot, and 2) encrypting the internal drive so that you can't mount it in a live environment without knowing the secret to unlocking it. I've done Secure Boot first since it's the simpler option to implement and also fairly low-risk (the worst that could happen was nuking my bootloader and that's not that hard to fix).</p>
 <h2 id="preliminaries" tabindex="-1">Preliminaries</h2>
 <p>So the first thing to consider was how exactly I was going to make my installation Secure Boot compatible. The ArchWiki's page on <a href="https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface/Secure_Boot#Implementing_Secure_Boot">Secure Boot</a> outlines two main approaches: Using your own keys directly (enrolling them in the UEFI Secure Boot database) or using a chain loader signed with Microsoft's 3rd party UEFI CA key (already enrolled in most PCs' Secure Boot databases) that validates your real bootloader via a machine owner key (MOK) or its SHA256 hash.</p>

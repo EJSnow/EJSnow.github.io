@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, inital-scale=1.0">
-    <title>Arch Linux Installation - EJSnow</title>
+    <title>Arch Linux Installation (with full disk encryption using TPM2 and Secure Boot) - EJSnow</title>
     <link rel="stylesheet" href="https://unpkg.com/7.css">
     <link rel="stylesheet" href="/css/style.css">
     <style>@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap');</style>
@@ -22,7 +22,7 @@
       <div class="window-body has-space">
         <article role="tabpanel">
           <a id="top" href="/">← 🏡 Home</a>
-          <h1>Arch Linux Installation</h1>
+          <h1>Arch Linux Installation (with full disk encryption using TPM2 and Secure Boot)</h1>
           <pre><code>#include metadata.h<br>// Created Jan 31, 2026<br>// Last updated Mar 6, 2026</code></pre>
           
           <details id="toc">
@@ -30,8 +30,9 @@
             <ul id="toc-contents"></ul>
           </details>
           
-          <p><strong>Important:</strong> This is my own personalized installation guide for personal use. I do not recommend following this if you aren't me. Use the <a href="https://wiki.archlinux.org/title/Installation_guide">official installation</a> guide instead.</p>
-<p>This setup implements Secure Boot and full disk encryption with automated unlocking provided by the TPM2. The system boots from a signed unified kernel image (UKI) to eliminate complex bootloader configuration (the UKI is stored on the ESP and has the kernel command line embedded).</p>
+          <p>My preferred route for installing Arch Linux including full disk encryption (with TPM2-based automatic unlocking!) and Secure Boot support. This mostly exists just in case I ever have to do a full reinstall/just because I want to fully document my installation route.</p>
+<p><strong>Important:</strong> This is my own personalized installation guide for personal use. I do not recommend following this if you aren't me. Use the <a href="https://wiki.archlinux.org/title/Installation_guide">official installation</a> guide instead.</p>
+<p>This setup uses systemd-boot as the bootloader and boots from a signed unified kernel image (UKI) incorporating the kernel image, initrd, and kernel commandline in one file to reduce complexity (as a side benefit, the initrd and kernel commandline are also validated by Secure Boot).</p>
 <h2 id="warming-up" tabindex="-1">Warming up</h2>
 <p><a href="https://archlinux.org/download">Download the latest ISO</a> and follow the instructions on that page to verify it. Then put it on a USB drive to boot it either using <a href="https://ventoy.net/">Ventoy</a> or by writing it directly to the USB drive (see the <a href="https://wiki.archlinux.org/title/USB_flash_installation_medium">relevant Arch</a>Wiki page for more info).</p>
 <p>Boot the installation media. After it boots up, you'll be greeted by the ArchISO prompt:<img src="/images/arch-installer.png" alt="The Arch Linux installer"> The Arch Linux ISO doesn't support Secure Boot, so it must be disabled before booting it.</p>
@@ -158,19 +159,19 @@ $ makepkg -sci
 </code></pre>
 <p>And finally my Plasma dotfiles. Follow the instructions on <a href="https://github.com/EJSnow/dotfiles">the repository</a> and that will about do it (currently the panel layout isn't done automatically though).<img src="/images/my-arch-setup.jpg" alt="My Arch setup"></p>
 <h2 id="references" tabindex="-1">References</h2>
-<p>I wrote this with the help of MANY ArchWiki pages and a few manpages.</p>
+<p>I wrote this with the help of MANY ArchWiki pages and a few manpages. Seriously the ArchWiki is amazing, go <a href="https://wiki.archlinux.org">check it out</a>.</p>
 <ul>
-<li><a href="https://wiki.archlinux.org/title/Installation_guide">The official installation guide</a></li>
+<li><a href="https://wiki.archlinux.org/title/Installation_guide">The official installation guide</a> (The basic skeleton for this page)</li>
 <li><a href="https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system#LUKS_on_a_partition_with_TPM2_and_Secure_Boot">This example for encrypting your installation</a> (I basically lifted the encryption instructions from there)</li>
-<li><a href="https://man.archlinux.org/man/mkfs.ext4.8.en">mkfs.ext4 manpage</a></li>
-<li><a href="https://man.archlinux.org/man/mkfs.fat.8.en">mkfs.fat manpage</a></li>
-<li><a href="https://man.archlinux.org/man/reflector.1#EXAMPLES">Reflector examples</a></li>
+<li><a href="https://man.archlinux.org/man/mkfs.ext4.8.en">mkfs.ext4 manpage</a> (mostly for adding a filesystem label when formatting)</li>
+<li><a href="https://man.archlinux.org/man/mkfs.fat.8.en">mkfs.fat manpage</a> (Same as above)</li>
+<li><a href="https://man.archlinux.org/man/reflector.1#EXAMPLES">Reflector examples</a> (Used this to build the mirrorlist generator command)</li>
 <li><a href="https://wiki.archlinux.org/title/Zram#Usage_as_swap">Swap on zram</a></li>
 <li><a href="https://wiki.archlinux.org/title/Power_management/Suspend_and_hibernate#Hibernation">Hibernation</a></li>
-<li><a href="https://wiki.archlinux.org/title/AMDGPU">AMD graphics (AMDGPU)</a></li>
-<li><a href="https://wiki.archlinux.org/title/Intel_graphics">Intel graphics</a></li>
-<li><a href="https://wiki.archlinux.org/title/Hardware_video_acceleration">Hardware video acceleration</a></li>
-<li><a href="https://wiki.archlinux.org/title/Arch_User_Repository#Installing_and_upgrading_packages">Installing AUR packages</a></li>
+<li><a href="https://wiki.archlinux.org/title/AMDGPU">AMD graphics (AMDGPU)</a> (For the required packages table in <a href="#desktop-environment">#Desktop Environment</a>)</li>
+<li><a href="https://wiki.archlinux.org/title/Intel_graphics">Intel graphics</a> (same as above)</li>
+<li><a href="https://wiki.archlinux.org/title/Hardware_video_acceleration">Hardware video acceleration</a> (Same as above lol)</li>
+<li><a href="https://wiki.archlinux.org/title/Arch_User_Repository#Installing_and_upgrading_packages">Installing AUR packages</a> (For installing yay at the very end)</li>
 </ul>
 
         </article>

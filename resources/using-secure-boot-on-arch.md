@@ -1,18 +1,15 @@
 ---
 layout: page.html
-title: Using Secure Boot on Arch
-created: Feb 25, 2026
+title: Using Secure Boot on Arch Linux with GRUB
+date: 2026-02-25
 lastUpdated: Mar 4, 2026
 toc: true
+tags: resource
 ---
 
-## Update (Mar 4, 2026)
+I recently set up Secure Boot on Twilight (my laptop). It works well, but the ArchWiki's documentation was a little confusing to follow, so I wrote this guide that targets GRUB. I have changed my setup significantly and I'm using systemd-boot now, but I'm leaving this here in case someone else finds it useful.
 
-About a week after I wrote this guide I had the brilliant idea to switch to systemd-boot and also reconfigure my system to boot from a unified kernel image (UKI). This actually greatly simplified the process of encrypting the root partition since the UKI gets placed on the ESP after being assembled, thus I didn't need to worry about the bootloader being able to access `/boot` since the UKI is on the ESP (which is where the bootloader is installed to as well). I also worked up enough courage to directly modify the Secure Boot database so I could eliminate shim from my setup. So for my purposes at least, this guide is no longer relevant. But I'm leaving it up in the hope someone else finds it useful. :)
-
-## Introduction
-
-Welp guess what? Last week I set up Secure Boot on Twilight, my laptop. It works pretty much fine, the only real issue I had was a skill issue and the documentation on the ArchWiki being kinda messy and spread across a few different pages. This page is supposed to fix that issue at least for GRUB users.
+<!-- excerpt -->
 
 Its always slightly bothered me that my systems (especially my laptop) aren't really that secure (I'm not joking, you get full access to them simply by booting up a live Linux image and mounting the internal drive and then you can do basically anything) so I'm taking some steps to *minimize the risks*. This basically just boils down to 1) enabling Secure Boot so only trusted OSes (and Windows) can boot, and 2) encrypting the internal drive so that you can't mount it in a live environment without knowing the secret to unlocking it. I've done Secure Boot first since it's the simpler option to implement and also fairly low-risk (the worst that could happen was nuking my bootloader and that's not that hard to fix).
 

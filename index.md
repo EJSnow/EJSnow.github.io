@@ -3,12 +3,6 @@ layout: home.html
 title: EJSnow
 ---
 
-<menu role="tablist" aria-label="Tabs">
-    <button role="tab" aria-controls="home" aria-selected="true">Home</button>
-    <button role="tab" aria-controls="about-me">About me</button>
-    <button role="tab" aria-controls="projects">Projects</button>
-    <button role="tab" aria-controls="resources">Resources</button>
-</menu>
 <!-- Home -->
 <article role="tabpanel" id="home">
 
@@ -19,12 +13,13 @@ title: EJSnow
 My main PC ([View project](projects/2024-10-05-redstone-computer/)):
 <img class="lightboxed" alt="The Redstone Computer, Sep 13 2025, running Arch Linux" src="images/redstone-computer.jpg">
 </article>
+
 <!-- About me -->
 <article role="tabpanel" id="about-me" hidden>
 
 # About me
 
-I'm Ezra Snow, a nerdy (extremely) 17 year old guy who may be addicted to computers and Linux (I spend far too much time using and messing with Linux on my computer). I currently live in North Carolina, and I'm a senior in high school. After I graduate, I'm going to study computer science at LeTourneau University. When I'm not doing school or messing with Linux, I'm often playing video games.
+I'm Ezra Snow, a nerdy (extremely) 17 year old guy who may be addicted to computers and Linux (I spend far too much time using and messing with Linux on my computer). I currently live in North Carolina, and I'm a senior in high school. After I graduate, I'm going to study computer science at LeTourneau University (yes, it's far, but I have reasons). When I'm not doing school or messing with Linux, I'm often playing video games.
 
 Games I like (in no particular order):
 
@@ -132,25 +127,14 @@ Cool stuff I've made. Check my <a target="_blank" href="https://github.com/ejsno
 
 # Resources
 
-Documents I have here for future reference. Mainly guides for setting up Linux currently. Just for the record this is for my own personal reference mostly and they're on here just because this is a convenient way of accessing them from anywhere. These mostly aren't general purpose guides; check official documentation (like the [ArchWiki](https://wiki.archlinux.org)) or other locations of good repute for those. ;)
+Things I have for future reference; they're on here because this makes them easy to access from anywhere. These mostly aren't general purpose guides; check official documentation (like the [ArchWiki](https://wiki.archlinux.org)) or other locations of good repute for those. ;)
 
 ## Linux stuff
 
-<section>
-
-### Arch Linux Installation (including LUKS encryption with TPM2 and Secure Boot)
-
-**Last updated Mar 6, 2026**
-<p style="margin-top: 0.5em">A guide documenting my preferred route for installing Arch Linux, including full disk encryption and Secure Boot support. Mostly just in case I ever have to do a full reinstall or I'm setting up a new PC.</p>
-<p style="text-align: right"><a href="resources/archlinux-installation">View</a></p>
-</section>
-<section>
-
-### Using Secure Boot on Linux with GRUB
-
-**Last updated Mar 4, 2026**
-<p style="margin-top: 0.5em">I recently set up Secure Boot on Twilight (my laptop) and the ArchWiki's documentation was a little confusing so here's a more concise guide that only deals with GRUB. NOTE: I actually switched to systemd-boot but I'm leaving this here in the hopes that this is somewhat useful to someone else :)</p>
-<p style="text-align: right"><a href="resources/using-secure-boot-on-arch">View</a></p>
-</section>
+<ul class="posts">
+{%- for resource in collections.resource -%}
+    <li><h3>{{ resource.data.title }}</h3><small><b>Last updated {{ resource.data.lastUpdated }} • Created {{ resource.page.date | dateOnly }}</b></small><p style="margin: 0.5em 0 0">{{ resource.page.excerpt }}</p><p style="text-align: right; margin-top: 0"><a href="{{ resource.page.url }}">View</a></p></li>
+{%- endfor -%}
+</ul>
 
 </article>

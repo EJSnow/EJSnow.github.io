@@ -23,7 +23,7 @@
         <article role="tabpanel">
           <a id="top" href="/">← 🏡 Home</a>
           <h1>{{ title }}</h1>
-          <pre><code>#include metadata.h<br>// Created {{ created }}<br>// Last updated {{ lastUpdated }}</code></pre>
+          <pre><code>#include metadata.h<br>// Created {{ page.date | dateOnly }}<br>// Last updated {{ lastUpdated }}</code></pre>
           {% if toc %}
           <details id="toc">
             <summary>Table of Contents</summary>

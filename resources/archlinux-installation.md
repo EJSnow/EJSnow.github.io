@@ -1,14 +1,19 @@
 ---
 layout: page.html
-title: Arch Linux Installation
-created: Jan 31, 2026
+title: Arch Linux Installation (with full disk encryption using TPM2 and Secure Boot)
+date: 2026-01-31
 lastUpdated: Mar 6, 2026
 toc: true
+tags: resource
 ---
+
+My preferred route for installing Arch Linux including full disk encryption (with TPM2-based automatic unlocking!) and Secure Boot support. This mostly exists just in case I ever have to do a full reinstall/just because I want to fully document my installation route.
+
+<!-- excerpt -->
 
 **Important:** This is my own personalized installation guide for personal use. I do not recommend following this if you aren't me. Use the [official installation](https://wiki.archlinux.org/title/Installation_guide) guide instead.
 
-This setup implements Secure Boot and full disk encryption with automated unlocking provided by the TPM2. The system boots from a signed unified kernel image (UKI) to eliminate complex bootloader configuration (the UKI is stored on the ESP and has the kernel command line embedded).
+This setup uses systemd-boot as the bootloader and boots from a signed unified kernel image (UKI) incorporating the kernel image, initrd, and kernel commandline in one file to reduce complexity (as a side benefit, the initrd and kernel commandline are also validated by Secure Boot).
 
 ## Warming up
 
@@ -178,16 +183,16 @@ And finally my Plasma dotfiles. Follow the instructions on [the repository](http
 
 ## References
 
-I wrote this with the help of MANY ArchWiki pages and a few manpages.
+I wrote this with the help of MANY ArchWiki pages and a few manpages. Seriously the ArchWiki is amazing, go [check it out](https://wiki.archlinux.org).
 
-* [The official installation guide](https://wiki.archlinux.org/title/Installation_guide)
+* [The official installation guide](https://wiki.archlinux.org/title/Installation_guide) (The basic skeleton for this page)
 * [This example for encrypting your installation](https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system#LUKS_on_a_partition_with_TPM2_and_Secure_Boot) (I basically lifted the encryption instructions from there)
-* [mkfs.ext4 manpage](https://man.archlinux.org/man/mkfs.ext4.8.en)
-* [mkfs.fat manpage](https://man.archlinux.org/man/mkfs.fat.8.en)
-* [Reflector examples](https://man.archlinux.org/man/reflector.1#EXAMPLES)
+* [mkfs.ext4 manpage](https://man.archlinux.org/man/mkfs.ext4.8.en) (mostly for adding a filesystem label when formatting)
+* [mkfs.fat manpage](https://man.archlinux.org/man/mkfs.fat.8.en) (Same as above)
+* [Reflector examples](https://man.archlinux.org/man/reflector.1#EXAMPLES) (Used this to build the mirrorlist generator command)
 * [Swap on zram](https://wiki.archlinux.org/title/Zram#Usage_as_swap)
 * [Hibernation](https://wiki.archlinux.org/title/Power_management/Suspend_and_hibernate#Hibernation)
-* [AMD graphics (AMDGPU)](https://wiki.archlinux.org/title/AMDGPU)
-* [Intel graphics](https://wiki.archlinux.org/title/Intel_graphics)
-* [Hardware video acceleration](https://wiki.archlinux.org/title/Hardware_video_acceleration)
-* [Installing AUR packages](https://wiki.archlinux.org/title/Arch_User_Repository#Installing_and_upgrading_packages)
+* [AMD graphics (AMDGPU)](https://wiki.archlinux.org/title/AMDGPU) (For the required packages table in [#Desktop Environment](#desktop-environment))
+* [Intel graphics](https://wiki.archlinux.org/title/Intel_graphics) (same as above)
+* [Hardware video acceleration](https://wiki.archlinux.org/title/Hardware_video_acceleration) (Same as above lol)
+* [Installing AUR packages](https://wiki.archlinux.org/title/Arch_User_Repository#Installing_and_upgrading_packages) (For installing yay at the very end)

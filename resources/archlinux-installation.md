@@ -2,7 +2,7 @@
 layout: page.html
 title: Arch Linux Installation (with full disk encryption using TPM2 and Secure Boot)
 date: 2026-01-31
-lastUpdated: Mar 6, 2026
+lastUpdated: Mar 14, 2026
 toc: true
 tags: resource
 ---
@@ -101,7 +101,7 @@ I currently use KDE Plasma because it's epic. Other supported DEs can be found o
 To install a fully featured KDE Plasma session with my preferred KDE apps + Firefox as the web browser, run the following command:
 
 ```sh
-# pacman -S plasma-meta kde-system-meta plymouth-kcm baloo-widgets breeze5 dolphin-plugins ffmpegthumbs kdeconnect kdegraphics-thumbnailers kdenetwork-filesharing kimageformats kio-admin kio-extras kio-fuse kwalletmanager phonon-qt6-vlc plasma5-integration qqc2-desktop-style icoutils iio-sensor-proxy libappindicator noto-fonts-emoji power-profiles-daemon qt6-imageformats thermald xdg-desktop-portal-gtk xsettingsd ark dragon elisa filelight gwenview kamoso kate kcalc kcharselect kdialog konsole kup kwalletmanager markdownpart okular svgpart firefox
+# pacman -S plasma-meta kde-system-meta plymouth-kcm baloo-widgets breeze5 dolphin-plugins ffmpegthumbs kdeconnect kdegraphics-thumbnailers kdenetwork-filesharing kimageformats kio-admin kio-extras kio-fuse kwalletmanager phonon-qt6-vlc plasma5-integration qqc2-desktop-style icoutils iio-sensor-proxy libappindicator noto-fonts-emoji power-profiles-daemon qt6-imageformats thermald xdg-desktop-portal-gtk xsettingsd ark dragon elisa filelight gwenview kamoso kate kcalc kcharselect kdialog konsole kup markdownpart okular svgpart firefox
 ```
 
 Don't forget to enable `plasmalogin.service` to actually boot into a graphical session.
@@ -149,16 +149,36 @@ At this point we need to get Secure Boot enabled, so it's time to reboot into th
 
 I use the method described [here](https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface/Secure_Boot#Assisted_process_with_sbctl) for enabling Secure Boot.
 
-Once Secure Boot is enabled, now we can enlist the help of the TPM2 to ensure a smooth boot process with no pesky password prompts to unlock the root partition. Use [`systemd-cryptenroll`](https://wiki.archlinux.org/title/Systemd-cryptenroll) to add a recovery key, enroll the TPM2, and wipe the password created earlier:
+Once Secure Boot is enabled, now we can enlist the help of the TPM2 to ensure a smooth boot process with no pesky password prompts to unlock the root partition. Use [`systemd-cryptenroll`](https://wiki.archlinux.org/title/Systemd-cryptenroll) to add a recovery key, enroll the TPM2, and wipe the password created earlier.
+
+It might be a good idea to set up a PCR policy rather than binding to plain PCR values since the former is more flexible. This requires the use of `systemd-ukify` to set up binding the key to a policy that verifies the UKI.
+
+Generate a policy signing key:
+
+```sh
+# ukify genkey \
+	--pcr-private-key=/etc/systemd/tpm2-pcr-private-key.pem \
+	--pcr-private-key=/etc/systemd/tpm2-pcr-public-key.pem
+```
+
+Create `/etc/kernel/uki.conf` containing the following to use the PCR policy:
+
+```
+[PCRSignature:initrd]
+PCRPrivateKey=/etc/systemd/tpm2-pcr-private-key.pem
+PCRPublicKey=/etc/systemd/tpm2-pcr-public-key.pem
+```
+
+Regenerate the initrd and the new UKI now makes use of the PCR policy. The last step is to enroll the TPM2 with the PCR policy:
 
 ```sh
 $ sudo systemd-cryptenroll /dev/sda2 --recovery-key
-$ sudo systemd-cryptenroll /dev/sda2 --wipe-slot=password --tpm2-device=auto --tpm2-pcrs=7+15:sha256=0000000000000000000000000000000000000000000000000000000000000000
+$ sudo systemd-cryptenroll /dev/sda2 --wipe-slot=password --tpm2-device=auto
 ```
 
-The TPM2 will release the key as long as the Secure Boot state hasn't been tampered with. If it doesn't, the system will prompt for the recovery key. Make sure to save it somewhere safe otherwise it won't be very useful.
+The TPM2 will release the key, allowing unattended boot, as long as the UKI isn't tampered with externally. Otherwise, the system will ask for the recovery key (this will also happen if the drive is moved to a new system).
 
-Reboot to make sure everything works.
+I recommend rebooting to make sure this works.
 
 ### Finishing touches
 
@@ -195,4 +215,5 @@ I wrote this with the help of MANY ArchWiki pages and a few manpages. Seriously 
 * [AMD graphics (AMDGPU)](https://wiki.archlinux.org/title/AMDGPU) (For the required packages table in [#Desktop Environment](#desktop-environment))
 * [Intel graphics](https://wiki.archlinux.org/title/Intel_graphics) (same as above)
 * [Hardware video acceleration](https://wiki.archlinux.org/title/Hardware_video_acceleration) (Same as above lol)
+* [Trusted Platform Module#PCR policies](https://wiki.archlinux.org/title/Trusted_Platform_Module#PCR_policies) (For using a PCR policy to seal the disk encryption key)
 * [Installing AUR packages](https://wiki.archlinux.org/title/Arch_User_Repository#Installing_and_upgrading_packages) (For installing yay at the very end)

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, inital-scale=1.0">
-    <title>Redstone Computer (Oct 5, 2024) - EJSnow</title>
+    <title>Redstone Computer - EJSnow</title>
     <link rel="stylesheet" href="https://unpkg.com/7.css">
     <link rel="stylesheet" href="/css/style.css">
     <style>@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap');</style>
@@ -22,11 +22,11 @@
       <div class="window-body has-space">
         <article role="tabpanel">
           <a id="top" href="/">← 🏡 Home</a>
-          <h1>Redstone Computer (Oct 5, 2024)</h1>
+          <h1>Redstone Computer</h1>
           <pre><code>#include metadata.h<br>// Created Oct 5, 2024<br>// Last updated Dec 20, 2025</code></pre>
           
-          <img alt="My computer as of Sep 13 2025, running Arch Linux" src="/images/redstone-computer.jpg" class="lightboxed">
-<p>The Redstone Computer is a Dell OptiPlex 7020 SFF that I got for free last year and turned into a low-end gaming PC/daily driver. I mostly play lightweight and older games, and the computer runs all of them pretty well, typically at a mix of high and ultra settings at 1680x1050 60Hz. The GPU is somewhat bottlenecked due to being in an old PCIe 3.0 system, not to mention thermals are just awful on this computer.</p>
+          <p>The Redstone Computer is a Dell OptiPlex 7020 SFF that I got for free last year and turned into a low-end gaming PC/daily driver. I mostly play lightweight and older games, and the computer runs all of them pretty well, typically at a mix of high and ultra settings at 1680x1050 60Hz. The GPU is somewhat bottlenecked due to being in an old PCIe 3.0 system, not to mention thermals are just awful on this computer, but it does its best.</p>
+<img alt="My computer as of Sep 13 2025, running Arch Linux" src="/images/redstone-computer.jpg" class="lightboxed">
 <p>Despite all of that, the computer is somehow quite usable and stable (I haven't had any BSODs in Windows, or major breakage in Linux on this computer). I'm actually impressed with how solid this computer has been. It's also a LOT faster than the laptop I used to use before, which was a slightly older Dell Latitude laptop with a 3rd gen dual-core i7 and only the HD 4000 iGPU. That laptop could barely run Minecraft at playable framerates WITHOUT shaders, and to be honest even Geometry Dash would lag on large extremely detailed levels (and if GD lags then you KNOW it's bad).</p>
 <h2 id="truly-final-update-i-promise-(12%2F17-20%2F2025)" tabindex="-1">Truly final update I promise (12/17-20/2025)</h2>
 <p>I was messing around with LACT in Linux and discovered I could undervolt my GPU. (You can't do this in Windows on this card, all adjustments are locked by AMD's Windows drivers. Even in Linux the only adjustment available is core voltage offset.) While the RX 6400 is already ridiculously efficient, I am now able to make it even more so. I initially started with a -65mv undervolt which results in, surprisingly, ~22% lower power draw and no clock speed penalty. Plus temps dropped by a few degrees which when you're in the upper 80s is pretty significant. -65mv wasn't quite stable though. After some further tweaking, I have it stable at -55mv, which is still a slight improvement.</p>

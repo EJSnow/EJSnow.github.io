@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, inital-scale=1.0">
+    <title>Securing Twilight (my laptop) - EJSnow</title>
+    <link rel="stylesheet" href="https://unpkg.com/7.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap');</style>
+  </head>
+  <body>
+    <div class="window glass active content" id="main">
+      <div class="title-bar">
+        <div class="title-bar-text">EJSnow</div>
+        <div class="title-bar-controls">
+          <!-- These are decorative and don't actually do anything -->
+          <button aria-label="Minimize"></button>
+          <button aria-label="Maximize"></button>
+          <button aria-label="Close"></button>
+        </div>
+      </div>
+      <div class="window-body has-space">
+        <article role="tabpanel">
+          <a id="top" href="/">← 🏡 Home</a>
+          <h1>Securing Twilight (my laptop)</h1>
+          <pre><code>#include metadata.h<br>// Created Apr 11, 2026<br>// Last updated Apr 11, 2026</code></pre>
+          
+          <p>In February I decided to try to &quot;secure&quot; Twilight (my laptop), by enabling Secure Boot and encrypting its SSD. Now that I've pretty much finalized the setup, I thought I'd write down a detailed explanation of it. Also, welcome to the blog! It'll be replacing the projects section I had before, and I'll be writing posts basically whenever I feel like it. Anyways. I won't explain Secure Boot and encryption here since there are multiple good explanations out there already:</p>
+<ul>
+<li>Secure Boot: <a href="https://www.rodsbooks.com/efi-bootloaders/secureboot.html">Rodsbooks' Secure Boot article</a> (Mainly the &quot;What is Secure Boot?&quot; section)</li>
+<li>Encryption: <a href="https://wiki.archlinux.org/title/Data-at-rest_encryption">Data-at-rest encryption - ArchWiki</a></li>
+</ul>
+<p>I mainly just want to document my Secure Boot/disk encryption process because why not?</p>
+<h2 id="secure-booting" tabindex="-1">Secure Booting</h2>
+<p>So the first thing I decided to set up was Secure Boot, as it seemed less risky than encrypting the SSD. I ended up generating and using my own Secure Boot keys, which has the benefit of not requiring <a href="https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface/Secure_Boot#shim">shim</a> (used by Ubuntu, Fedora and friends) but does have some downsides; namely that some hardware has signed option ROMS and may require Microsoft's keys to be enrolled in order to work (you really only need this for GPUs and some SSDs), and forgetting to enroll Microsoft's keys is rather awkward to recover from.</p>
+<h3 id="key-creation" tabindex="-1">Key creation</h3>
+<p>There's a few ways to create your own keys. Me being me, I decided to go the fully manual route, and automate the resigning of the bootloader and kernel when they update. For the future, I also wrote a script to automatically generate keys (and download Microsoft's keys in case they're needed).</p>
+<details><summary><ins>Here's the script (click to expand):</ins></summary>
+<pre><code class="language-bash">#!/bin/bash
+# A Secure Boot key generator that also includes Microsoft's keys
+# as separate .auth files.
+# NOTE: efitools is needed to generate the .esl and .auth files.
+# Additionally, curl and sbsigntools are needed to download and
+# convert Microsoft's keys.
+
+echo -n &quot;Enter a common name to embed in your keys: &quot;
+read NAME
+
+echo &quot;Creating user keys...&quot;
+uuidgen --random &gt; GUID.txt
+
+openssl req -newkey rsa:4096 -noenc -keyout PK.key -new -x509 -sha256 -days 3650 -subj &quot;/CN=$NAME PK/&quot; -out PK.crt
+openssl req -newkey rsa:4096 -noenc -keyout KEK.key -new -x509 -sha256 -days 3650 -subj &quot;/CN=$NAME KEK/&quot; -out KEK.crt
+openssl req -newkey rsa:4096 -noenc -keyout db.key -new -x509 -sha256 -days 3650 -subj &quot;/CN=$NAME db/&quot; -out db.crt
+openssl x509 -outform DER -in PK.crt -out PK.cer
+openssl x509 -outform DER -in KEK.crt -out KEK.cer
+openssl x509 -outform DER -in db.crt -out db.cer
+
+cert-to-efi-sig-list -g &quot;$(&lt; GUID.txt)&quot; PK.crt PK.esl
+cert-to-efi-sig-list -g &quot;$(&lt; GUID.txt)&quot; KEK.crt KEK.esl
+cert-to-efi-sig-list -g &quot;$(&lt; GUID.txt)&quot; db.crt db.esl
+
+sign-efi-sig-list -g &quot;$(&lt; GUID.txt)&quot; -k PK.key -c PK.crt PK PK.esl PK.auth
+sign-efi-sig-list -g &quot;$(&lt; GUID.txt)&quot; -k PK.key -c PK.crt PK /dev/null noPK.auth
+sign-efi-sig-list -g &quot;$(&lt; GUID.txt)&quot; -k PK.key -c PK.crt KEK KEK.esl KEK.auth
+sign-efi-sig-list -g &quot;$(&lt; GUID.txt)&quot; -k KEK.key -c KEK.crt db db.esl db.auth
+
+echo &quot;Downloading Microsoft's public keys...&quot;
+# Download Microsoft's public keys
+curl -o microsoft-windows-production-pca-2011.crt https://www.microsoft.com/pkiops/certs/MicWinProPCA2011_2011-10-19.crt
+curl -o windows-uefi-ca-2023.crt https://www.microsoft.com/pkiops/certs/windows%20uefi%20ca%202023.crt
+curl -o microsoft-corporation-uefi-ca-2011.crt https://www.microsoft.com/pkiops/certs/MicCorUEFCA2011_2011-06-27.crt
+curl -o microsoft-uefi-ca-2023.crt https://www.microsoft.com/pkiops/certs/microsoft%20uefi%20ca%202023.crt
+curl -o microsoft-option-rom-uefi-ca-2023.crt https://www.microsoft.com/pkiops/certs/microsoft%20option%20rom%20uefi%20ca%202023.crt
+curl -o microsoft-corporation-kek-ca-2011.crt https://www.microsoft.com/pkiops/certs/MicCorKEKCA2011_2011-06-24.crt
+curl -o microsoft-corporation-kek-2k-ca-2023.crt https://www.microsoft.com/pkiops/certs/microsoft%20corporation%20kek%202k%20ca%202023.crt
+
+echo &quot;Preparing Microsoft db and KEK additions...&quot;
+sbsiglist --owner 77fa9abd-0359-4d32-bd60-28f4e78f784b --type x509 --output MS_Win_db_2011.esl microsoft-windows-production-pca-2011.crt
+sbsiglist --owner 77fa9abd-0359-4d32-bd60-28f4e78f784b --type x509 --output MS_Win_db_2023.esl windows-uefi-ca-2023.crt
+sbsiglist --owner 77fa9abd-0359-4d32-bd60-28f4e78f784b --type x509 --output MS_UEFI_db_2011.esl microsoft-corporation-uefi-ca-2011.crt
+sbsiglist --owner 77fa9abd-0359-4d32-bd60-28f4e78f784b --type x509 --output MS_UEFI_db_2023.esl microsoft-uefi-ca-2023.crt
+sbsiglist --owner 77fa9abd-0359-4d32-bd60-28f4e78f784b --type x509 --output MS_OpROM_UEFI_db_2023.esl microsoft-option-rom-uefi-ca-2023.crt
+cat MS_Win_db_2011.esl MS_Win_db_2023.esl MS_UEFI_db_2011.esl MS_UEFI_db_2023.esl MS_OpROM_UEFI_db_2023.esl &gt; MS_db.esl
+
+sbsiglist --owner 77fa9abd-0359-4d32-bd60-28f4e78f784b --type x509 --output MS_Win_KEK_2011.esl microsoft-corporation-kek-ca-2011.crt
+sbsiglist --owner 77fa9abd-0359-4d32-bd60-28f4e78f784b --type x509 --output MS_Win_KEK_2023.esl microsoft-corporation-kek-2k-ca-2023.crt
+cat MS_Win_KEK_2011.esl MS_Win_KEK_2023.esl &gt; MS_Win_KEK.esl
+
+sign-efi-sig-list -a -g 77fa9abd-0359-4d32-bd60-28f4e78f784b -k KEK.key -c KEK.crt db MS_db.esl add_MS_db.auth
+sign-efi-sig-list -a -g 77fa9abd-0359-4d32-bd60-28f4e78f784b -k PK.key -c PK.crt KEK MS_Win_KEK.esl add_MS_Win_KEK.auth
+
+chmod 0600 *.key
+
+echo &quot;&quot;
+ls *.auth
+echo -e &quot;\nFinished creating keys and EFI signature lists.\nThe .auth files shown are ready for use.&quot;
+</code></pre>
+</details>
+<p>I have it sitting on my laptop named <code>genkeys.sh</code>. When run it generates all the keys, and lists the .auth files that get enrolled in the UEFI.</p>
+<h3 id="enrolling-the-keys" tabindex="-1">enrolling the keys</h3>
+<p>As is typical on Linux there's about 5 different tools to do this, but I used (or attempted to use, you'll see why later on) <code>sbkeysync</code> from <code>sbsigntools</code>.</p>
+<p>I copied the keys to the suggested location for <code>sbkeysync</code> and arranged them in the way it expects. Then I enrolled the keys. This requires setting Secure Boot in setup mode, otherwise you can't just enroll any old keys. Additionally, the platform key must be enrolled last, since enrolling it will put Secure Boot back in user mode. So everything else is enrolled first:</p>
+<pre><code class="language-sh"># sbkeysync --keystore /etc/secureboot/keys --verbose
+</code></pre>
+<p>This initially failed saying &quot;Operation not permitted&quot;, weirdly enough. However, I tried again a few minutes later, and it worked, so I guess my laptop's UEFI was just being weird. Then I tried to enroll the platform key:</p>
+<pre><code class="language-sh"># sbkeysync --keystore /etc/secureboot/keys --pk --verbose
+</code></pre>
+<p>Once again, I got &quot;Operation not permitted&quot; errors, and despite retrying multiple times, sbkeysync stubbornly refused to enroll the platform key. Fortunately, there's an alternative way:</p>
+<pre><code class="language-sh"># efi-updatevar -f /etc/secureboot/keys/PK/PK.auth PK
+</code></pre>
+<p>This finally worked, finishing the Secure Boot setup. After signing systemd-boot and my UKI, I rebooted, and it worked! To ensure painless upgrades, I automated kernel and bootloader resigning when they're updated. The UKI is signed when it's built by systemd-ukify and I made a pacman hook to automatically resign systemd-boot on systemd updates.</p>
+<h2 id="encryption" tabindex="-1">Encryption</h2>
+<p>Surprisingly, this wasn't that hard to do, just extremely time-consuming. The usual warnings apply: have backups, test in VMs, etc. I went with an encryption setup similar to Bitlocker's default setup on Windows: TPM2-based automatic unlocking, plus a recovery key for when the TPM2 fails me. The ESP contains boot files and has to remain unencrypted.</p>
+<p>First, I needed to boot into a live Arch ISO since the root partition has to be unmounted before encrypting. Also, before encrypting, the filesystem (NOT the partition) needed to be shrunk to give space for a LUKS header. This is a bit of a nasty workaround to avoid having to erase the SSD before encrypting. After doing that, the root partition was ready to be encrypted using cryptsetup:</p>
+<pre><code class="language-sh"># cryptsetup reencrypt --encrypt --reduce-device-size 32M /dev/nvme0n1p5
+</code></pre>
+<p>This command asked for a password to unlock the partition. I entered a temporary one to satisfy it, but I wasn't going to keep it. Encrypting an existing filesystem takes a very very long time, but once it finishes, some additional system configuration was needed in order for Arch to boot.</p>
+<p>The short version was I had to simply add the <code>sd-encrypt</code> hook to mkinitcpio's configuration (I'm using a systemd-based initramfs, which is now the default, and while you also need the <code>keyboard</code> hook to be able to enter the recovery key if it's needed, it's included in the default config). I also initally explicitly specified the root partition via kernel parameters, but I later discovered that systemd's GPT partition automounting (which I'm taking advantage of) can find and unlock the root partition without needing any kernel parameters telling it where the root is, which is extremely neat. Finally, after regenerating the initramfs, I rebooted to re-enable Secure Boot (the ISO currently doesn't support Secure Boot). Then I enrolled the TPM2, generated a strong recovery key, and removed the temporary password from before:</p>
+<pre><code class="language-sh"># systemd-cryptenroll /dev/nvme0n1p5 --recovery-key
+# systemd-cryptenroll /dev/nvme0n1p5 --wipe-slot=password --tpm2-device=auto --tpm2-pcrs=12
+</code></pre>
+<p>The <code>--tpm2-pcrs</code> option really depends on your preference. After this, I saved the generated recovery key in a VerySafe™ location. Then I rebooted, and it did in fact unlock the root partition automatically and proceeded to boot normally.</p>
+<h2 id="conclusion" tabindex="-1">Conclusion</h2>
+<p>Have I achieved my goal of making my laptop more secure? I think so. To be honest, it realistically doesn't matter that much, but it was a fun learning experience, which is mostly why I did it. I haven't done all this on my PC, partly because I plan on upgrading it soon (RX 6600 incoming... 👀) and I don't want to have to transfer it all to a new system, and partly because my PC doesn't have a TPM2 because it's old (it should still be possible with a TPM1.2 though).</p>
+
+        </article>
+      </div>
+      <footer class="page">
+        <span>
+          Me, but elsewhere:
+          <a href="https://github.com/ejsnow">GitHub</a>
+          <a href="https://www.youtube.com/@EJSnow-m1s">Youtube</a>
+        </span>
+        <a href="#top">Back to top ↑</a>
+      </footer>
+    </div>
+
+    <!-- Lightbox window -->
+    <div class="window glass active" id="image-viewer" role="dialog" aria-labelledby="lightbox-title">
+      <div class="title-bar">
+        <div class="title-bar-text" id="lightbox-title">Viewing image</div>
+        <div class="title-bar-controls">
+          <button aria-label="Minimize"></button>
+          <button aria-label="Maximize"></button>
+          <button onclick="history.back()" aria-label="Close"></button>
+        </div>
+      </div>
+      <div class="window-body" id="lightbox">
+        <figure>
+          <img id="lightbox-img" src="" alt="">
+          <figcaption id="image-caption"></figcaption>
+        </figure>
+      </div>
+    </div>
+    <script src="/js/script.js"></script>
+  </body>
+</html>

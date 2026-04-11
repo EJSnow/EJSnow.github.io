@@ -8,9 +8,9 @@ title: EJSnow
 
 # Home
 
-👋 Hi, I'm Ezra Snow, usually "EJSnow" online. I enjoy gaming, programming, and messing with Linux. This site was written entirely on Arch btw. I'm currently daily-driving Arch Linux, coming from Windows (though not directly, I explored several other Linux distros before landing on Arch). I'm also hopelessly nostalgic for Windows 7 (this site is evidence of that lol).
+👋 Hi, I'm Ezra Snow, usually "EJSnow" online. I enjoy gaming, programming, and messing with Linux. I'm currently daily-driving Arch Linux, coming from Windows (though not directly, I explored several other Linux distros before landing on Arch). This site was written entirely on Arch btw. I'm also hopelessly nostalgic for Windows 7 (this site is evidence of that lol).
 
-My main PC ([View project](projects/2024-10-05-redstone-computer/)):
+My main PC ([Details and specs](projects/2024-10-05-redstone-computer/)):
 <img class="lightboxed" alt="The Redstone Computer, Sep 13 2025, running Arch Linux" src="images/redstone-computer.jpg">
 </article>
 
@@ -19,7 +19,9 @@ My main PC ([View project](projects/2024-10-05-redstone-computer/)):
 
 # About me
 
-I'm Ezra Snow, a nerdy (extremely) 17 year old guy who may be addicted to computers and Linux (I spend far too much time using and messing with Linux on my computer). I currently live in North Carolina, and I'm a senior in high school. After I graduate, I'm going to study computer science at LeTourneau University (yes, it's far, but I have reasons). When I'm not doing school or messing with Linux, I'm often playing video games.
+I'm Ezra Snow, a nerdy (extremely) 17 year old guy who may be addicted to computers and Linux (I spend far too much time using and messing with Linux on my computer). I currently live in North Carolina, and I'm a senior in high school. After I graduate, I'm going to study computer science at LeTourneau University. When I'm not doing school or messing with Linux, I'm often playing video games or programming.
+
+I am also mildly interested in self-hosting things. One thing I definitely want to do is self-host this website, and also probably set up a NAS or something. I do not currently have a domain though, so I can't do much yet (I really should get a domain it's not even very expensive). \*sigh\* Maybe someday. For now I mess about in the LAN on my PC.
 
 Games I like (in no particular order):
 
@@ -30,8 +32,6 @@ Games I like (in no particular order):
 * Minecraft
 * Just Shapes and Beats
 
-I'm also getting interested in running a home server, but I'm kind of limited with what I can do right now, since I don't have a web domain. What I really want to do is set up a NAS so I can access files more conveniently from multiple devices. And perhaps a media server. There's a lot I could do with a server. But that's a distant dream right now. \*sigh\* Maybe someday. Although I've already been messing around with some stuff on my main PC.
-
 Fun fact: I wrote parts of this section on my phone by ssh-ing into my PC. <a target="_blank" href="https://termux.dev">Termux</a> is wonderful (The vast majority was written either on my PC or my laptop though).
 
 ## My computers
@@ -41,7 +41,7 @@ Fun fact: I wrote parts of this section on my phone by ssh-ing into my PC. <a ta
 ### The Redstone Computer
 <img class="lightboxed" alt="The Redstone Computer, Sep 13 2025, running Arch Linux" src="images/redstone-computer.jpg">
 
-My main PC, that I use for gaming, some web development, and pretty much everything else that isn't schoolwork (including Windows nostalgia). I built it over a year ago and it's worked really well, despite its age. It was originally a lowly office computer (a Dell OptiPlex 7020 SFF), but then I got my hands on it and **forced** it to game, upgrading most of the hardware to bring it up to gaming specs. Among the upgrades was a TP-Link Archer TX55E Wi-Fi card, since it only had Ethernet to begin with and I can't conveniently use Ethernet, plus I also wanted Bluetooth. I primarily play Geometry Dash, Skyrim, and Forza Horizon 4 on it, and I used to play a lot of Minecraft as well. It handles all of those games quite flawlessly.
+My main PC, that I use for gaming, some web development, and pretty much everything else that isn't schoolwork (including Windows nostalgia). I built it over a year ago and it's worked really well, despite its age. See more details [here](projects/2024-10-05-redstone-computer/).
 
 Specs (original → upgraded):
 
@@ -69,11 +69,9 @@ Specs:
 ### The Minecraft server (not anymore though)
 <img class="lightboxed" alt="The Minecraft server, Oct 23 2025, installing Fedora Server 42" src="images/server.jpg">
 
-This laptop has been in my family for a long time, and from 2022-2024 it was the kids' laptop (but mostly mine). It was originally my mom's, but for various reasons (mostly its age and the fact that it had a hard drive bottlenecking the crap out of it) she got a new computer, and this laptop came to me. Technically, it was only for school, but it was also my introduction to computers, Windows, PC gaming (despite the fact that it can't play very many games), and I even started playing around with Linux on it towards the end. I also put an SSD and more RAM in it. Before I started messing with Linux, I played around with Windows 7, first in a VM (which was horrendously slow), and then I set up a dual-boot with Windows 10. Windows 7 was actually really good on that laptop.
+This laptop has been in my family for a long time, and from 2022-2024 it was the kids' laptop (but mostly mine). It was originally my mom's, but she got a new computer a while ago, and this laptop came to me. Technically, it was only for school, but it was also my introduction to computers, Windows, PC gaming (despite the fact that it can't play very many games), and I even started playing around with Linux on it towards the end. I also put an SSD and more RAM in it, which improved it a bit but not nearly enough. Before I started messing with Linux, I played around with Windows 7, first in a VM (which was horrendously slow), and then I set up a dual-boot with Windows 10. Windows 7 was actually really good on that laptop.
 
-In October 2024 this laptop was retired after I built the Redstone Computer. However, it's still used as a Minecraft server, and it works surprisingly well for that, despite how slow it was as a PC. I guess it's because I'm running Linux on it (Windows is unacceptable for servers), and there's no desktop environment either (being a server, management is done through web dashboards or the terminal).
-
-I mean the Minecraft server kinda died though so it's been shut down for a while. I don't want this to be a server forever so any server needs will probably be handled by either what's left of the Redstone Computer after I upgrade/replace it or a cheap mini PC, and then I'll turn this laptop into a Windows 7 nostalgia machine and hopefully give it back its original HDD.
+In October 2024 this laptop was retired after I built the Redstone Computer. I resurrected it in February 2025 as a small Minecraft server and it actually wasn't too bad for that. However, that server is long dead, and the laptop is hiding in my closet, waiting for the day when I resurrect it as a Windows 7 nostalgia PC.
 
 Specs:
 
@@ -82,45 +80,20 @@ Specs:
 * GPU: Intel HD 4000 (iGPU)
 * Storage: 750GB Western Digital Scorpio Black 2.5" HDD → 500GB Crucial MX500 2.5" SSD
 * OS: Windows 7 Professional → Windows 10 Pro → Linux Mint 22 → Debian 12 → Fedora Server 42
+
 </article>
 <!-- My projects -->
-<article role="tabpanel" id="projects" hidden>
+<article role="tabpanel" id="blog" hidden>
 
-# My projects
+# Blog
 
-Cool stuff I've made. Check my <a target="_blank" href="https://github.com/ejsnow">GitHub profile</a> for more!
+Idk why not have a blog lol. I will probably not post here too often.
 
-## Completed
-
-<div class="grid-container">
-<div class="grid-item">
-
-### Redstone Computer
-
-![The Redstone Computer running Arch Linux, Sep 13 2025](/images/redstone-computer.jpg)
-
-**Built Oct 5, 2024**
-
-<p style="margin: 0.5em 0 0">My main PC, for gaming, development, and messing with Linux. It's an SFF Dell OptiPlex that's been heavily upgraded.</p>
-<p style="text-align: right"><a href="projects/2024-10-05-redstone-computer/">View</a></p>
-</div>
-</div>
-
-## Ongoing
-
-<div class="grid-container">
-<div class="grid-item">
-
-### My KDE Plasma dotfiles
-
-![My Arch Linux setup Feb 1, 2026](/images/my-arch-setup.jpg)
-
-**Created Jan 7, 2026**
-
-<p style="margin: 0.5em 0 0">My configs for KDE Plasma on Arch Linux. Wallpapers/panel layout not included.</p>
-<p style="text-align: right"><a href="https://github.com/ejsnow/dotfiles">Github repo ↗</a>
-</div>
-</div>
+<ul class="posts">
+{%- for post in collections.blog reversed -%}
+    <li><h3>{{ post.data.title }}</h3><small>Last updated {{ post.data.lastUpdated }} • Created {{ post.page.date | dateOnly }}</small><p style="margin: 0.5em 0 0">{{ post.page.excerpt }}</p><p style="text-align: right; margin-top: 0"><a href="{{ post.page.url }}">View</a></p></li>
+{%- endfor -%}
+</ul>
 </article>
 <!-- Resources for various purposes -->
 <article role="tabpanel" id="resources" hidden>
@@ -133,7 +106,7 @@ Things I have for future reference; they're on here because this makes them easy
 
 <ul class="posts">
 {%- for resource in collections.resource -%}
-    <li><h3>{{ resource.data.title }}</h3><small><b>Last updated {{ resource.data.lastUpdated }} • Created {{ resource.page.date | dateOnly }}</b></small><p style="margin: 0.5em 0 0">{{ resource.page.excerpt }}</p><p style="text-align: right; margin-top: 0"><a href="{{ resource.page.url }}">View</a></p></li>
+    <li><h3>{{ resource.data.title }}</h3><small>Last updated {{ resource.data.lastUpdated }} • Created {{ resource.page.date | dateOnly }}</small><p style="margin: 0.5em 0 0">{{ resource.page.excerpt }}</p><p style="text-align: right; margin-top: 0"><a href="{{ resource.page.url }}">View</a></p></li>
 {%- endfor -%}
 </ul>
 

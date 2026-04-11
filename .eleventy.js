@@ -1,4 +1,6 @@
-import { default as markDownItAnchor } from "markdown-it-anchor";
+import markdownIt from "markdown-it";
+import markdownItAnchor from "markdown-it-anchor";
+import markdownItFootnote from "markdown-it-footnote";
 import { DateTime } from "luxon";
 
 const TIME_ZONE = "America/New_York";
@@ -14,7 +16,9 @@ export default async function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy("js/*");
   eleventyConfig.addPassthroughCopy("images/*")
 
-  eleventyConfig.amendLibrary("md", (mdLib) => mdLib.use(markDownItAnchor), {level: [2, 3, 4]});
+  eleventyConfig.setLibrary("md", markdownIt({html: true, linkify: true}).use(markdownItAnchor, {level: [2, 3, 4]}).use(markdownItFootnote));
+  //eleventyConfig.amendLibrary("md", (mdLib) => mdLib.use(markDownItAnchor), {level: [2, 3, 4]});
+  //eleventyConfig.amendLibrary("md", (mdLib) => mdLib.use(markDownItFootnote));
 
   eleventyConfig.addDateParsing(function(dateValue) {
     let localDate;

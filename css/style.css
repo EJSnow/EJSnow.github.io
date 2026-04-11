@@ -84,7 +84,11 @@ pre, code {
 }
 .content footer {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: 0.25rem;
+}
+.content footer.page {
+	justify-content: space-between;
 }
 
 /* K time for an ultra-basic super simple responsive grid */

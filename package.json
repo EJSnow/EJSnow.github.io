@@ -14,6 +14,7 @@
     "@11ty/eleventy": "^3.1.2"
   },
   "devDependencies": {
-    "markdown-it-anchor": "^9.2.0"
+    "markdown-it-anchor": "^9.2.0",
+    "markdown-it-footnote": "^4.0.0"
   }
 }

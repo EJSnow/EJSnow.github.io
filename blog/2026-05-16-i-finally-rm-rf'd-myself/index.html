@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, inital-scale=1.0">
+    <title>I Finally rm -rf /*'d Myself - EJSnow</title>
+    <link rel="stylesheet" href="https://unpkg.com/7.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap');</style>
+  </head>
+  <body>
+    <div class="window glass active content" id="main">
+      <div class="title-bar">
+        <div class="title-bar-text">EJSnow</div>
+        <div class="title-bar-controls">
+          <!-- These are decorative and don't actually do anything -->
+          <button aria-label="Minimize"></button>
+          <button aria-label="Maximize"></button>
+          <button aria-label="Close"></button>
+        </div>
+      </div>
+      <div class="window-body has-space">
+        <article role="tabpanel">
+          <a id="top" href="/">← 🏡 Home</a>
+          <h1>I Finally rm -rf /*'d Myself</h1>
+          <pre><code>#include metadata.h<br>// Created May 16, 2026<br>// Last updated May 16, 2026</code></pre>
+          
+          <p>There's a saying in the Linux community that goes something like this: If you haven't rm -rf /*'d yourself yet, you're either not a real one or you've just been lucky so far. Well, my luck finally ran out and I did the thing. Yippee!</p>
+<p>It all started on Wednesday when I decided to put Windows 11 back on Twilight alongside Arch, because I'm heading to college this fall and I will probably need MS Office, and I refuse to use the web version. So I did that and that went surprisingly smoothly, I had no major problems with the installation and it all kind of just worked. But the next day, after leaving Twilight idling in Windows 11, I rebooted back into Arch and was presented with the dreaded recovery key screen. The TPM2 which normally provides a key to automatically unlock the root partition was no longer happy with me. I tried re-registering the TPM2 with several different combinations of PCRs, but nothing worked. It still just gave me the same recovery key screen when booting up. So I gave up and tried to simply decrypt the SSD. After scouring the ArchWiki, I found a <a href="https://wiki.archlinux.org/title/Removing_system_encryption#Decrypting_LUKS2_devices_in-place">page</a> on decrypting a partition in-place. Even better, it theoretically could be done online (while the partition is unlocked/mounted), meaning I wouldn't have to boot into a live Linux ISO to do it. However, it was early in the morning and I hadn't had any coffee yet, so I misread the warning about it completely locking up and did the exact thing it told me NOT to do, i.e I tried to place the exported header in the filesystem on the device being decrypted (specifically I tried to just drop it in /etc), rather than on another drive.</p>
+<p>As the ArchWiki predicted, after starting the decryption, cryptsetup just froze and didn't output anything further (no progress info or anything). I tried to open System Monitor to see if anything was actually happening, but at that point the whole system froze, including the immortal mouse pointer. After 15 minutes it was still frozen, so I gave up and hard rebooted Twilight. It was around this time that I realized I might have misread the warning and screwed up my Linux install. Sure enough, when I tried to boot into Arch again, it sent me straight to the recovery mode that doesn't actually work because the root account is locked (I should probably try to fix that but whatever I have live ISOs). So I booted into a live Linux ISO and tried to mount the root partition, which failed regardless of whether I used a normal <code>mount</code> command (for unencrypted drives) or <code>cryptsetup open</code> to unlock an encrypted drive.</p>
+<p>So the only option was to reinstall Arch. I decided to just leave the disk unencrypted because who cares anyways. I'm still using Secure Boot though. I actually set up a portable Arch Linux install on my Ventoy drive (a 128GB SSD donated from my PC) a while ago and I used it to reinstall as all of the necessary tools were on it and it has a nice friendly KDE Plasma session with Firefox to browse the ArchWiki. This of course went quite smoothly and I'm now back up and running once again.</p>
+
+        </article>
+      </div>
+      <footer class="page">
+        <span>
+          Me, but elsewhere:
+          <a href="https://github.com/ejsnow">GitHub</a>
+          <a href="https://www.youtube.com/@EJSnow-m1s">Youtube</a>
+        </span>
+        <a href="#top">Back to top ↑</a>
+      </footer>
+    </div>
+
+    <!-- Lightbox window -->
+    <div class="window glass active" id="image-viewer" role="dialog" aria-labelledby="lightbox-title">
+      <div class="title-bar">
+        <div class="title-bar-text" id="lightbox-title">Viewing image</div>
+        <div class="title-bar-controls">
+          <button aria-label="Minimize"></button>
+          <button aria-label="Maximize"></button>
+          <button onclick="history.back()" aria-label="Close"></button>
+        </div>
+      </div>
+      <div class="window-body" id="lightbox">
+        <figure>
+          <img id="lightbox-img" src="" alt="">
+          <figcaption id="image-caption"></figcaption>
+        </figure>
+      </div>
+    </div>
+    <script src="/js/script.js"></script>
+  </body>
+</html>

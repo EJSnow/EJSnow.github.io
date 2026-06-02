@@ -71,7 +71,7 @@
 <p>The ESP has to be formatted as FAT32, unless re-using an existing one, then don't format it.</p>
 <pre><code class="language-sh"># mkfs.fat -F 32 -n &quot;EFI&quot; /dev/sda1
 </code></pre>
-<p>Mount the unlocked root partition to <code>/mnt</code> and the ESP to <code>/mnt/efi</code>.</p>
+<p>Mount the root partition to <code>/mnt</code> and the ESP to <code>/mnt/efi</code>.</p>
 <h2 id="installing-the-base-system" tabindex="-1">Installing the base system</h2>
 <p>Generally refer to the <a href="https://wiki.archlinux.org/title/Installation_guide#Installation">official</a> installation guide for this part. The following reflector command can be used to generate a good mirrorlist for the US:</p>
 <pre><code class="language-sh"># reflector --latest 10 --sort rate --country 'United States' --save /etc/pacman.d/mirrorlist
@@ -134,22 +134,29 @@
 <p>Systemd's GPT partition automounting mechanism will automatically find and mount the root partition, don't worry about it.</p>
 <h2 id="finishing-up" tabindex="-1">Finishing up</h2>
 <p>There's only a couple more steps!</p>
-<p>Install <a href="https://wiki.archlinux.org/title/Systemd-boot">systemd-boot</a> as the bootloader. Systemd-boot automatically picks up UKIs on the ESP, so no further configuration is required to boot. At this point, you can regenerate the initramfs as well (which will build a UKI and place it on the ESP).</p>
+<p>Install <a href="https://wiki.archlinux.org/title/Systemd-boot">systemd-boot</a> as the bootloader. Systemd-boot automatically picks up UKIs on the ESP, so no further configuration is required to boot. Make sure to actually regenerate the initramfs now to build a UKI and place it on the ESP.</p>
 <p>At this point we need to get Secure Boot enabled, so it's time to reboot into the new installation. Make a quick detour into the BIOS to put Secure Boot in setup mode so keys can be enrolled. After logging in to the new install, make a fastfetch screenshot for good luck before proceeding.</p>
 <p>I use the <a href="https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface/Secure_Boot#Manual_process">manual process</a> to generate/enroll keys, but I wrote a script which largely automates the entire thing. Download and run it:</p>
 <pre><code class="language-sh">$ curl -L -O https://ejsnow.github.io/resources/sbKeySetup.sh
 $ chmod +x sbKeySetup.sh
 $ ./sbKeySetup.sh
 </code></pre>
-<p>It will automatically generate and try to enroll custom Secure Boot keys, including Microsoft's keys in case your system has any signed OpROMs (particularly for SSDs and GPUs).</p>
-<p>All keys can be found in <code>~/secure-boot-keys</code>, and the .auth files enrolled in the firmware (except for noPK.auth) are also copied to <code>/etc/secureboot/keys</code>. The db key (used to actually sign binaries) is also copied to <code>/etc/secureboot</code>.</p>
+<p>It will automatically generate and try to enroll custom Secure Boot keys, including Microsoft's keys in case your system has any signed OpROMs (particularly for SSDs and GPUs). If the keys fail to enroll and Secure Boot is definitely in setup mode, try to manually enroll them like this:</p>
+<pre><code class="language-sh"># sbkeysync --keystore /etc/secureboot/keys --verbose
+# sbkeysync --keystore /etc/secureboot/keys --verbose --pk
+</code></pre>
+<p>If the platform key enrollment still fails, but the KEK and db keys enroll successfully, you can also try this:</p>
+<pre><code class="language-sh"># efi-updatevar -f /etc/secureboot/keys/PK/PK.auth PK
+</code></pre>
+<p>See the relevant section on the <a href="https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface/Secure_Boot#Using_sbkeysync">ArchWiki</a> for more details.</p>
+<p>All keys can be found in <code>~/secure-boot-keys</code>, and the .auth files enrolled in the firmware (except for noPK.auth) are copied to <code>/etc/secureboot/keys</code>. The db key (used to actually sign binaries) is also copied to <code>/etc/secureboot</code>.</p>
 <p>To automatically sign the kernel whenever the initramfs/UKI is rebuilt, add the following to <code>/etc/kernel/uki.conf</code>:</p>
 <pre><code>[UKI]
 SecureBootSigningTool=sbsign
 SecureBootPrivateKey=/etc/secureboot/db.key
 SecureBootCertificate=/etc/secureboot/db.crt
 </code></pre>
-<p>NOTE: The noPK.auth file in <code>~/secure-boot-keys</code> is important! It lets you remove your Secure Boot keys and put Secure Boot back in setup mode. Keep this file, as well as the private .key files, safe, and don't share them!</p>
+<p><strong>Note</strong>: The noPK.auth file in <code>~/secure-boot-keys</code> is important! It lets you remove your Secure Boot keys and put Secure Boot back in setup mode. Keep this file, as well as the private .key files, safe, and don't share them!</p>
 <p>The kernel and bootloader must be signed otherwise the system will not boot.</p>
 <pre><code class="language-sh"># sbsign --key /etc/secureboot/db.key --cert /etc/secureboot/db.crt --output /efi/EFI/Linux/arch-linux.efi /efi/EFI/Linux/arch-linux.efi
 # sbsign --key /etc/secureboot/db.key --cert /etc/secureboot/db.crt --output /efi/EFI/systemd/systemd-bootx64.efi
@@ -158,20 +165,20 @@ SecureBootCertificate=/etc/secureboot/db.crt
 <p>A pacman hook can be used to automate systemd-boot resigning when systemd updates.</p>
 <h3 id="finishing-touches" tabindex="-1">Finishing touches</h3>
 <p>Now it's time to put some finishing touches on the installation. I use yay as my AUR helper, which supports the <a href="https://github.com/exequtic/apdatifier">Apdatifier</a> plasmoid (which can do some basic package management stuff but most importantly makes it way easier to keep your system up to date).</p>
-<p>To install yay, open a terminal and navigate to a directory where you won't mind having an AUR package compiled. Your user account needs read/write permissions on it. Then run the following:</p>
-<pre><code class="language-sh">$ git clone https://aur.archlinux.org/yay.git &amp;&amp; cd yay
+<p>To install yay, open a terminal and navigate to <code>/tmp</code>. Then run the following:</p>
+<pre><code class="language-sh"># pacman -S git
+$ git clone https://aur.archlinux.org/yay.git &amp;&amp; cd yay
 $ makepkg -sci
 </code></pre>
 <p>I also like to add the <a href="https://aur.chaotic.cx/">Chaotic-AUR</a> repository to my systems so installing AUR packages doesn't take a million years. It provides prebuilt versions of popular AUR packages and is very nice to have.</p>
 <p>Now, here's all the other apps I like to install:</p>
-<pre><code class="language-sh">$ yay -S --needed digikam discord easyeffects gamemode lib32-gamemode ghostwriter kdenlive keepassxc krita ktorrent lact libreoffice-fresh mangohud modrinth-app-bin obs-studio droidcam-obs-plugin obs-vkcapture-git lib32-obs-vkcapture-git obs-wayland-hotkeys-git spotify steam visual-studio-code-bin vlc
+<pre><code class="language-sh">$ yay -S --needed awatcher-bundle-bin bleachbit btop digikam discord easyeffects gamemode lib32-gamemode informant kdenlive keepassxc krita ktorrent kweather lact libreoffice-fresh mangohud modrinth-app-bin needrestart obs-studio droidcam-obs-plugin obs-vkcapture-git lib32-obs-vkcapture-git obs-wayland-hotkeys-git pacman-cleanup-hook rpc-bridge-bin spotify steam visual-studio-code-bin vlc
 </code></pre>
 <p>And finally my Plasma dotfiles. Follow the instructions on <a href="https://github.com/EJSnow/dotfiles">the repository</a> and that will about do it (currently the panel layout isn't done automatically though).<a href="/images/my-arch-setup.jpg"><img src="/images/my-arch-setup.jpg" alt="My Arch setup"></a></p>
 <h2 id="references" tabindex="-1">References</h2>
 <p>I wrote this with the help of MANY ArchWiki pages and a few manpages. Seriously the ArchWiki is amazing, go <a href="https://wiki.archlinux.org">check it out</a>.</p>
 <ul>
 <li><a href="https://wiki.archlinux.org/title/Installation_guide">The official installation guide</a> (The basic skeleton for this page)</li>
-<li><a href="https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system#LUKS_on_a_partition_with_TPM2_and_Secure_Boot">This example for encrypting your installation</a> (I basically lifted the encryption instructions from there)</li>
 <li><a href="https://man.archlinux.org/man/mkfs.ext4.8.en">mkfs.ext4 manpage</a> (mostly for adding a filesystem label when formatting)</li>
 <li><a href="https://man.archlinux.org/man/mkfs.fat.8.en">mkfs.fat manpage</a> (Same as above)</li>
 <li><a href="https://man.archlinux.org/man/reflector.1#EXAMPLES">Reflector examples</a> (Used this to build the mirrorlist generator command)</li>
@@ -180,7 +187,8 @@ $ makepkg -sci
 <li><a href="https://wiki.archlinux.org/title/AMDGPU">AMD graphics (AMDGPU)</a> (For the required packages table in <a href="#desktop-environment">#Desktop Environment</a>)</li>
 <li><a href="https://wiki.archlinux.org/title/Intel_graphics">Intel graphics</a> (same as above)</li>
 <li><a href="https://wiki.archlinux.org/title/Hardware_video_acceleration">Hardware video acceleration</a> (Same as above lol)</li>
-<li><a href="https://wiki.archlinux.org/title/Trusted_Platform_Module#PCR_policies">Trusted Platform Module#PCR policies</a> (For using a PCR policy to seal the disk encryption key)</li>
+<li><a href="https://wiki.archlinux.org/title/Silent_boot">Silent boot</a> (Kernel parameters/initramfs config to silence the console while booting)</li>
+<li><a href="https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface/Secure_Boot#Manual_process">Secure Boot#Manual process</a> (Reference for Secure Boot setup)</li>
 <li><a href="https://wiki.archlinux.org/title/Arch_User_Repository#Installing_and_upgrading_packages">Installing AUR packages</a> (For installing yay at the very end)</li>
 </ul>
 
@@ -195,22 +203,6 @@ $ makepkg -sci
         <a href="#top">Back to top ↑</a>
       </footer>
     </div>
-
-    <!-- Lightbox window -->
-    <!--<div class="window glass active" id="image-viewer" role="dialog" aria-labelledby="lightbox-title">
-      <div class="title-bar">
-        <div class="title-bar-text" id="lightbox-title">Viewing image</div>
-        <div class="title-bar-controls">
-          <button aria-label="Minimize"></button>
-          <button aria-label="Maximize"></button>
-          <button onclick="history.back()" aria-label="Close"></button>
-        </div>
-      </div>
-      <div class="window-body" id="lightbox">
-        <img id="lightbox-img" src="" alt="">
-        <div id="image-caption"></div>
-      </div>
-    </div>-->
     <script src="/js/script.js"></script>
   </body>
 </html>

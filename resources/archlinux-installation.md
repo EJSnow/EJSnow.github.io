@@ -48,7 +48,7 @@ The ESP has to be formatted as FAT32, unless re-using an existing one, then don'
 # mkfs.fat -F 32 -n "EFI" /dev/sda1
 ```
 
-Mount the unlocked root partition to `/mnt` and the ESP to `/mnt/efi`.
+Mount the root partition to `/mnt` and the ESP to `/mnt/efi`.
 
 ## Installing the base system
 
@@ -136,7 +136,7 @@ Systemd's GPT partition automounting mechanism will automatically find and mount
 
 There's only a couple more steps!
 
-Install [systemd-boot](https://wiki.archlinux.org/title/Systemd-boot) as the bootloader. Systemd-boot automatically picks up UKIs on the ESP, so no further configuration is required to boot. At this point, you can regenerate the initramfs as well (which will build a UKI and place it on the ESP).
+Install [systemd-boot](https://wiki.archlinux.org/title/Systemd-boot) as the bootloader. Systemd-boot automatically picks up UKIs on the ESP, so no further configuration is required to boot. Make sure to actually regenerate the initramfs now to build a UKI and place it on the ESP.
 
 At this point we need to get Secure Boot enabled, so it's time to reboot into the new installation. Make a quick detour into the BIOS to put Secure Boot in setup mode so keys can be enrolled. After logging in to the new install, make a fastfetch screenshot for good luck before proceeding.
 
@@ -148,9 +148,22 @@ $ chmod +x sbKeySetup.sh
 $ ./sbKeySetup.sh
 ```
 
-It will automatically generate and try to enroll custom Secure Boot keys, including Microsoft's keys in case your system has any signed OpROMs (particularly for SSDs and GPUs).
+It will automatically generate and try to enroll custom Secure Boot keys, including Microsoft's keys in case your system has any signed OpROMs (particularly for SSDs and GPUs). If the keys fail to enroll and Secure Boot is definitely in setup mode, try to manually enroll them like this:
 
-All keys can be found in `~/secure-boot-keys`, and the .auth files enrolled in the firmware (except for noPK.auth) are also copied to `/etc/secureboot/keys`. The db key (used to actually sign binaries) is also copied to `/etc/secureboot`.
+```sh
+# sbkeysync --keystore /etc/secureboot/keys --verbose
+# sbkeysync --keystore /etc/secureboot/keys --verbose --pk
+```
+
+If the platform key enrollment still fails, but the KEK and db keys enroll successfully, you can also try this:
+
+```sh
+# efi-updatevar -f /etc/secureboot/keys/PK/PK.auth PK
+```
+
+See the relevant section on the [ArchWiki](https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface/Secure_Boot#Using_sbkeysync) for more details.
+
+All keys can be found in `~/secure-boot-keys`, and the .auth files enrolled in the firmware (except for noPK.auth) are copied to `/etc/secureboot/keys`. The db key (used to actually sign binaries) is also copied to `/etc/secureboot`.
 
 To automatically sign the kernel whenever the initramfs/UKI is rebuilt, add the following to `/etc/kernel/uki.conf`:
 
@@ -161,7 +174,7 @@ SecureBootPrivateKey=/etc/secureboot/db.key
 SecureBootCertificate=/etc/secureboot/db.crt
 ```
 
-NOTE: The noPK.auth file in `~/secure-boot-keys` is important! It lets you remove your Secure Boot keys and put Secure Boot back in setup mode. Keep this file, as well as the private .key files, safe, and don't share them!
+**Note**: The noPK.auth file in `~/secure-boot-keys` is important! It lets you remove your Secure Boot keys and put Secure Boot back in setup mode. Keep this file, as well as the private .key files, safe, and don't share them!
 
 The kernel and bootloader must be signed otherwise the system will not boot.
 
@@ -177,9 +190,10 @@ A pacman hook can be used to automate systemd-boot resigning when systemd update
 
 Now it's time to put some finishing touches on the installation. I use yay as my AUR helper, which supports the [Apdatifier](https://github.com/exequtic/apdatifier) plasmoid (which can do some basic package management stuff but most importantly makes it way easier to keep your system up to date).
 
-To install yay, open a terminal and navigate to a directory where you won't mind having an AUR package compiled. Your user account needs read/write permissions on it. Then run the following:
+To install yay, open a terminal and navigate to `/tmp`. Then run the following:
 
 ```sh
+# pacman -S git
 $ git clone https://aur.archlinux.org/yay.git && cd yay
 $ makepkg -sci
 ```
@@ -189,7 +203,7 @@ I also like to add the [Chaotic-AUR](https://aur.chaotic.cx/) repository to my s
 Now, here's all the other apps I like to install: 
 
 ```sh
-$ yay -S --needed digikam discord easyeffects gamemode lib32-gamemode ghostwriter kdenlive keepassxc krita ktorrent lact libreoffice-fresh mangohud modrinth-app-bin obs-studio droidcam-obs-plugin obs-vkcapture-git lib32-obs-vkcapture-git obs-wayland-hotkeys-git spotify steam visual-studio-code-bin vlc
+$ yay -S --needed awatcher-bundle-bin bleachbit btop digikam discord easyeffects gamemode lib32-gamemode informant kdenlive keepassxc krita ktorrent kweather lact libreoffice-fresh mangohud modrinth-app-bin needrestart obs-studio droidcam-obs-plugin obs-vkcapture-git lib32-obs-vkcapture-git obs-wayland-hotkeys-git pacman-cleanup-hook rpc-bridge-bin spotify steam visual-studio-code-bin vlc
 ```
 
 And finally my Plasma dotfiles. Follow the instructions on [the repository](https://github.com/EJSnow/dotfiles) and that will about do it (currently the panel layout isn't done automatically though).[![My Arch setup](/images/my-arch-setup.jpg)](/images/my-arch-setup.jpg)
@@ -199,7 +213,6 @@ And finally my Plasma dotfiles. Follow the instructions on [the repository](http
 I wrote this with the help of MANY ArchWiki pages and a few manpages. Seriously the ArchWiki is amazing, go [check it out](https://wiki.archlinux.org).
 
 * [The official installation guide](https://wiki.archlinux.org/title/Installation_guide) (The basic skeleton for this page)
-* [This example for encrypting your installation](https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system#LUKS_on_a_partition_with_TPM2_and_Secure_Boot) (I basically lifted the encryption instructions from there)
 * [mkfs.ext4 manpage](https://man.archlinux.org/man/mkfs.ext4.8.en) (mostly for adding a filesystem label when formatting)
 * [mkfs.fat manpage](https://man.archlinux.org/man/mkfs.fat.8.en) (Same as above)
 * [Reflector examples](https://man.archlinux.org/man/reflector.1#EXAMPLES) (Used this to build the mirrorlist generator command)
@@ -208,5 +221,6 @@ I wrote this with the help of MANY ArchWiki pages and a few manpages. Seriously 
 * [AMD graphics (AMDGPU)](https://wiki.archlinux.org/title/AMDGPU) (For the required packages table in [#Desktop Environment](#desktop-environment))
 * [Intel graphics](https://wiki.archlinux.org/title/Intel_graphics) (same as above)
 * [Hardware video acceleration](https://wiki.archlinux.org/title/Hardware_video_acceleration) (Same as above lol)
-* [Trusted Platform Module#PCR policies](https://wiki.archlinux.org/title/Trusted_Platform_Module#PCR_policies) (For using a PCR policy to seal the disk encryption key)
+* [Silent boot](https://wiki.archlinux.org/title/Silent_boot) (Kernel parameters/initramfs config to silence the console while booting)
+* [Secure Boot#Manual process](https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface/Secure_Boot#Manual_process) (Reference for Secure Boot setup)
 * [Installing AUR packages](https://wiki.archlinux.org/title/Arch_User_Repository#Installing_and_upgrading_packages) (For installing yay at the very end)

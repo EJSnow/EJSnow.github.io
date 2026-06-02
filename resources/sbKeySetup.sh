@@ -7,9 +7,13 @@
 echo "Before continuing, make sure Secure Boot is in setup mode."
 echo ""
 echo "Otherwise this script won't do much."
-
+echo ""
 echo "Installing dependencies..."
 sudo pacman -S --needed efitools sbsigntools curl
+if [ $? -gt 0 ]; then {
+    echo "Dependency installation failed. Make sure sudo is installed and configured properly."
+    exit 1
+}
 # These packages are needed to generate and enroll keys
 
 echo -n "Enter an identifying name to embed in your keys: "
@@ -72,7 +76,7 @@ echo "Enrolling keys in UEFI..."
 
 sudo sbkeysync --keystore /etc/secureboot/keys --verbose
 sudo sbkeysync --keystore /etc/secureboot/keys --verbose --pk
-if ! $? == 0; then {
+if [ $? -gt 0 ]; then {
     echo "Key enrollment failed. Make sure Secure Boot is in setup mode and try again."
     echo "If you keep seeing errors with the platform key specifically, try running:"
     echo "# efi-updatevar -f /etc/secureboot/keys/PK/PK.auth PK"

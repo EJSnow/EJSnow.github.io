@@ -14,7 +14,7 @@ Check out the pages above for more! This site is probably going to be more stati
 
 ## My main PC (The Redstone PC)
 
-This is my main computer that I use for most things, primarily gaming on Linux. See the [detailed build overview](blog/2024-10-05-redstone-pc/).
+This is my main computer that I use for most things, primarily gaming on Linux. See the [detailed build overview](blog/2024-10-05-redstone-pc/) for more information.
 
 [![The Redstone PC as of June 1, 2026](images/latest-redstonepc.jpg)](images/latest-redstonepc.jpg)
 </article>
@@ -26,7 +26,7 @@ This is my main computer that I use for most things, primarily gaming on Linux. 
 
 I'm Ezra Snow, an (extremely) nerdy guy who may be addicted to computers and Linux and video games (all of which I spend far too much time playing with...). I live in North Carolina, but this fall I'm heading to college in East Texas to study computer science. Aside from video games and Linuxing, I'm also learning coding and I like reading.
 
-I also strongly dislike just about any piece of technology/software that came out since 2020 because most of them are annoying in that they refuse to respect your privacy and refuse to acknowlege you as the owner. I'm also highly mistrustful of cloud/streaming services and try not to use them when possible (one exception is Spotify because it will take a while to gain a large enough local music collection to move off Spotify). I plan to eventually experiment with self-hosting and building a homelab, although again this is something I can't do right now because hardware is too darn *expensive* 😠.
+I also strongly dislike just about any piece of technology/software that came out since 2020 because most of them are annoying in that they refuse to respect your privacy and refuse to acknowlege you as the owner. I'm also highly mistrustful of cloud/streaming services and try not to use them when possible (one exception is Spotify because it will take a while to gain a large enough local music collection to move off Spotify). I plan to eventually experiment with self-hosting and building a homelab, but this is something I can't really do right now because hardware is too darn *expensive*.
 
 If anyone's curious, here are my favorite video games, in no particular order:
 

@@ -9,11 +9,11 @@ body {
 	margin: 0;
 	height: 100vh;
 }
-body, .content, .content .window-body {
+body, .window, .window-body {
 	display: flex;
 	flex-direction: column;
 }
-.content, .content .window-body, .content article {
+.window, .window-body, article {
   flex: 1 0 auto;
 }
 /* most of the code below is to fix the issues caused by using flexbox to size the "window" */
@@ -32,7 +32,7 @@ body, .content, .content .window-body {
 	margin: 8px;
 	}
 }
-.content .window-body {
+.window .window-body {
   height: calc(100% - 86px);
 }
 article {
@@ -144,46 +144,6 @@ pre {
 code {
 	background: var(--w7-surface);
 	font-size: 10pt;
-}
-
-/*****************************************************************************/
-/* Lightbox */
-
-.lightboxed {
-  cursor: pointer; /* So that it's obvious that the image can be clicked */
-}
-
-@media only screen and (max-width: 600px) {
-	#image-viewer {
-		width: calc(100% - 16px);
-		max-height: calc(100% - 16px) !important;
-	}
-}
-/* Style fix for the image in the lightbox window */
-#lightbox-img {
-  margin: auto;
-  max-width: 100%;
-  height: calc(100% - 19px);
-  aspect-ratio: auto;
-}
-
-figure {
-  margin: 0;
-}
-
-/* Lightbox container */
-#image-viewer {
-  max-height: calc(100% - 16px);
-}
-#image-viewer > .window-body {
-	overflow: auto;
-	max-height: calc(100% - 33px);
-}
-/* Lightbox image caption */
-#image-caption {
-  text-align: center;
-  margin: 0 0 0.5em 0;
-  text-overflow: hidden;
 }
 
 /* Table of contents */

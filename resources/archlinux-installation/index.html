@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, inital-scale=1.0">
-    <title>Arch Linux Installation (with full disk encryption using TPM2 and Secure Boot) - EJSnow</title>
+    <title>Arch Linux Installation (with Secure Boot) - EJSnow</title>
     <link rel="stylesheet" href="https://unpkg.com/7.css">
     <link rel="stylesheet" href="/css/style.css">
     <style>@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap');</style>
@@ -22,24 +22,24 @@
       <div class="window-body has-space">
         <article role="tabpanel">
           <a id="top" href="/">← 🏡 Home</a>
-          <h1>Arch Linux Installation (with full disk encryption using TPM2 and Secure Boot)</h1>
-          <pre><code>#include metadata.h<br>// Created Jan 31, 2026<br>// Last updated Mar 14, 2026</code></pre>
+          <h1>Arch Linux Installation (with Secure Boot)</h1>
+          <pre><code>#include metadata.h<br>// Created Jan 31, 2026<br>// Last updated Jun 1, 2026</code></pre>
           
           <details id="toc">
             <summary>Table of Contents</summary>
             <ul id="toc-contents"></ul>
           </details>
           
-          <p>My preferred route for installing Arch Linux including full disk encryption (with TPM2-based automatic unlocking!) and Secure Boot support. This mostly exists just in case I ever have to do a full reinstall/just because I want to fully document my installation route.</p>
+          <p>My preferred route for installing Arch Linux including Secure Boot support. This mostly exists just in case I ever have to do a full reinstall/just because I want to fully document my installation route.</p>
 <p><strong>Important:</strong> This is my own personalized installation guide for personal use. I do not recommend following this if you aren't me. Use the <a href="https://wiki.archlinux.org/title/Installation_guide">official installation</a> guide instead.</p>
 <p>This setup uses systemd-boot as the bootloader and boots from a signed unified kernel image (UKI) incorporating the kernel image, initrd, and kernel commandline in one file to reduce complexity (as a side benefit, the initrd and kernel commandline are also validated by Secure Boot).</p>
 <h2 id="warming-up" tabindex="-1">Warming up</h2>
 <p><a href="https://archlinux.org/download">Download the latest ISO</a> and follow the instructions on that page to verify it. Then put it on a USB drive to boot it either using <a href="https://ventoy.net/">Ventoy</a> or by writing it directly to the USB drive (see the <a href="https://wiki.archlinux.org/title/USB_flash_installation_medium">relevant Arch</a>Wiki page for more info).</p>
-<p>Boot the installation media. After it boots up, you'll be greeted by the ArchISO prompt:<img src="/images/arch-installer.png" alt="The Arch Linux installer"> The Arch Linux ISO doesn't support Secure Boot, so it must be disabled before booting it.</p>
+<p>Boot the installation media. After it boots up, you'll be greeted by the ArchISO prompt:<a href="/images/arch-installer.png"><img src="/images/arch-installer.png" alt="The Arch Linux installer"></a> The Arch Linux ISO doesn't support Secure Boot, so it must be disabled before booting it.</p>
 <p>Set the console font if necessary (for example on not-quite-HiDPI laptop screens) and ensure you have Internet access as described in the <a href="https://wiki.archlinux.org/title/Installation_guide#Connect_to_the_internet">installation guide</a>.</p>
 <h2 id="partitioning" tabindex="-1">Partitioning</h2>
 <p>See the <a href="https://wiki.archlinux.org/title/Installation_guide#Partition_the_disks">installation guide</a> and <a href="https://wiki.archlinux.org/title/Partitioning#Partition_scheme">Partitioning#Partition scheme</a> for more details.</p>
-<p>Below is my preferred partitioning scheme (GPT/UEFI). I use swap on zram and a larger swap file for hibernation (if hibernation is desired). Also note that for an NVME drive the partitions will be <code>/dev/nvme0n1p1</code> for the ESP and <code>/dev/nvme0n1p2</code> for the root partition. I honestly don't put too much stock in the partition numbers though since they often end up being completely different due to dual-booting shenaniganery. Use <code>lsblk</code> to ensure you've got the partitions straight :)</p>
+<p>Below is my preferred partitioning scheme (GPT/UEFI). I use swap on zram and a larger swap file for hibernation (if hibernation is desired). For an NVME drive the partitions will be <code>/dev/nvme0n1p1</code> for the ESP and <code>/dev/nvme0n1p2</code> for the root partition. I honestly don't put too much stock in the partition numbers though since they often end up being completely different due to dual-booting shenaniganery. Use <code>lsblk</code> to ensure you've got the partitions straight :)</p>
 <table>
 <thead>
 <tr>
@@ -65,12 +65,8 @@
 </tbody>
 </table>
 <p>Create the partitions using, e.g, <a href="https://wiki.archlinux.org/title/Fdisk">fdisk</a>. Obviously <strong>all data on the drive will be erased</strong> so take appropriate precautions.</p>
-<p>The root partition can be <a href="https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system#LUKS_on_a_partition_with_TPM2_and_Secure_Boot">encrypted</a> now using LUKS2. After booting into the new installation you can enroll your TPM2, generate a secure recovery key, and erase the password you create here.</p>
-<pre><code class="language-sh"># cryptsetup luksFormat /dev/sda2
-# cryptsetup open /dev/sda2 root
-</code></pre>
-<p>Now the unlocked root partition can be formatted as ext4 (although other filesystems can be used).</p>
-<pre><code class="language-sh"># mkfs.ext4 -L &quot;Arch Linux&quot; /dev/mapper/root
+<p>Now the root partition can be formatted as ext4 (although other filesystems can be used).</p>
+<pre><code class="language-sh"># mkfs.ext4 -L &quot;Arch Linux&quot; /dev/sda2
 </code></pre>
 <p>The ESP has to be formatted as FAT32, unless re-using an existing one, then don't format it.</p>
 <pre><code class="language-sh"># mkfs.fat -F 32 -n &quot;EFI&quot; /dev/sda1
@@ -101,7 +97,7 @@
 <h3 id="desktop-environment" tabindex="-1">Desktop environment</h3>
 <p>I currently use KDE Plasma because it's epic. Other supported DEs can be found on the <a href="https://wiki.archlinux.org/title/Desktop_environment">Desktop Environment</a> ArchWiki page.</p>
 <p>To install a fully featured KDE Plasma session with my preferred KDE apps + Firefox as the web browser, run the following command:</p>
-<pre><code class="language-sh"># pacman -S plasma-meta kde-system-meta plymouth-kcm baloo-widgets breeze5 dolphin-plugins ffmpegthumbs kdeconnect kdegraphics-thumbnailers kdenetwork-filesharing kimageformats kio-admin kio-extras kio-fuse kwalletmanager phonon-qt6-vlc plasma5-integration qqc2-desktop-style icoutils iio-sensor-proxy libappindicator noto-fonts-emoji power-profiles-daemon qt6-imageformats thermald xdg-desktop-portal-gtk xsettingsd ark dragon elisa filelight gwenview kamoso kate kcalc kcharselect kdialog konsole kup markdownpart okular svgpart firefox
+<pre><code class="language-sh"># pacman -S plasma-meta kde-system-meta plymouth-kcm breeze5 dolphin-plugins ffmpegthumbs kdeconnect kdegraphics-thumbnailers kdenetwork-filesharing kwalletmanager phonon-qt6-vlc plasma5-integration icoutils power-profiles-daemon thermald ark dragon elisa filelight gwenview kamoso kate kcalc kcharselect kdialog konsole kup markdownpart okular svgpart firefox
 </code></pre>
 <p>Don't forget to enable <code>plasmalogin.service</code> to actually boot into a graphical session.</p>
 <p>For graphics drivers consult this handy table for Intel and AMD graphics (note that <code>mesa</code> which provides the basic graphics stack and OpenGL drivers is required by Plasma so is already installed):</p>
@@ -125,51 +121,52 @@
 </table>
 <p>While it's unlikely I will ever use an Nvidia GPU, if I do end up with one, see the <a href="https://wiki.archlinux.org/title/NVIDIA">Nvidia page on</a> the ArchWiki.</p>
 <h3 id="kernel%2Finitramfs-config" tabindex="-1">Kernel/initramfs config</h3>
-<p>In order to boot successfully, make sure the <code>HOOKS</code> array in <code>mkinitcpio.conf</code> contains the following:</p>
-<pre><code>HOOKS=(base systemd autodetect microcode modconf kms keyboard sd-vconsole block sd-encrypt filesystems plymouth)
+<p>Most of this is to silence the console output while booting. Make sure the <code>HOOKS</code> array in <code>mkinitcpio.conf</code> contains the following:</p>
+<pre><code>HOOKS=(base systemd autodetect microcode modconf kms keyboard sd-vconsole block filesystems plymouth)
 </code></pre>
-<p>The <code>fsck</code> hook is skipped because systemd provides its own filesystem checking mechanism and it keeps the console output while booting to a minimum.</p>
+<p>While you would normally include <code>fsck</code> to check filesystems on boot, systemd has a built-in mechanism to do this so it can be removed.</p>
 <p>Follow the instructions at <a href="https://wiki.archlinux.org/title/Unified_kernel_image#mkinitcpio">Unified kernel image#mkinitcpio</a> to set up UKI generation. Do not regenerate the initramfs after finishing, as the required directory on the ESP hasn't been created yet. For the kernel command line create <code>/etc/cmdline.d/silent.conf</code> containing the following:</p>
-<pre><code>quiet loglevel=3 systemd.show_status=auto rd.udev.log_level=3 splash&quot;
+<pre><code>quiet loglevel=3 systemd.show_status=auto rd.udev.log_level=3 splash
 </code></pre>
 <p>And <code>/etc/cmdline.d/disable-zswap.conf</code> since we're using swap on zram:</p>
 <pre><code>zswap.enabled=0
 </code></pre>
-<p>Systemd's GPT partition automounting mechanism will automatically find, unlock, and mount the root partition, don't worry about it.</p>
+<p>Systemd's GPT partition automounting mechanism will automatically find and mount the root partition, don't worry about it.</p>
 <h2 id="finishing-up" tabindex="-1">Finishing up</h2>
 <p>There's only a couple more steps!</p>
 <p>Install <a href="https://wiki.archlinux.org/title/Systemd-boot">systemd-boot</a> as the bootloader. Systemd-boot automatically picks up UKIs on the ESP, so no further configuration is required to boot. At this point, you can regenerate the initramfs as well (which will build a UKI and place it on the ESP).</p>
 <p>At this point we need to get Secure Boot enabled, so it's time to reboot into the new installation. Make a quick detour into the BIOS to put Secure Boot in setup mode so keys can be enrolled. After logging in to the new install, make a fastfetch screenshot for good luck before proceeding.</p>
-<p>I use the method described <a href="https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface/Secure_Boot#Assisted_process_with_sbctl">here</a> for enabling Secure Boot.</p>
-<p>Once Secure Boot is enabled, now we can enlist the help of the TPM2 to ensure a smooth boot process with no pesky password prompts to unlock the root partition. Use <a href="https://wiki.archlinux.org/title/Systemd-cryptenroll"><code>systemd-cryptenroll</code></a> to add a recovery key, enroll the TPM2, and wipe the password created earlier.</p>
-<p>It might be a good idea to set up a PCR policy rather than binding to plain PCR values since the former is more flexible. This requires the use of <code>systemd-ukify</code> to set up binding the key to a policy that verifies the UKI.</p>
-<p>Generate a policy signing key:</p>
-<pre><code class="language-sh"># ukify genkey \
-	--pcr-private-key=/etc/systemd/tpm2-pcr-private-key.pem \
-	--pcr-private-key=/etc/systemd/tpm2-pcr-public-key.pem
+<p>I use the <a href="https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface/Secure_Boot#Manual_process">manual process</a> to generate/enroll keys, but I wrote a script which largely automates the entire thing. Download and run it:</p>
+<pre><code class="language-sh">$ curl -L -O https://ejsnow.github.io/resources/sbKeySetup.sh
+$ chmod +x sbKeySetup.sh
+$ ./sbKeySetup.sh
 </code></pre>
-<p>Create <code>/etc/kernel/uki.conf</code> containing the following to use the PCR policy:</p>
-<pre><code>[PCRSignature:initrd]
-PCRPrivateKey=/etc/systemd/tpm2-pcr-private-key.pem
-PCRPublicKey=/etc/systemd/tpm2-pcr-public-key.pem
+<p>It will automatically generate and try to enroll custom Secure Boot keys, including Microsoft's keys in case your system has any signed OpROMs (particularly for SSDs and GPUs).</p>
+<p>All keys can be found in <code>~/secure-boot-keys</code>, and the .auth files enrolled in the firmware (except for noPK.auth) are also copied to <code>/etc/secureboot/keys</code>. The db key (used to actually sign binaries) is also copied to <code>/etc/secureboot</code>.</p>
+<p>To automatically sign the kernel whenever the initramfs/UKI is rebuilt, add the following to <code>/etc/kernel/uki.conf</code>:</p>
+<pre><code>[UKI]
+SecureBootSigningTool=sbsign
+SecureBootPrivateKey=/etc/secureboot/db.key
+SecureBootCertificate=/etc/secureboot/db.crt
 </code></pre>
-<p>Regenerate the initrd and the new UKI now makes use of the PCR policy. The last step is to enroll the TPM2 with the PCR policy:</p>
-<pre><code class="language-sh">$ sudo systemd-cryptenroll /dev/sda2 --recovery-key
-$ sudo systemd-cryptenroll /dev/sda2 --wipe-slot=password --tpm2-device=auto
+<p>NOTE: The noPK.auth file in <code>~/secure-boot-keys</code> is important! It lets you remove your Secure Boot keys and put Secure Boot back in setup mode. Keep this file, as well as the private .key files, safe, and don't share them!</p>
+<p>The kernel and bootloader must be signed otherwise the system will not boot.</p>
+<pre><code class="language-sh"># sbsign --key /etc/secureboot/db.key --cert /etc/secureboot/db.crt --output /efi/EFI/Linux/arch-linux.efi /efi/EFI/Linux/arch-linux.efi
+# sbsign --key /etc/secureboot/db.key --cert /etc/secureboot/db.crt --output /efi/EFI/systemd/systemd-bootx64.efi
+# sbsign --key /etc/secureboot/db.key --cert /etc/secureboot/db.crt --output /efi/EFI/BOOT/BOOTX64.EFI /efi/EFI/BOOT/BOOTX64.EFI
 </code></pre>
-<p>The TPM2 will release the key, allowing unattended boot, as long as the UKI isn't tampered with externally. Otherwise, the system will ask for the recovery key (this will also happen if the drive is moved to a new system).</p>
-<p>I recommend rebooting to make sure this works.</p>
+<p>A pacman hook can be used to automate systemd-boot resigning when systemd updates.</p>
 <h3 id="finishing-touches" tabindex="-1">Finishing touches</h3>
 <p>Now it's time to put some finishing touches on the installation. I use yay as my AUR helper, which supports the <a href="https://github.com/exequtic/apdatifier">Apdatifier</a> plasmoid (which can do some basic package management stuff but most importantly makes it way easier to keep your system up to date).</p>
 <p>To install yay, open a terminal and navigate to a directory where you won't mind having an AUR package compiled. Your user account needs read/write permissions on it. Then run the following:</p>
 <pre><code class="language-sh">$ git clone https://aur.archlinux.org/yay.git &amp;&amp; cd yay
 $ makepkg -sci
 </code></pre>
-<p>I also like to add the <a href="https://aur.chaotic.cx/">Chaotic-AUR</a> repository to my systems as it provides prebuilt AUR packages. It doesn't provide <em>every</em> AUR package but it provides quite a few and is nice to have.</p>
+<p>I also like to add the <a href="https://aur.chaotic.cx/">Chaotic-AUR</a> repository to my systems so installing AUR packages doesn't take a million years. It provides prebuilt versions of popular AUR packages and is very nice to have.</p>
 <p>Now, here's all the other apps I like to install:</p>
-<pre><code class="language-sh">$ yay -S --needed digikam discord easyeffects ghostwriter goverlay kdenlive keepassxc krita ktorrent lact libreoffice-fresh mangohud modrinth-app-bin obs-studio octopi spotify steam visual-studio-code-bin
+<pre><code class="language-sh">$ yay -S --needed digikam discord easyeffects gamemode lib32-gamemode ghostwriter kdenlive keepassxc krita ktorrent lact libreoffice-fresh mangohud modrinth-app-bin obs-studio droidcam-obs-plugin obs-vkcapture-git lib32-obs-vkcapture-git obs-wayland-hotkeys-git spotify steam visual-studio-code-bin vlc
 </code></pre>
-<p>And finally my Plasma dotfiles. Follow the instructions on <a href="https://github.com/EJSnow/dotfiles">the repository</a> and that will about do it (currently the panel layout isn't done automatically though).<img src="/images/my-arch-setup.jpg" alt="My Arch setup"></p>
+<p>And finally my Plasma dotfiles. Follow the instructions on <a href="https://github.com/EJSnow/dotfiles">the repository</a> and that will about do it (currently the panel layout isn't done automatically though).<a href="/images/my-arch-setup.jpg"><img src="/images/my-arch-setup.jpg" alt="My Arch setup"></a></p>
 <h2 id="references" tabindex="-1">References</h2>
 <p>I wrote this with the help of MANY ArchWiki pages and a few manpages. Seriously the ArchWiki is amazing, go <a href="https://wiki.archlinux.org">check it out</a>.</p>
 <ul>
@@ -200,7 +197,7 @@ $ makepkg -sci
     </div>
 
     <!-- Lightbox window -->
-    <div class="window glass active" id="image-viewer" role="dialog" aria-labelledby="lightbox-title">
+    <!--<div class="window glass active" id="image-viewer" role="dialog" aria-labelledby="lightbox-title">
       <div class="title-bar">
         <div class="title-bar-text" id="lightbox-title">Viewing image</div>
         <div class="title-bar-controls">
@@ -210,12 +207,10 @@ $ makepkg -sci
         </div>
       </div>
       <div class="window-body" id="lightbox">
-        <figure>
-          <img id="lightbox-img" src="" alt="">
-          <figcaption id="image-caption"></figcaption>
-        </figure>
+        <img id="lightbox-img" src="" alt="">
+        <div id="image-caption"></div>
       </div>
-    </div>
+    </div>-->
     <script src="/js/script.js"></script>
   </body>
 </html>

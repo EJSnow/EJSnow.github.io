@@ -3,9 +3,10 @@ layout: page.html
 title: I Finally rm -rf /*'d Myself
 date: 2026-05-16
 lastUpdated: May 16, 2026
+tags: blog
 ---
 
-There's a saying in the Linux community that goes something like this: If you haven't rm -rf /\*'d yourself yet, you're either not a real one or you've just been lucky so far. Well, my luck finally ran out and I did the thing. Yippee!<!-- excerpt -->
+There's a saying in the Linux community that goes something like this: If you haven't rm -rf /*'d yourself yet, you're either not a real one or you've just been lucky so far. Well, my luck finally ran out and I did the thing. Yippee!<!-- excerpt -->
 
 It all started on Wednesday when I decided to put Windows 11 back on Twilight alongside Arch, because I'm heading to college this fall and I will probably need MS Office, and I refuse to use the web version. So I did that and that went surprisingly smoothly, I had no major problems with the installation and it all kind of just worked. But the next day, after leaving Twilight idling in Windows 11, I rebooted back into Arch and was presented with the dreaded recovery key screen. The TPM2 which normally provides a key to automatically unlock the root partition was no longer happy with me. I tried re-registering the TPM2 with several different combinations of PCRs, but nothing worked. It still just gave me the same recovery key screen when booting up. So I gave up and tried to simply decrypt the SSD. After scouring the ArchWiki, I found a [page](https://wiki.archlinux.org/title/Removing_system_encryption#Decrypting_LUKS2_devices_in-place) on decrypting a partition in-place. Even better, it theoretically could be done online (while the partition is unlocked/mounted), meaning I wouldn't have to boot into a live Linux ISO to do it. However, it was early in the morning and I hadn't had any coffee yet, so I misread the warning about it completely locking up and did the exact thing it told me NOT to do, i.e I tried to place the exported header in the filesystem on the device being decrypted (specifically I tried to just drop it in /etc), rather than on another drive.
 

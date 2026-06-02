@@ -6,12 +6,17 @@ title: EJSnow
 <!-- Home -->
 <article role="tabpanel" id="home">
 
-# Home
+# {{ title }} - Personal Website
 
-👋 Hi, I'm Ezra Snow, usually "EJSnow" online. I enjoy gaming, programming, and messing with Linux. I'm currently daily-driving Arch Linux, coming from Windows (though not directly, I explored several other Linux distros before landing on Arch). This site was written entirely on Arch btw. I'm also hopelessly nostalgic for Windows 7 (this site is evidence of that lol).
+Hi, I'm Ezra Snow, or "EJSnow" online. I'm what you would call an unprofessional nerd. I enjoy Linuxing, playing video games, and I'm learning coding. I currently daily drive Arch Linux, having previously used Windows and tried several other Linux distros in between (Microsoft ending support for Windows 10 drove me to Linux). I'm hopelessly nostalgic for Windows 7 and wish I could still use it.
 
-My main PC ([Details and specs](projects/2024-10-05-redstone-computer/)):
-<img class="lightboxed" alt="The Redstone Computer, Sep 13 2025, running Arch Linux" src="images/redstone-computer.jpg">
+Check out the pages above for more! This site is probably going to be more static but once in a while I write a blog post or have a new project to share.
+
+## My main PC (The Redstone PC)
+
+This is my main computer that I use for most things, primarily gaming on Linux. See the [detailed build overview](blog/2024-10-05-redstone-pc/).
+
+[![The Redstone PC as of June 1, 2026](images/latest-redstonepc.jpg)](images/latest-redstonepc.jpg)
 </article>
 
 <!-- About me -->
@@ -19,46 +24,60 @@ My main PC ([Details and specs](projects/2024-10-05-redstone-computer/)):
 
 # About me
 
-I'm Ezra Snow, a nerdy (extremely) 17 year old guy who may be addicted to computers and Linux (I spend far too much time using and messing with Linux on my computer). I currently live in North Carolina, and I'm a senior in high school. After I graduate, I'm going to study computer science at LeTourneau University. When I'm not doing school or messing with Linux, I'm often playing video games or programming.
+I'm Ezra Snow, an (extremely) nerdy guy who may be addicted to computers and Linux and video games (all of which I spend far too much time playing with...). I live in North Carolina, but this fall I'm heading to college in East Texas to study computer science. Aside from video games and Linuxing, I'm also learning coding and I like reading.
 
-I am also mildly interested in self-hosting things. One thing I definitely want to do is self-host this website, and also probably set up a NAS or something. I do not currently have a domain though, so I can't do much yet (I really should get a domain it's not even very expensive). \*sigh\* Maybe someday. For now I mess about in the LAN on my PC.
+I also strongly dislike just about any piece of technology/software that came out since 2020 because most of them are annoying in that they refuse to respect your privacy and refuse to acknowlege you as the owner. I'm also highly mistrustful of cloud/streaming services and try not to use them when possible (one exception is Spotify because it will take a while to gain a large enough local music collection to move off Spotify). I plan to eventually experiment with self-hosting and building a homelab, although again this is something I can't do right now because hardware is too darn *expensive* 😠.
 
-Games I like (in no particular order):
+If anyone's curious, here are my favorite video games, in no particular order:
 
 * The Elder Scrolls V: Skyrim
-* Forza Horizon 4
-* Geometry Dash
-* Hollow Knight
 * Minecraft
-* Just Shapes and Beats
+* Geometry Dash (technically I hate this game but at the same time I love it but I hate it)
+* Hollow Knight
+* Forza Horizon 4
+* Just Shapes & Beats
 
-Fun fact: I wrote parts of this section on my phone by ssh-ing into my PC. <a target="_blank" href="https://termux.dev">Termux</a> is wonderful (The vast majority was written either on my PC or my laptop though).
+Games I want to play (but haven't bought yet for one reason or another):
+
+* FH5 & FH6
+* Celeste
+* Ori and the Blind Forest
+* Ori and the Will of the Wisps
+* TES IV: Oblivion
+* TES III: Morrowind
+* Elden Ring
+
+My all-time favorite book series is Lord of the Rings, but a close second is Swallows and Amazons. Check it out. Seriously.
 
 ## My computers
 
-*Select any image below to view it full size*
+*Click any picture below to enlarge it*
 
-### The Redstone Computer
-<img class="lightboxed" alt="The Redstone Computer, Sep 13 2025, running Arch Linux" src="images/redstone-computer.jpg">
+### The Redstone PC
 
-My main PC, that I use for gaming, some web development, and pretty much everything else that isn't schoolwork (including Windows nostalgia). I built it over a year ago and it's worked really well, despite its age. See more details [here](projects/2024-10-05-redstone-computer/).
+[![The Redstone PC as of June 1, 2026](images/latest-redstonepc.jpg)](images/latest-redstonepc.jpg)
 
-Specs (original → upgraded):
+This is my main PC. It's a gaming rig first and foremost, but it's also where I store most of my data and it used to be where I did a lot of my experiments with coding and Linux, but I do most of that on my laptop now. I built it in October 2024 and it works surprisingly well for being an old Dell Optiplex with a modern bottom-tier GPU shoved into it and awful thermals overall. My full writeup on that computer is [here](blog/2024-10-05-redstone-pc/).
+
+<details><summary>Specs (original → upgraded):</summary>
 
 * CPU: Intel Core i5-4590 → Intel Core i7-4790
 * RAM: 8GB (2x4GB) DDR3 → **Crucial 16GB (2x8GB) DDR3**
-* GPU: Intel HD 4600 (iGPU) → **Radeon RX 6400 (dGPU)**
+* GPU: Intel HD 4600 (iGPU) → **Radeon RX 6400**
 * Storage: 128GB 2.5" SSD → **500GB Crucial MX500 2.5" SSD + 1TB Western Digital Blue 2.5" HDD**
 * OS: **Arch Linux** + Windows 10 Pro
 
 Items in bold are considered to be significant upgrades.
 
-### Twilight
-<img class="lightboxed" alt="Twilight, my laptop, Sep 30 2025, running Arch Linux" src="images/twilight.jpg">
+</details>
 
-A Lenovo Ideapad Flex 5-15IIL05 laptop I got for free in August 2025 from my grandparents. The keyboard was mostly dead due to a lot of dirt finding its way into it, so they had gotten a new laptop and gave this one to me. After doing a deep clean of the keyboard, it works great now. I use it for school and general messing around when I don't want to sit down at my PC. It's even capable of lightweight gaming; it runs Minecraft and Geometry Dash very well (also JSAB and Hollow Knight run solidly too). It can even run Skyrim at 720p and extremely low settings, but it can't run much beyond that. It's kind of insane for a free laptop. The battery is even still pretty good, at least in Arch Linux (it's significantly worse in Windows).
+### Twilight (my laptop)
 
-Specs:
+[![Twilight chilling on the table](images/twilight.jpg)](images/twilight.jpg)
+
+Twilight is a Lenovo Ideapad Flex 5 15IIL05 laptop that I got for free in August 2025 from my grandparents. They had just bought a new one and didn't need it anymore, plus the keyboard was mostly dead. I discovered the keyboard literally just needed to be cleaned very, very well and then it's worked flawlessly since then. I use it for just about anything aside from most gaming as it's not great at that (but it's usable for a few lighter games like GD and Minecraft and I also got Skyrim to run pretty well at 720p with some settings tweaks). Particularly I use it for coding and playing around with Linux (an unfortunate casualty of that is that I finally `rm -rf /*`'d myself in May). Overall, Twilight is great and it should last me quite a while. Its battery is still quite solid too.
+
+<details><summary>Specs:</summary>
 
 * CPU: Intel Core i7-1065G7
 * RAM: 16GB LPDDR4
@@ -66,14 +85,17 @@ Specs:
 * Storage: Smasnug PM991 512GB NVMe SSD
 * OS: Windows 10 Home → Windows 11 Home → **Arch Linux**
 
-### The Minecraft server (not anymore though)
-<img class="lightboxed" alt="The Minecraft server, Oct 23 2025, installing Fedora Server 42" src="images/server.jpg">
+</details>
 
-This laptop has been in my family for a long time, and from 2022-2024 it was the kids' laptop (but mostly mine). It was originally my mom's, but she got a new computer a while ago, and this laptop came to me. Technically, it was only for school, but it was also my introduction to computers, Windows, PC gaming (despite the fact that it can't play very many games), and I even started playing around with Linux on it towards the end. I also put an SSD and more RAM in it, which improved it a bit but not nearly enough. Before I started messing with Linux, I played around with Windows 7, first in a VM (which was horrendously slow), and then I set up a dual-boot with Windows 10. Windows 7 was actually really good on that laptop.
+### My old laptop
 
-In October 2024 this laptop was retired after I built the Redstone Computer. I resurrected it in February 2025 as a small Minecraft server and it actually wasn't too bad for that. However, that server is long dead, and the laptop is hiding in my closet, waiting for the day when I resurrect it as a Windows 7 nostalgia PC.
+[![My old laptop installing Fedora Server](images/server.jpg)](images/server.jpg)
 
-Specs:
+This was my main and only PC until I built the Redstone PC. It was originally my mom's laptop, but she upgraded a long time ago and eventually this laptop got passed to me. I used it from 2022 to 2024 just as a regular PC, and it was my introduction to PCs, Windows, PC gaming, and the wide wide world of the Internet (Up until I had that PC I didn't do much on the Internet although I had an Android tablet before). I even started experimenting a little bit with Linux in the summer of 2024, but my experimentation was pretty limited.
+
+After it was retired from regular PC duty, I actually hosted a Minecraft server with it in 2025 and that was very cool. I started it in February and it lasted until about November, when I shut it down because no one was playing on it anymore. Eventually it's going to turn into a Windows 7 nostalgia PC.
+
+<details><summary>Specs:</summary>
 
 * CPU: Intel Core i7-3540M
 * RAM: 8GB DDR3 → 16GB DDR3
@@ -81,8 +103,10 @@ Specs:
 * Storage: 750GB Western Digital Scorpio Black 2.5" HDD → 500GB Crucial MX500 2.5" SSD
 * OS: Windows 7 Professional → Windows 10 Pro → Linux Mint 22 → Debian 12 → Fedora Server 42
 
+</details>
 </article>
-<!-- My projects -->
+
+<!-- Blog or something idk -->
 <article role="tabpanel" id="blog" hidden>
 
 # Blog
@@ -91,22 +115,21 @@ Idk why not have a blog lol. I will probably not post here too often.
 
 <ul class="posts">
 {%- for post in collections.blog reversed -%}
-    <li><h3>{{ post.data.title }}</h3><small>Last updated {{ post.data.lastUpdated }} • Created {{ post.page.date | dateOnly }}</small><p style="margin: 0.5em 0 0">{{ post.page.excerpt }}</p><p style="text-align: right; margin-top: 0"><a href="{{ post.page.url }}">View</a></p></li>
+    <li><h3><a href="{{ post.page.url }}">{{ post.data.title }}</a></h3><small>Last updated {{ post.data.lastUpdated }} • Created {{ post.page.date | dateOnly }}</small><p style="margin: 0.5em 0 0">{{ post.page.excerpt }}</p></li>
 {%- endfor -%}
 </ul>
 </article>
-<!-- Resources for various purposes -->
+
+<!-- Resources of various intents and purposes -->
 <article role="tabpanel" id="resources" hidden>
 
 # Resources
 
 Things I have for future reference; they're on here because this makes them easy to access from anywhere. These mostly aren't general purpose guides; check official documentation (like the [ArchWiki](https://wiki.archlinux.org)) or other locations of good repute for those. ;)
 
-## Linux stuff
-
 <ul class="posts">
 {%- for resource in collections.resource -%}
-    <li><h3>{{ resource.data.title }}</h3><small>Last updated {{ resource.data.lastUpdated }} • Created {{ resource.page.date | dateOnly }}</small><p style="margin: 0.5em 0 0">{{ resource.page.excerpt }}</p><p style="text-align: right; margin-top: 0"><a href="{{ resource.page.url }}">View</a></p></li>
+    <li><h3><a href="{{resource.page.url}}">{{ resource.data.title }}</a></h3><small>Last updated {{ resource.data.lastUpdated }} • Created {{ resource.page.date | dateOnly }}</small><p style="margin: 0.5em 0 0">{{ resource.page.excerpt }}</p></li>
 {%- endfor -%}
 </ul>
 

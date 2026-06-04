@@ -61,7 +61,7 @@ Generally refer to the [official](https://wiki.archlinux.org/title/Installation_
 Anyways time to `pacstrap` the system. Suggested packages to install here (my choices plus some things beyond what the installation guide suggests):
 
 * `base-devel` for AUR packages and possibly other shenanigans
-* Userspace filesystem utilities: At a minimum, `dosfstools`, `e2fsprogs`, and `exfatprogs`. `ntfs-3g` might be wanted for NTFS (note that the kernel has a native NTFS driver now so `ntfs-3g` is only required for creating/modifying NTFS's). If I ever get into Btrfs, obviously `btrfs-progs`.
+* Userspace filesystem utilities: At a minimum, `dosfstools`, `e2fsprogs`, and `exfatprogs`. `ntfsprogs` might be wanted for NTFS. If I ever get into Btrfs, obviously `btrfs-progs`.
 * I use `networkmanager` for network/Internet access
 * Always `fastfetch` for good luck ;)
 

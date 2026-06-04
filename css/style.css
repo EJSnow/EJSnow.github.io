@@ -152,6 +152,9 @@ details > ul {
 table {
 	margin-bottom: 1em;
 }
+table > thead > tr > * {
+	position: static;
+}
 
 /* post list */
 ul.posts {
@@ -177,8 +180,13 @@ ul.posts {
 #main img:hover {
 	filter: brightness(120%);
 }
-/* Enlarged image modal background */
-#modal-overlay {
+/* Image modal containment */
+#modal {
+	padding: 0;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	height: 100%;
 	display: none;
 	position: absolute;
 	left: 7px;
@@ -189,14 +197,9 @@ ul.posts {
 	animation: 0.3s zoom, 0.2s opacity;
 	z-index: 999;
 }
-/* Image modal containment */
-#modal {
-	padding: 0;
+/* Show the modal */
+#modal.shown {
 	display: flex;
-	justify-content: center;
-	align-items: center;
-	flex-direction: column;
-	height: 100%;
 }
 @keyframes zoom {
 	from {transform: scale(0.5)}
@@ -235,10 +238,6 @@ ul.posts {
 	font-size: 1.25em;
 	text-shadow: 0 0 4px #000;
 }
-/* Show the modal */
-#modal-overlay.shown {
-	display: block;
-}
 /* Modal close button */
 #close-button {
 	cursor: pointer;
@@ -267,9 +266,6 @@ ul.posts {
 /* Fix tables */
 table {
 	border: 1px solid #d7d7d7;
-}
-table > thead > tr > * {
-	position: static;
 }
 table > tbody > tr > * {
 	border-right: none !important;

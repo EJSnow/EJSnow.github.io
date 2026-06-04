@@ -54,7 +54,7 @@ function openModal(modalContents) {
 function closeModal() {
 	modalContainer.classList.remove("shown");
 }
-const modalContainer = document.getElementById("modal-overlay");
+const modalContainer = document.getElementById("modal");
 const modalImg = document.querySelector("#modal-img > img");
 const modalCaption = document.querySelector("#modal-img > figcaption");
 

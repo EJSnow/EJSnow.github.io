@@ -80,7 +80,7 @@
 <p>Anyways time to <code>pacstrap</code> the system. Suggested packages to install here (my choices plus some things beyond what the installation guide suggests):</p>
 <ul>
 <li><code>base-devel</code> for AUR packages and possibly other shenanigans</li>
-<li>Userspace filesystem utilities: At a minimum, <code>dosfstools</code>, <code>e2fsprogs</code>, and <code>exfatprogs</code>. <code>ntfs-3g</code> might be wanted for NTFS (note that the kernel has a native NTFS driver now so <code>ntfs-3g</code> is only required for creating/modifying NTFS's). If I ever get into Btrfs, obviously <code>btrfs-progs</code>.</li>
+<li>Userspace filesystem utilities: At a minimum, <code>dosfstools</code>, <code>e2fsprogs</code>, and <code>exfatprogs</code>. <code>ntfsprogs</code> might be wanted for NTFS. If I ever get into Btrfs, obviously <code>btrfs-progs</code>.</li>
 <li>I use <code>networkmanager</code> for network/Internet access</li>
 <li>Always <code>fastfetch</code> for good luck ;)</li>
 </ul>
@@ -195,14 +195,12 @@ $ makepkg -sci
 
         </article>
       </div>
-      <div id="modal-overlay">
-        <div id="modal">
-          <span id="close-button" onclick="closeModal();">&times;</span>
-          <figure id="modal-img">
-            <img src="">
-            <figcaption></figcaption>
-          </figure>
-        </div>
+      <div id="modal">
+        <span id="close-button" onclick="closeModal();">&times;</span>
+        <figure id="modal-img">
+          <img src="">
+          <figcaption></figcaption>
+        </figure>
       </div>
       <footer class="page">
         <span>

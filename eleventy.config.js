@@ -8,8 +8,8 @@ export default async function (eleventyConfig) {
   eleventyConfig.setOutputDirectory("out");
 
   // Eleventy doesn't need to touch these
-  eleventyConfig.addPassthroughCopy("css");
-  eleventyConfig.addPassthroughCopy("js");
+  eleventyConfig.addPassthroughCopy("**/*.css");
+  eleventyConfig.addPassthroughCopy("**/*.js");
   eleventyConfig.addPassthroughCopy("images");
   eleventyConfig.addPassthroughCopy("**/*.sh");
 

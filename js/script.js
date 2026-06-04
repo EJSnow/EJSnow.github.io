@@ -44,27 +44,29 @@ try {
 	console.log("Page does not have tabs, skipping");
 }
 
-// Lightbox kinda sorta
+// Modal lightbox
 
-const lightbox = document.getElementById("lightbox");
-const images = document.querySelectorAll(".lightboxed");
-const img = document.getElementById("lightbox-img");
-const imgCaption = document.getElementById("image-caption");
+function openModal(modalContents) {
+	modalImg.src = modalContents.src;
+	modalCaption.innerHTML = modalContents.alt
+	modalContainer.classList.add("shown");
+}
+function closeModal() {
+	modalContainer.classList.remove("shown");
+}
+const modalContainer = document.getElementById("modal-overlay");
+const modalImg = document.querySelector("#modal-img > img");
+const modalCaption = document.querySelector("#modal-img > figcaption");
 
-images.forEach(image => {
-	image.addEventListener("click", e => {
-		img.src = image.src;
-		imgCaption.innerHTML = image.alt;
-		window.location.assign(window.location.href + "#image-viewer");
-	});
-});
+const lightboxImgs = document.images;
+for (let i = 0; i < lightboxImgs.length - 1; i++) {
+	lightboxImgs[i].addEventListener("click", function(){ openModal(lightboxImgs[i]); });
+}
 
 try {
 	// Table of contents population
-	const headings = document.querySelectorAll("h2"); // Get all H2s in the doc
-	//console.log(headings);
-	const tocContents = document.querySelector("#toc-contents"); // Get the TOC element
-	//console.log(tocContents);
+	const headings = document.querySelectorAll("h2");
+	const tocContents = document.querySelector("#toc-contents");
 	
 	// Iterate through each heading and add a link for it
 	for (let i = 0; i < headings.length; i++) {
@@ -80,7 +82,6 @@ try {
 		listItem.appendChild(listItemLink);
 		tocContents.appendChild(listItem);
 	}
-	console.log("Created a TOC");
 } catch(error) {
 	console.log("Page does not have a TOC, skipping");
 }

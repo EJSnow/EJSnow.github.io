@@ -19,7 +19,7 @@ This setup uses systemd-boot as the bootloader and boots from a signed unified k
 
 [Download the latest ISO](https://archlinux.org/download) and follow the instructions on that page to verify it. Then put it on a USB drive to boot it either using [Ventoy](https://ventoy.net/) or by writing it directly to the USB drive (see the [relevant Arch](https://wiki.archlinux.org/title/USB_flash_installation_medium)Wiki page for more info).
 
-Boot the installation media. After it boots up, you'll be greeted by the ArchISO prompt:[![The Arch Linux installer](/images/arch-installer.png)](/images/arch-installer.png) The Arch Linux ISO doesn't support Secure Boot, so it must be disabled before booting it.
+Boot the installation media. After it boots up, you'll be greeted by the ArchISO prompt:![The Arch Linux installer](/images/arch-installer.png) The Arch Linux ISO doesn't support Secure Boot, so it must be disabled before booting it.
 
 Set the console font if necessary (for example on not-quite-HiDPI laptop screens) and ensure you have Internet access as described in the [installation guide](https://wiki.archlinux.org/title/Installation_guide#Connect_to_the_internet).
 
@@ -206,7 +206,7 @@ Now, here's all the other apps I like to install:
 $ yay -S --needed awatcher-bundle-bin bleachbit btop digikam discord easyeffects gamemode lib32-gamemode informant kdenlive keepassxc krita ktorrent kweather lact libreoffice-fresh mangohud modrinth-app-bin needrestart obs-studio droidcam-obs-plugin obs-vkcapture-git lib32-obs-vkcapture-git obs-wayland-hotkeys-git pacman-cleanup-hook rpc-bridge-bin spotify steam visual-studio-code-bin vlc
 ```
 
-And finally my Plasma dotfiles. Follow the instructions on [the repository](https://github.com/EJSnow/dotfiles) and that will about do it (currently the panel layout isn't done automatically though).[![My Arch setup](/images/my-arch-setup.jpg)](/images/my-arch-setup.jpg)
+And finally my Plasma dotfiles. Follow the instructions on [the repository](https://github.com/EJSnow/dotfiles) and that will about do it (currently the panel layout isn't done automatically though).![My Arch setup](/images/my-arch-setup.jpg)
 
 ## References
 

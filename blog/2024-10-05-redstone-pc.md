@@ -8,7 +8,7 @@ tags: blog
 
 The Redstone Computer is a Dell OptiPlex 7020 SFF that I got for free last year and turned into a low-end gaming PC/daily driver. I mostly play lightweight and older games, and the computer runs all of them pretty well, typically at a mix of high and ultra settings at 1680x1050 60Hz.<!-- excerpt --> The GPU is somewhat bottlenecked due to being in an old PCIe 3.0 system, not to mention thermals are just awful on this computer, but it does its best. It's surprisingly adequate for being what it is.
 
-[![The Redstone PC as of June 1, 2026](/images/latest-redstonepc.jpg)](/images/latest-redstonepc.jpg)
+![The Redstone PC as of June 1, 2026](/images/latest-redstonepc.jpg)
 
 Despite all of that, the computer is somehow quite usable and stable (I haven't had any BSODs in Windows, or major breakage in Linux on this computer). I'm actually impressed with how solid this computer has been. It's also a LOT faster than the laptop I used to use before, which was a slightly older Dell Latitude laptop with a 3rd gen dual-core i7 and only the HD 4000 iGPU. That laptop could barely run Minecraft at playable framerates WITHOUT shaders, and to be honest even Geometry Dash would lag on large extremely detailed levels (and if GD lags then you KNOW it's bad).
 
@@ -48,45 +48,45 @@ To be honest, I think this build is pretty good for what it is. I actually reall
 
 *Note: Click an image to enlarge it.*
 
-<div class="masonry-grid">
+<div class="masonry-grid gallery">
   <div class="masonry-item">
 
-[![All the parts, stacked on top of the computer](/images/redstone-computer-1.JPG)](/images/redstone-computer-1.JPG)
+![All the parts, stacked on top of the computer](/images/redstone-computer-1.JPG)
 
 All the parts, stacked on top of the computer
 
   </div>
   <div class="masonry-item">
 
-[![Inside the computer after completing all the upgrades](/images/redstone-computer-2.JPG)](/images/redstone-computer-2.JPG)
+![Inside the computer after completing all the upgrades](/images/redstone-computer-2.JPG)
 
 Inside the computer after completing all the upgrades
 
   </div>
   <div class="masonry-item">
 
-[![Installing Windows 10 (this was before I became a Linux user)](/images/redstone-computer-3.JPG)](/images/redstone-computer-3.JPG)
+![Installing Windows 10 (this was before I became a Linux user)](/images/redstone-computer-3.JPG)
 
 Installing Windows 10 (this was before I became a Linux user)
 
   </div>
   <div class="masonry-item">
 
-[![Intial build complete](/images/redstone-computer-4.JPG)](/images/redstone-computer-4.JPG)
+![Intial build complete](/images/redstone-computer-4.JPG)
 
 Intial build complete
 
   </div>
   <div class="masonry-item">
 
-[![The second hard drive, formatted for Windows](/images/redstone-computer-6.JPG)](/images/redstone-computer-6.JPG)
+![The second hard drive, formatted for Windows](/images/redstone-computer-6.JPG)
 
 The second hard drive, formatted for Windows
 
   </div>
   <div class="masonry-item">
 
-[![The second hard drive before installing it](/images/redstone-computer-5.JPG)](/images/redstone-computer-5.JPG)
+![The second hard drive before installing it](/images/redstone-computer-5.JPG)
 
 The second hard drive before installing it
 
@@ -94,7 +94,7 @@ The second hard drive before installing it
   
   <div class="masonry-item">
 
-[![The Redstone PC as of Sep 13, 2025](/images/redstone-computer.jpg)](/images/redstone-computer.jpg)
+![The Redstone PC as of Sep 13, 2025](/images/redstone-computer.jpg)
 
 The Redstone PC as of Sep 13, 2025
 

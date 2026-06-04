@@ -36,7 +36,7 @@
 <p>This setup uses systemd-boot as the bootloader and boots from a signed unified kernel image (UKI) incorporating the kernel image, initrd, and kernel commandline in one file to reduce complexity (as a side benefit, the initrd and kernel commandline are also validated by Secure Boot).</p>
 <h2 id="warming-up" tabindex="-1">Warming up</h2>
 <p><a href="https://archlinux.org/download">Download the latest ISO</a> and follow the instructions on that page to verify it. Then put it on a USB drive to boot it either using <a href="https://ventoy.net/">Ventoy</a> or by writing it directly to the USB drive (see the <a href="https://wiki.archlinux.org/title/USB_flash_installation_medium">relevant Arch</a>Wiki page for more info).</p>
-<p>Boot the installation media. After it boots up, you'll be greeted by the ArchISO prompt:<a href="/images/arch-installer.png"><img src="/images/arch-installer.png" alt="The Arch Linux installer"></a> The Arch Linux ISO doesn't support Secure Boot, so it must be disabled before booting it.</p>
+<p>Boot the installation media. After it boots up, you'll be greeted by the ArchISO prompt:<img src="/images/arch-installer.png" alt="The Arch Linux installer"> The Arch Linux ISO doesn't support Secure Boot, so it must be disabled before booting it.</p>
 <p>Set the console font if necessary (for example on not-quite-HiDPI laptop screens) and ensure you have Internet access as described in the <a href="https://wiki.archlinux.org/title/Installation_guide#Connect_to_the_internet">installation guide</a>.</p>
 <h2 id="partitioning" tabindex="-1">Partitioning</h2>
 <p>See the <a href="https://wiki.archlinux.org/title/Installation_guide#Partition_the_disks">installation guide</a> and <a href="https://wiki.archlinux.org/title/Partitioning#Partition_scheme">Partitioning#Partition scheme</a> for more details.</p>
@@ -175,7 +175,7 @@ $ makepkg -sci
 <p>Now, here's all the other apps I like to install:</p>
 <pre><code class="language-sh">$ yay -S --needed awatcher-bundle-bin bleachbit btop digikam discord easyeffects gamemode lib32-gamemode informant kdenlive keepassxc krita ktorrent kweather lact libreoffice-fresh mangohud modrinth-app-bin needrestart obs-studio droidcam-obs-plugin obs-vkcapture-git lib32-obs-vkcapture-git obs-wayland-hotkeys-git pacman-cleanup-hook rpc-bridge-bin spotify steam visual-studio-code-bin vlc
 </code></pre>
-<p>And finally my Plasma dotfiles. Follow the instructions on <a href="https://github.com/EJSnow/dotfiles">the repository</a> and that will about do it (currently the panel layout isn't done automatically though).<a href="/images/my-arch-setup.jpg"><img src="/images/my-arch-setup.jpg" alt="My Arch setup"></a></p>
+<p>And finally my Plasma dotfiles. Follow the instructions on <a href="https://github.com/EJSnow/dotfiles">the repository</a> and that will about do it (currently the panel layout isn't done automatically though).<img src="/images/my-arch-setup.jpg" alt="My Arch setup"></p>
 <h2 id="references" tabindex="-1">References</h2>
 <p>I wrote this with the help of MANY ArchWiki pages and a few manpages. Seriously the ArchWiki is amazing, go <a href="https://wiki.archlinux.org">check it out</a>.</p>
 <ul>
@@ -194,6 +194,15 @@ $ makepkg -sci
 </ul>
 
         </article>
+      </div>
+      <div id="modal-overlay">
+        <div id="modal">
+          <span id="close-button" onclick="closeModal();">&times;</span>
+          <figure id="modal-img">
+            <img src="">
+            <figcaption></figcaption>
+          </figure>
+        </div>
       </div>
       <footer class="page">
         <span>

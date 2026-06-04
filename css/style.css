@@ -268,6 +268,9 @@ ul.posts {
 table {
 	border: 1px solid #d7d7d7;
 }
+table > thead > tr > * {
+	position: static;
+}
 table > tbody > tr > * {
 	border-right: none !important;
 	border: 1px solid #d7d7d7;

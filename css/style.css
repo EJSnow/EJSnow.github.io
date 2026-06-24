@@ -193,17 +193,13 @@ ul.posts {
 	top: 28px;
 	width: calc(100% - 14px);
 	height: calc(100% - 35px);
-	background-color: #0008;
-	animation: 0.3s zoom, 0.2s opacity;
+	background-color: #0004;
+	animation: 0.3s opacity;
 	z-index: 999;
 }
 /* Show the modal */
 #modal.shown {
 	display: flex;
-}
-@keyframes zoom {
-	from {transform: scale(0.5)}
-	to {transform: scale(1)}
 }
 @keyframes opacity {
 	from {opacity: 0}
@@ -233,17 +229,17 @@ ul.posts {
 	margin: 0 auto;
 	text-align: center;
 	color: #fff;
-	font-weight: bold;
+	/*font-weight: bold;*/
 	padding: 0 0 0.5rem 0;
 	font-size: 1.25em;
-	text-shadow: 0 0 4px #000;
+	text-shadow: 0 1px 3px #000;
 }
 /* Modal close button */
 #close-button {
 	cursor: pointer;
 	display: block;
 	font-size: 2em;
-	transition: all 0.2s ease-out;
+	transition: color 0.2s ease-out;
 	position: absolute;
 	top: 0;
 	right: 0;
@@ -252,11 +248,14 @@ ul.posts {
 	text-align: center;
 	z-index: 2;
 	color: #bbb;
-	text-shadow: 0 0 4px #000;
+	text-shadow: 0 1px 3px #000;
 }
 
 #close-button:hover {
 	color: #fff;
+}
+#close-button:active {
+	color: #aaa;
 }
 
 /*************************************************************/

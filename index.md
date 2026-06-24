@@ -37,7 +37,7 @@ If anyone's curious, here are my favorite video games, in no particular order:
 * Forza Horizon 4
 * Just Shapes & Beats
 
-Games I want to play (but haven't bought yet for one reason or another):
+Games I want to play (but haven't gotten around to yet):
 
 * FH5 & FH6
 * Celeste
@@ -93,7 +93,7 @@ Twilight is a Lenovo Ideapad Flex 5 15IIL05 laptop that I got for free in August
 
 This was my main and only PC until I built the Redstone PC. It was originally my mom's laptop, but she upgraded a long time ago and eventually this laptop got passed to me. I used it from 2022 to 2024 just as a regular PC, and it was my introduction to PCs, Windows, PC gaming, and the wide wide world of the Internet (Up until I had that PC I didn't do much on the Internet although I had an Android tablet before). I even started experimenting a little bit with Linux in the summer of 2024, but my experimentation was pretty limited.
 
-After it was retired from regular PC duty, I actually hosted a Minecraft server with it in 2025 and that was very cool. I started it in February and it lasted until about November, when I shut it down because no one was playing on it anymore. Eventually it's going to turn into a Windows 7 nostalgia PC.
+After it was retired from regular PC duty, I actually turned it into a Minecraft server although it's extremely inactive and was shut down for a while, although I recently restarted it. Eventually it's going to turn into a Windows 7 nostalgia PC.
 
 <details><summary>Specs:</summary>
 

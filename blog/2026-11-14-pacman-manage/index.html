@@ -24,7 +24,7 @@
         <article role="tabpanel">
           <a id="top" href="/">← 🏡 Home</a>
           <h1>pacman-manage - A Bash TUI frontend for pacman and yay</h1>
-          <pre><code>#include metadata.h<br>// Created Nov 14, 2026<br>// Last updated Nov 14, 2026</code></pre>
+          <pre><code>#include metadata.h<br>// Created Nov 14, 2026<br>// Last updated Nov 17, 2026</code></pre>
           
           <p>One of the downsides of Arch is its package management experience. Everything is done through a somewhat clunky CLI interface, and Arch is highly against GUI frontends such as KDE Discover as they don't show enough information from pacman during install/upgrade operations. Over the years, people have created several frontends to pacman with varying goals:</p>
 <ul>
@@ -39,12 +39,12 @@
 <li>Browsing repositories/AUR and locally installed packages</li>
 <li>View/uninstall orphan dependencies</li>
 <li>Refresh mirrorlist (not implemented yet)</li>
-<li>Clear the Pacman cache (also not implemented yet)</li>
+<li>Clear the Pacman package cache</li>
 </ul>
 <p>For now, it's fairly bare-bones, and I intend to keep it fairly minimal while still having the important features. AUR operations are also supported through yay (if you want support for xyz other AUR helper, feel free to PR support, though right now the script is hard-coded for yay).</p>
-<p>Mirrorlist refreshing and cache clearing are the two main things I haven't implemented yet. I also plan to improve the UX significantly (right now, it's kind of terrible; menu navigation requires arrow keys + Enter, and when performing a pacman operation, as soon as it completes, the previous menu re-appears, clearing the output from pacman).</p>
-<p>Speaking of the TUI, I honestly was lazy and used <a href="https://github.com/timo-reymann/bash-tui-toolkit">bash-tui-toolkit</a> to build the menus. It's incredibly (and scarily) easy to use, and probably preserved my (already questionable) sanity (from all I've seen, writing a TUI from scratch in Bash is quite painful).</p>
-<p>Some screenshots:</p>
+<p>As of 2026-11-17, the only notable thing missing from the script is mirrorlist refreshing. The TUI could use some improvements, but it's fairly usable (if slightly annoying to navigate). I used <a href="https://github.com/timo-reymann/bash-tui-toolkit">bash-tui-toolkit</a> to build the menus. It's incredibly (and scarily) easy to use, and probably preserved my (already questionable) sanity (from all I've seen, writing a TUI from scratch in Bash is quite painful).</p>
+<p>The script can be found on Github at <a href="https://github.com/EJSnow/pacman-manage">EJSnow/pacman-manage</a>. If you find it useful, give it a star!</p>
+<p>Screenshots:</p>
 <div class="masonry-grid gallery">
    <div class="masonry-item">
 <p><img src="/images/pacman-manage-1.png" alt="The main menu"></p>
@@ -52,9 +52,13 @@
    <div class="masonry-item">
 <p><img src="/images/pacman-manage-2.png" alt="Browsing installed packages (with search!)"></p>
    </div>
+   <div class="masonry-item">
+<p><img src="/images/pacman-manage-3.png" alt="Unneeded dependency removal"></p>
+   </div>
+   <div class="masonry-item">
+<p><img src="/images/pacman-manage-4.png" alt="Cache clearing"></p>
+   </div>
 </div>
-<p><img src="/images/pacman-manage-3.png" alt="Menu for managing orphan dependencies"></p>
-<p>The script is on GitHub: <a href="https://github.com/EJSnow/pacman-manage">EJSnow/pacman-manage</a>. If you find it useful, give it a star!</p>
 
         </article>
       </div>

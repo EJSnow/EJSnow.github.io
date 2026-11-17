@@ -2,7 +2,7 @@
 layout: page.html
 title: pacman-manage - A Bash TUI frontend for pacman and yay
 date: 2026-11-14
-lastUpdated: Nov 14, 2026
+lastUpdated: Nov 17, 2026
 tags: blog
 ---
 
@@ -21,15 +21,15 @@ My goal was rather simple: Make a friendly TUI for key package management operat
 * Browsing repositories/AUR and locally installed packages
 * View/uninstall orphan dependencies
 * Refresh mirrorlist (not implemented yet)
-* Clear the Pacman cache (also not implemented yet)
+* Clear the Pacman package cache
 
 For now, it's fairly bare-bones, and I intend to keep it fairly minimal while still having the important features. AUR operations are also supported through yay (if you want support for xyz other AUR helper, feel free to PR support, though right now the script is hard-coded for yay).
 
-Mirrorlist refreshing and cache clearing are the two main things I haven't implemented yet. I also plan to improve the UX significantly (right now, it's kind of terrible; menu navigation requires arrow keys + Enter, and when performing a pacman operation, as soon as it completes, the previous menu re-appears, clearing the output from pacman).
+As of 2026-11-17, the only notable thing missing from the script is mirrorlist refreshing. The TUI could use some improvements, but it's fairly usable (if slightly annoying to navigate). I used [bash-tui-toolkit](https://github.com/timo-reymann/bash-tui-toolkit) to build the menus. It's incredibly (and scarily) easy to use, and probably preserved my (already questionable) sanity (from all I've seen, writing a TUI from scratch in Bash is quite painful).
 
-Speaking of the TUI, I honestly was lazy and used [bash-tui-toolkit](https://github.com/timo-reymann/bash-tui-toolkit) to build the menus. It's incredibly (and scarily) easy to use, and probably preserved my (already questionable) sanity (from all I've seen, writing a TUI from scratch in Bash is quite painful).
+The script can be found on Github at [EJSnow/pacman-manage](https://github.com/EJSnow/pacman-manage). If you find it useful, give it a star!
 
-Some screenshots:
+Screenshots:
 
 <div class="masonry-grid gallery">
    <div class="masonry-item">
@@ -42,8 +42,14 @@ Some screenshots:
 ![Browsing installed packages (with search!)](/images/pacman-manage-2.png)
 
    </div>
+   <div class="masonry-item">
+
+![Unneeded dependency removal](/images/pacman-manage-3.png)
+
+   </div>
+   <div class="masonry-item">
+
+![Cache clearing](/images/pacman-manage-4.png)
+
+   </div>
 </div>
-
-![Menu for managing orphan dependencies](/images/pacman-manage-3.png)
-
-The script is on GitHub: [EJSnow/pacman-manage](https://github.com/EJSnow/pacman-manage). If you find it useful, give it a star!
